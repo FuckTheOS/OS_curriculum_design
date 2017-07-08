@@ -1,0 +1,47 @@
+# depslib dependency file v1.0
+1499344338 source:c:\morejarphone\code相关\os_project\common.cpp
+
+1499344329 source:c:\morejarphone\code相关\os_project\dir.cpp
+
+1499344385 source:c:\morejarphone\code相关\os_project\file.cpp
+
+1499344368 source:c:\morejarphone\code相关\os_project\index.cpp
+
+1499344402 source:c:\morejarphone\code相关\os_project\user.cpp
+
+1499439428 source:\\mac\home\desktop\os_project\common.cpp
+	"common.h"
+
+1499440509 source:\\mac\home\desktop\os_project\dir.cpp
+	"common.h"
+	"dir.h"
+
+1499344385 source:\\mac\home\desktop\os_project\file.cpp
+
+1499344368 source:\\mac\home\desktop\os_project\index.cpp
+
+1499344402 source:\\mac\home\desktop\os_project\user.cpp
+
+1499437542 source:\\mac\home\desktop\os_project\main.cpp
+	"common.h"
+
+1499440480 \\mac\home\desktop\os_project\common.h
+	<cstdio>
+	<iostream>
+	<cstring>
+	<queue>
+	<cmath>
+	<algorithm>
+	<stack>
+	<map>
+	<string>
+	<set>
+	<stdlib.h>
+	<unistd.h>
+	<conio.h>
+	<windows.h>
+	<fstream>
+
+1499440518 \\mac\home\desktop\os_project\dir.h
+	"common.h"
+
