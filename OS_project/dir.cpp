@@ -3,13 +3,27 @@
 #include "index.h"
 
 dirBlock readDir (int id) {				//根据文件块id读取文件块信息
+	if (id >= DIRSIZE || id < 0) {
+		cout << "段错误！" << endl;
+		exit (0);
+	}
 	dirBlock db;
 	ifstream fin (disk.c_str (), std::ios::binary);
 	fin.seekg (dirSegOffset+sizeof (db)*id, ios::beg); 	//定位到目标便宜
 	db = fin.read ((char *)&db, sizeof db);
 	fin.close ();
 }
-//访盘，注意保护原有数据
+
+void writeDir (dirBlock db, int id){	//将目录块信息写入目录块
+	if (id >= DIRSIZE || id < 0) {
+		cout << "段错误！" << endl;
+		exit (0);
+	}
+	ofstream fout (dis.c_str (), std::ios::binary|ios::in|ios::out);
+	fout.seekp (userSegOffset+sizeof (db)*id, ios::beg);
+	fout.write ((char *)&db, sizeof db);
+	fout.close ();
+}
 
 int giveDirBlock (int dirType){			//分配新的目录块 
 	return -1;
