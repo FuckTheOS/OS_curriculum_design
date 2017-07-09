@@ -27,11 +27,25 @@ int openFile (string fileaName){ 			//打开文件的目录块 返回对应的�
 	dirBlcok db;
 	db = readDir (curDirID); db = readDir (db.sonDirID);
 	while (db.nextDirID != -1) {
-		if ((string)db.dirName == fileaName) {}
+		if ((string)db.dirName == fileaName && db.type == 2) {
+			indexBlock ib = readIndex (db.textLcation); 	//读取文件内容所在的索引块
+			return ib.offsetID;		//返回文件内容所在的偏移
+		}
 	}
 	return -1;
 }
-//参数表示当前路径下的文件名
-void vim (int id);				//对文件内容进行编辑
+
+void vim (int id){				//对文件内容进行编辑
+	fileBlock fb = readFile (id);
+	string buffer = (string)fb.text;
+	system ("CLS");
+	cout << "---修改模式---" << endl;
+	cout << buffer << endl;
+	char ch, op;
+	while (true) {
+		//用getch实现的小型vim 待完善
+	}
+	write (fb, id);
+}
 //参数表示文件内容块的索引
 
