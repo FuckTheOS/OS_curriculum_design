@@ -25,7 +25,7 @@ void writeDir (dirBlock db, int id){	//将目录块信息写入目录块
 	fout.close ();
 }
 
-int giveDirBlock (int dirType){			//分配新的目录块 
+int giveDirBlock (int dirType){			//分配新的目录块
 	return -1;
 }
 
@@ -77,7 +77,7 @@ bool mkdirs (string newDirPath, string newDirMod){	//在当前目录下创建多
 			}
 		}
 		else {}
-	} 
+	}
 	return true;
 }
 //相对或绝对路径 新目录的权限(仅针对最末级)
@@ -86,6 +86,10 @@ bool mkdirs (string newDirPath, string newDirMod){	//在当前目录下创建多
 
 bool gotoDir (string tarPath){			//跳转到新的目录
 	vector <string> path = pathPrase (tarPath);
+	dirBlock* curDirBlock = &readDir(curDirID);
+    for(auto op:path)
+        if(!visitPath(op)) return false;
+    curDirID = curDirBlock - &readDir(0);
 	return true;
 }
 //参数是相对或绝对路径 需要路径解析自动机解析路径

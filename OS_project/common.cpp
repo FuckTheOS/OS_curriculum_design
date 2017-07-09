@@ -39,3 +39,27 @@ vector <string>& pathPrase (string tarPath){	//用自动机解析路径
 	}
 	return path;
 }
+
+bool visitPath(dirBlock* cur, string target)
+{
+    //权限检查待更新
+    switch(target)
+    {
+        case "/CUR": break;
+        case "/root":
+            cur = &readDir(0);//读取root块
+            break;
+        case "/BACK":
+            if(cur->faDirID <=0) return false;//已到根目录而无法返回
+            else  cur = &readDir(cur->faDirID);
+            break;
+        default:
+            while(stricmp(cur->dirName,target.c_str())!=0)
+            {
+                if(cur->nextDirID == -1) return false; //当前目录下并找不到指定的目录
+                cur = &readDir(cur->nextDirID);
+            }
+            cur = &readDir(cur->sonDirID);//进入该目录
+    }
+    return true;
+}
