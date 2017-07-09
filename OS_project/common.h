@@ -126,7 +126,7 @@ struct dirBlock {
 	int faDirID;		//父目录id
 	int sonDirID;		//下一级目录id(孩子)
 	int nextDirID;		//下一个目录id(兄弟)  如果没有被占用，那么表示下一个空闲快 -1表示最后一个空块
-	//int dirMod;			//目录权限信息
+	int dirMod;			//目录权限信息
 	bool used;			//是否被占用
 };
 

@@ -116,14 +116,18 @@ bool mkdir (string newDirName, string newDirMod) {	//在当前目录下创建子
 	strcpy (db.fileName, newDirName.c_str ());
 	char dirOwner[20];	//目录创建者
 	db.dirSize = 0;
-	db.dirCreateTime;	//目录创建时间
-	db.dirChangeTime;	//目录上一次修改时间
+	db.dirCreateTime = getTime ();
+	db.dirChangeTime = db.dirCreateTime;
 	db.type = 1;
 	db.textLocation = -1;
 	db.faDirID = curDirID;
 	db.sonDirID = -1;
 	db.nextDirID = -1;
+	db.dirMod = (newDirMod[0] == 'r' ? 
+		(newDirMod == "rw" ? 2 : 1) :
+		(newDirMod == "a" ? 3: 0));
 	db.used = 1;
+	writeDir (db, dirID);	//将目录信息写入目录块
 	return true;
 }
 
