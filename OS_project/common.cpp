@@ -5,6 +5,7 @@ void showCurPath (int type) {	//输出当前路径
 }
 
 vector <string>& pathPrase (string tarPath){	//用自动机解析路径
+    //Edit and test by Kelukin_Lau
 	vector <string> path;path.clear();
 	size_t x_point = 0; //未处理到的tarPath的字符下标
 	if(tarPath[0]=='/') //绝对路径
