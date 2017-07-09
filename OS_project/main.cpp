@@ -95,7 +95,7 @@ void bash () {			//命令行模式操作文件系统
 					cin >> newDirMod;
 				}
 			}
-			mkdirs (newDirPath, newDirMod);	////在当前目录下创建多级子目录
+			mkdirs (newDirPath, newDirMod);	//在当前目录下创建多级子目录
 		}
 		else if (op1 == "cd") {
 			char ch = getchar ();
