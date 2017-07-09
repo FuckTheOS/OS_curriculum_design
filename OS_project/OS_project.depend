@@ -45,3 +45,26 @@
 1499440518 \\mac\home\desktop\os_project\dir.h
 	"common.h"
 
+1499584380 source:e:\my_college\operatorsystem\os_curriculum_design\os_project\common.cpp
+	"common.h"
+	"dir.h"
+
+1499581024 e:\my_college\operatorsystem\os_curriculum_design\os_project\common.h
+	<cstdio>
+	<iostream>
+	<cstring>
+	<queue>
+	<cmath>
+	<algorithm>
+	<stack>
+	<map>
+	<string>
+	<set>
+	<stdlib.h>
+	<unistd.h>
+	<conio.h>
+	<windows.h>
+	<fstream>
+
+1499577491 e:\my_college\operatorsystem\os_curriculum_design\os_project\dir.h
+

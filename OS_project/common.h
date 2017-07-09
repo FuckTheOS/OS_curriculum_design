@@ -160,7 +160,7 @@ vector <string>& pathPrase (string tarPath);	//用自动机解析路径
 bool visitPath(dirBlock* cur, string target); //访问当前目录下的指定下级目录
 //传进当时所在的目录块指针以及下级目录的名臣
 //如果无法访问或者不存在则返回false
-
+//访问成功时修改当前的变量curDirID;
 
 
 

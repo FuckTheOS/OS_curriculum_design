@@ -86,10 +86,10 @@ bool mkdirs (string newDirPath, string newDirMod){	//在当前目录下创建多
 
 bool gotoDir (string tarPath){			//跳转到新的目录
 	vector <string> path = pathPrase (tarPath);
-	dirBlock* curDirBlock = &readDir(curDirID);
+	dirBlock curDirBlock = readDir(curDirID);
     for(auto op:path)
-        if(!visitPath(op)) return false;
-    curDirID = curDirBlock - &readDir(0);
+        if(!visitPath(curDirBlock, op)) return false;
+    curDirID = &curDirBlock - &readDir(0);
 	return true;
 }
 //参数是相对或绝对路径 需要路径解析自动机解析路径
