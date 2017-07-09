@@ -1,5 +1,21 @@
 #include "common.h"
 #include "dir.h"
+
+superNodeBlock readSuperNode (){    //读入超级节点信息
+    superNodeBlock sn;
+    ifstream fin (disk.c_str (), std::ios::binary);
+    fin.seekg (superNodeOffset, ios::beg);
+    sn = fin.read ((char *)&sn, sizeof sn);
+    fin.close ();
+    return sn;
+}
+void writeSuperNode (superNodeBlcok sn) {   //吸入超级节点信息
+    ofstream fout (disk.c_str (), std::ios::binary|ios::in|ios::out);
+    fout.seekp (superNodeOffset, ios::beg);
+    fout.write ((char *)&sn, sizeof sn);
+    fout.close ();
+}
+
 #define PATH_PRASER_ERROR  path.clear();path.push_back("error");break;
 void showCurPath (int type) {	//输出当前路径
 }
