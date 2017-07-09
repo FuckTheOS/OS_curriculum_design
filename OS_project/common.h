@@ -166,6 +166,8 @@ bool visitPath(dirBlock& cur, string target, int& curID); //访问当前目录�
 //传进当时所在的目录块指针以及下级目录的名臣
 //如果无法访问或者不存在则返回false
 //访问成功时修改当前的变量curDirID;
+int findNextDir (int dirID, string target);		//访问dirID下的target目录
+//返回这个下级目录的ID 不存在返回-1
 long long getTime ();				//获取当前的时间
 //按照年月日时分 即年*100000000+月*1000000+日*10000+时*100+分
 void printTime (long long num);		//根据时间值打印时间串
