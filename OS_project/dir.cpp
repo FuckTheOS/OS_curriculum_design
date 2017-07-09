@@ -80,10 +80,17 @@ void showAllSonDir (){	//显示当前路径下所有子目录
 //当前路径直接用全局变量
 //按照a b.txt c d.cpp 的格式输出
 
-bool mkdir (string newDirName, string newDirMod) {	//在当前目录下创建子目录
-	if (!checkMod (3)) {	//权限检查没通过
+bool mkdir (string newDirName, string newDirMod, int _curDirID = curDirID) {	//在当前目录下创建子目录
+	if (!checkMod (curUserID, curDirID, 2)) {	//权限检查没通过
 		cout << "权限错误！" << endl;
 		return false;
+	}
+	if (newDirMod == "p") {
+		userBlcok ub = readUser (curUserID);
+		if ((string)ub.userName != "admin") {
+			cout << "权限错误！" << endl;
+			return false;
+		}
 	}
 	if (!checkDirName (newDirName)) { 	//目录名检查没通过
 		cout << "文件名错误！" << endl;
@@ -100,7 +107,7 @@ bool mkdir (string newDirName, string newDirMod) {	//在当前目录下创建子
 	ib.offsetID = dirID;
 	writeIndex (ib, indexID);
 
-	dirBlock db = readDir (curDirID);
+	dirBlock db = readDir (_curDirID);
 	if (db.sonDirID == -1) {
 		db.sonDirID = indexID;
 	}
@@ -113,12 +120,15 @@ bool mkdir (string newDirName, string newDirMod) {	//在当前目录下创建子
 	}
 
 	db = readDir (dirID);
+	userBlock ub = readUser (curUserID);
 	strcpy (db.fileName, newDirName.c_str ());
-	char dirOwner[20];	//目录创建者
+	strcpy (db.dirOwner, ub.name);
 	db.dirSize = 0;
 	db.dirCreateTime = getTime ();
 	db.dirChangeTime = db.dirCreateTime;
-	db.type = 1;
+	db.type = (newDirMod[0] == 'r' ? 
+		(newDirMod == "r" ? 1 : 2) :
+		(newDirMod == "p" ? 0 : 3));
 	db.textLocation = -1;
 	db.faDirID = curDirID;
 	db.sonDirID = -1;
@@ -133,21 +143,22 @@ bool mkdir (string newDirName, string newDirMod) {	//在当前目录下创建子
 
 bool mkdirs (string newDirPath, string newDirMod){	//在当前目录下创建多级子目录
 	vector <string> tarDirPath = pathPrase (newDirPath);	//用自动机解析路径
-	int dirID = (tarDirPath[0] == "root" ? 0 : curDirID);
+	int dirID = (tarDirPath[0] == "/root" ? 0 : curDirID);
 	for (int i = 0; i < tarDirPath.size (); i++) {
 		string tmp = tarDirPath[i];
-		if (tmp == "TOT") {
+		if (tmp == "/TOT") {
 			return 0;
 		}
 		if (i == 0 && tmp == root) continue;
 		if (tmp == "CUR") continue;
-		int nextID = findNextDir (dirID, tmp);	//找到下一级目录
-		if (nextID == -1) {
-			if (!mkdir (tmp, newDirMod)) {
+		int nextID = findNextDir (dirID, tarDirPath[i]);
+		if (nextID == -1) {	//不存在需要新创建
+			if (!mkdir (newDirPath[i], (string)"a",  dirID));
 				return false;
-			}
 		}
-		else {}
+		else {
+			dirID = nextID;
+		}
 	}
 	return true;
 }

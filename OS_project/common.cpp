@@ -70,7 +70,8 @@ vector <string>& pathPrase (string tarPath){	//用自动机解析路径
 	return path;
 }
 
-bool visitPath(dirBlock& cur, string target, int& curID)
+bool visitPath(dirBlock& cur, string target, int& curID) 
+//这里存在bug 访问下一级dir应该通过索引块
 {
     //权限检查待更新
     if(target == "/CUR") return true;
@@ -99,6 +100,28 @@ bool visitPath(dirBlock& cur, string target, int& curID)
     cur = readDir(cur.sonDirID);//进入该目录
     return true;
 }
+
+int findNextDir (int dirID, string target){     //访问dirID下的target目录
+    dirBlock db = readDir (dirID), tmp;
+    if (db.sonDirID == -1) return -1;
+    indexBlock ib = readIndex (db.sonDirID);
+    tmp = readDir (ib.diskOffset);
+    if (target == (string)tmp.dirName) {
+        return db.sonDirID;
+    }
+    db = tmp;
+    while (db.nextDirID != -1) {
+        ib = readIndex (db.nextDirID);
+        tmp = readDir (ib.diskOffset);
+        if (target == (string)tmp.dirName && tmp.type == 1) {
+            return db.nextDirID;
+        }
+        else 
+            db = tmp;
+    }
+    return -1;
+}
+//返回这个下级目录的ID 不存在返回-1
 
 long long getTime (){               //获取当前的时间
     SYSTEMTIME sys;

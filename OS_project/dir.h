@@ -15,7 +15,8 @@ bool checkDirName (string newDirName);	//检查目录名是否和当前其他目
 //参数表示希望新建的文件名
 //如果不冲突返回1 否则返回0
 //当前路径直接是全局变量
-bool mkdir (string newDirName, string newDirMod);	//在当前目录下创建子目录
+bool mkdir (string newDirName, string newDirMod, int _curDirID = curDirID);	//在目录下创建子目录
+//第三个参数缺省表示目前所在的目录 否则表示给定目录
 //新目录的名字 新目录的权限(空串表示-a)
 //创建成功返回1 否则返回0
 bool mkdirs (string newDirPath, string newDirMod);	//在当前目录下创建多级子目录
