@@ -1,7 +1,9 @@
 #ifndef DIR_H_INCLUDED
 #define DIR_H_INCLUDED
 
-dirBlock readDir (int id);				//根据文件块id读取文件块信息
+dirBlock readDir (int id);				//根据目录块id读取目录块信息
+//访盘，注意保护原有数据
+void writeDir (dirBlock db, int id);  	//将目录块信息写入目录块
 //访盘，注意保护原有数据
 void showAllSonDir ();	//显示当前路径下所有子目录
 //当前路径直接用全局变量
