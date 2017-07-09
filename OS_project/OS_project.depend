@@ -45,11 +45,11 @@
 1499440518 \\mac\home\desktop\os_project\dir.h
 	"common.h"
 
-1499584380 source:e:\my_college\operatorsystem\os_curriculum_design\os_project\common.cpp
+1499585344 source:e:\my_college\operatorsystem\os_curriculum_design\os_project\common.cpp
 	"common.h"
 	"dir.h"
 
-1499581024 e:\my_college\operatorsystem\os_curriculum_design\os_project\common.h
+1499585390 e:\my_college\operatorsystem\os_curriculum_design\os_project\common.h
 	<cstdio>
 	<iostream>
 	<cstring>

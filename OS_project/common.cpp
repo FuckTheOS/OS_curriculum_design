@@ -40,19 +40,24 @@ vector <string>& pathPrase (string tarPath){	//用自动机解析路径
 	return path;
 }
 
-bool visitPath(dirBlock &cur, string target)
+bool visitPath(dirBlock& cur, string target, int& curID)
 {
     //权限检查待更新
     if(target == "/CUR") return true;
     if(target == "/root")
     {
         cur = readDir(0);
+        curID = 0;
         return true;
     }
     if(target == "/BACK")
     {
         if(cur.faDirID <=0) return false;//已到根目录而无法返回
-        else  cur = readDir(cur.faDirID);
+        else
+        {
+            curID = cur.faDirID;
+            cur = readDir(cur.faDirID);
+        }
         return true;
     }
     while(stricmp(cur.dirName,target.c_str())!=0)
@@ -60,6 +65,7 @@ bool visitPath(dirBlock &cur, string target)
         if(cur.nextDirID == -1) return false; //当前目录下并找不到指定的目录
         cur = readDir(cur.nextDirID);
     }
+    curID = cur.sonDirID;
     cur = readDir(cur.sonDirID);//进入该目录
     return true;
 }

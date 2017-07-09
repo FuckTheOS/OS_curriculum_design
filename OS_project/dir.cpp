@@ -1,7 +1,7 @@
 #include "common.h"
 #include "dir.h"
 #include "index.h"
-
+#include "file.h"
 dirBlock readDir (int id) {				//根据文件块id读取文件块信息
 	if (id >= DIRSIZE || id < 0) {
 		cout << "段错误！" << endl;
@@ -87,9 +87,10 @@ bool mkdirs (string newDirPath, string newDirMod){	//在当前目录下创建多
 bool gotoDir (string tarPath){			//跳转到新的目录
 	vector <string> path = pathPrase (tarPath);
 	dirBlock curDirBlock = readDir(curDirID);
+	int tmp_no=curDirID;//记录当前块的编号
     for(auto op:path)
-        if(!visitPath(curDirBlock, op)) return false;
-    curDirID = &curDirBlock - &readDir(0);
+        if(!visitPath(curDirBlock, op ,tmp_no)) return false;
+    curDirID = tmp_no;
 	return true;
 }
 //参数是相对或绝对路径 需要路径解析自动机解析路径
