@@ -37,9 +37,20 @@ bool checkDirName (string newDirName){	//检查目录名是否和当前其他目
 //当前路径直接是全局变量
 
 void showAllSonDir (){	//显示当前路径下所有子目录
-
+	dirBlcok db = readDir (curDirID);
+	if (db.sonDirID == -1) { 			//空目录
+		cout << endl;
+		return ;
+	}
+	db = readDir (db.sonDirID);
+	cout << db.dirName << " ";
+	while (db.nextDirID != -1) {
+		indexBlock ib = readIndex (db.nextDirID);
+		db = readDir (ib.offsetID);
+		cout << db.dirName << " ";
+	}
+	cout << endl;
 }
-//当前路径直接用全局变量
 //按照a b.txt c d.cpp 的格式输出
 
 bool mkdir (string newDirName, string newDirMod) {	//在当前目录下创建子目录
