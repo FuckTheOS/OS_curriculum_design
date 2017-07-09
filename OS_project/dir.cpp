@@ -30,11 +30,21 @@ int giveDirBlock (int dirType){			//分配新的目录块
 }
 
 bool checkDirName (string newDirName){	//检查目录名是否和当前其他目录冲突
+	dirBlock db = readDir (curDirID);
+	if (db.sonDirID == -1) return true;
+	indexBlock ib = readIndex (db.sonDirID);
+	db = readDir (ib.offsetID);
+	if (db.dirName == newDirName) return false;
+	while (db.nextDirID != -1) {
+		ib = readIndex (db.nextDirID);
+		db = readDir (ib.offsetID);
+		if (db.dirName == newDirName) 
+			return false;
+	}
 	return true;
 }
 //参数表示希望新建的文件名
 //如果不冲突返回1 否则返回0
-//当前路径直接是全局变量
 
 void showAllSonDir (){	//显示当前路径下所有子目录
 	dirBlcok db = readDir (curDirID);
