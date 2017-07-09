@@ -1,11 +1,10 @@
 #include "common.h"
 
+#define PATH_PRASER_ERROR  path.clear;path.push_back("error");break;
 void showCurPath (int type) {	//输出当前路径
 }
 
 vector <string>& pathPrase (string tarPath){	//用自动机解析路径
-<<<<<<< HEAD
-    //Edit and test by Kelukin_Lau
 	vector <string> path;path.clear();
 	size_t x_point = 0; //未处理到的tarPath的字符下标
 	if(tarPath[0]=='/') //绝对路径
@@ -38,9 +37,5 @@ vector <string>& pathPrase (string tarPath){	//用自动机解析路径
         if(tmp_pos == tarPath.npos) break;
         x_point = tmp_pos+1;
 	}
-=======
-	vector <string> path; path.clear ();
->>>>>>> 097d604fd14ea8a542cf2ab1e4f918940cb4d0b8
 	return path;
 }
-
