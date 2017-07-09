@@ -103,3 +103,17 @@ void printTime (long long num){     //根据时间值打印时间串
     printf ("%02d:", num/100);
     printf ("%02d\n", num%100);
 }
+
+bool checkMod (int userID, int dirID, int type){    //权限判断
+    userBlock ub = readUser (userID);
+    dirBlock db = readDir (dirID);
+    int utype = ub.userMod, dtype = db.dirMod;
+    if (type == 1 || (type == 2 && utype < 3) || (type == 3 && utype < 2)) { //操作满足用户权限
+        if ((type == 1 && dtype) || (type == 2 && dtype > 1) || (type == 3 && dtype > 2))
+            return true;    //操作满足文件权限
+        else 
+            return false;
+    }
+    else
+        return false
+}
