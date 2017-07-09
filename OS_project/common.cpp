@@ -85,3 +85,21 @@ bool visitPath(dirBlock& cur, string target, int& curID)
     cur = readDir(cur.sonDirID);//进入该目录
     return true;
 }
+
+long long getTime (){               //获取当前的时间
+    SYSTEMTIME sys;
+    GetLocalTime( &sys );
+    long long year, month, day, hour, minute;
+    year = sys.wYear, month = sys.wMonth, day = sys.wDay, hour = sys.wHour;
+    minute = sys.wMinute;
+    long long ans = year*100000000LL+month*1000000LL+day*10000LL+hour*100+minute;
+    return ans;
+}
+//按照年月日时分 即年*100000000+月*1000000+日*10000+时*100+分
+void printTime (long long num){     //根据时间值打印时间串
+    cout << num/100000000LL << "年"; num %= 100000000LL;
+    cout << num/1000000LL << "月"; num %= 1000000LL;
+    cout << num/10000LL << "日 "; num %= 10000LL;
+    printf ("%02d:", num/100);
+    printf ("%02d\n", num%100);
+}
