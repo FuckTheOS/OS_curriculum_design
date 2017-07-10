@@ -61,7 +61,7 @@ void releaseFile(int fileID){              //释放文件块
      else{
          fileBlock fb1 = readFile(sn._emptyFileBlock);
          fb1.nextFileID = fileID;
-         writeIndex(fb1,sn._emptyFileBlock);
+         writeFile(ib1,sn._emptyIndexBlock);
          sn._emptyFileBlock = fileID;
     }
     writeSuperNode(sn);
