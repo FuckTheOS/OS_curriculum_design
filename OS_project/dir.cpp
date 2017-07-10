@@ -48,10 +48,10 @@ bool checkDirName (string newDirName, int dirType){	//检查目录名是否和�
 	dirBlock db = readDir (curDirID);
 	if (db.sonDirID == -1) return true;
 	db = readDir (db.sonDirID);
-	if (db.dirName == newDirName && db.type == dirType) return false;
+	if (db.dirName == newDirName) return false;
 	while (db.nextDirID != -1) {
 		db = readDir (db.nextDirID);
-		if (db.dirName == newDirName && db.type == dirType) 
+		if (db.dirName == newDirName) 
 			return false;
 	}
 	return true;
