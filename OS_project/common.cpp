@@ -70,10 +70,11 @@ vector <string>& pathPrase (string tarPath){	//用自动机解析路径
 	return path;
 }
 
-bool visitPath(dirBlock& cur, string target, int& curID) 
+bool visitPath(dirBlock& cur, string target, int& curID)
 //这里存在bug 访问下一级dir应该通过索引块
 {
     //权限检查待更新
+    indexBlock ib;
     if(target == "/CUR") return true;
     if(target == "/root")
     {
@@ -87,17 +88,21 @@ bool visitPath(dirBlock& cur, string target, int& curID)
         else
         {
             curID = cur.faDirID;
-            cur = readDir(cur.faDirID);
+            ib = readIndex(curID);
+            cur = readDir(ib.diskOffset);
         }
         return true;
     }
     while(stricmp(cur.dirName,target.c_str())!=0)
     {
         if(cur.nextDirID == -1) return false; //当前目录下并找不到指定的目录
-        cur = readDir(cur.nextDirID);
+        curID = cur.nextDirID;
+        ib = readIndex(curID);
+        cur = readDir(ib.diskOffset);
     }
     curID = cur.sonDirID;
-    cur = readDir(cur.sonDirID);//进入该目录
+    ib = readIndex(curID);
+    cur = readDir(ib.diskOffset);//进入该目录
     return true;
 }
 
@@ -116,7 +121,7 @@ int findNextDir (int dirID, string target){     //访问dirID下的target目录
         if (target == (string)tmp.dirName && tmp.type == 1) {
             return db.nextDirID;
         }
-        else 
+        else
             db = tmp;
     }
     return -1;
@@ -148,7 +153,7 @@ bool checkMod (int userID, int dirID, int type){    //权限判断
     if (type == 1 || (type == 2 && utype < 3) || (type == 3 && utype < 2)) { //操作满足用户权限
         if ((type == 1 && dtype) || (type == 2 && dtype > 1) || (type == 3 && dtype > 2))
             return true;    //操作满足文件权限
-        else 
+        else
             return false;
     }
     else
