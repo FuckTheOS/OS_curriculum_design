@@ -48,6 +48,22 @@ void vim (int id){				//对文件内容进行编辑
 }
 //参数表示文件内容块的索引
 
-void releaseFile (int fileID){	//释放文件块
+void releaseFile(int fileID){              //释放文件块
+     superNodeBlock sn = readSuperNode();
+     fileBlock fb = readFile(fileID);
+     memset(fb.text,0,sizeof(fb.text));
+     fb.used = 0;
+     fb.nextFileID = -1;
+     if(sn.emptyFileBlock = -1){
+         sn.emptyFileBlock = fileID;
+         sn._emptyFileBlock = fileID;
+    }
+     else{
+         fileBlock fb1 = readFile(sn._emptyFileBlock);
+         fb1.nextFileID = fileID;
+         writeIndex(fb1,sn._emptyFileBlock);
+         sn._emptyFileBlock = fileID;
+    }
+    writeSuperNode(sn);
+    writeFile (fb,fileID);
 }
-
