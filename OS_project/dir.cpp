@@ -177,3 +177,82 @@ bool gotoDir (string tarPath){			//跳转到新的目录
 //参数是相对或绝对路径 需要路径解析自动机解析路径
 //跳转成功返回1 否则返回0
 
+bool gotoFaDir () {						//跳转到父亲目录
+	dirBlcok db = readDir (curDirID);
+	if (db.faDirID == -1) {	 	//已经处在最上级目录
+		return false;
+	}
+	indexBlock ib = readIndex (db.faDirID);
+	curPath.pop_back ();		//擦掉路径的最末尾
+	curDirID = ib.diskOffset;	//修改当前目录块id
+	return true;
+}
+
+bool delDir (int dirID, string dirPath, int type){	//删掉目录块
+	vector <string> path = pathPrase (dirPath);
+	if (path[0] == "error") 
+		return false;
+	for (int i = 0; i < path.size ()-1; i++) {
+		if (path[i] == "/CUR") 
+			continue;
+		dirID = (findNextDir (dirID, path[i]));
+		if (dirID == -1) 		//没有找到目标路径
+			return false; 
+		if (!checkMod (curUserID, dirID, 2))
+			return false;		//用户权限错误
+	}
+	string leaf = path[path.szie ()-1];
+	if (type == 0) {	//删除整个目录块
+		dirID = findNextDir (dirID, leaf);
+		if (dirID == -1)
+			return -1;
+		if (!checkMod (curUserID, dirID, 3))
+			return false;
+		if (!delAllDir (dirID))	//递归删除整个目录块
+			return false;
+	}
+	else {
+		dirBlock db = readDir (dirID);
+		if (db.sonDirID == -1) 
+			return false;
+		indexBlock ib = readIndex (db.sonDirID);
+		dirID = ib.diskOffset;
+		db = readDir (dirID);
+		while (!((string)db.Name != leaf && db.type == 2)) {
+			if (db.nextDirID == -1)
+				return false;
+			ib = readIndex (db.nextDirID);
+			dirID = ib.diskOffset;
+			db = readDir (dirID);
+		}
+		if (!checkMod (curUserID, dirID, 3))
+			return false;
+		delFile (dirID);	//删除一个文件块
+	}
+	return true;
+}
+//当前目录块 路径串 删掉的是整个目录还是某个文件
+//删除成功返回1 否则(路径不存在或者权限错误)是0
+
+bool delAllDir (int dirID) {		//递归删掉整个目录块
+	if (dirID.sonDirID == -1) {}
+}
+
+void releaseDir (int dirID) {		//释放一块目录块
+	superNodeBlock sn = readSuperNode ();
+	if (sn.emptyDirBlock == -1) {	
+		sn.emptyDirBlock = dirID;
+		sn._emptyDirBlock = dirID;
+	}
+	else {
+		dirBlcok db = readDir (sn._emptyDirBlock);
+		db.nextDirID = dirID;
+		sn._emptyDirBlock = dirID;
+	}
+	writeSuperNode (sn);
+	dirBlock db, cur = readDir (dirID);
+	db = readDir (cur.faDirID);
+	if (cur.nextDirID == -1) {}
+}
+
+

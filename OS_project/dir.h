@@ -26,6 +26,14 @@ bool mkdirs (string newDirPath, string newDirMod);	//在当前目录下创建多
 bool gotoDir (string tarPath);			//跳转到新的目录
 //参数是相对或绝对路径 需要路径解析自动机解析路径
 //跳转成功返回1 否则返回0
+bool gotoFaDir ();						//跳转到父亲目录
+//当前目录块直接调用全局变量
+bool delDir (int dirID, string dirPath, int type);	//删掉目录块
+//当前目录块 路径串 删掉的是整个目录还是某个文件
+//删除成功返回1 否则(路径不存在或者权限错误)是0
+bool delAllDir (int dirID);				//递归删掉所有目录块
+//删除成功返回1 否则返回0
+void releaseDir (int dirID);			//释放一块目录块
 
 
 

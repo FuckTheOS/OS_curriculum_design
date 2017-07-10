@@ -100,12 +100,19 @@ void bash () {			//命令行模式操作文件系统
 		else if (op1 == "cd") {
 			char ch = getchar ();
 			if (ch == '\n') {		//跳转到根目录
+				curPath.clear ();
+				curPath.pb ("root");
+				curDirID = 0;
+				goto out;
 			}
 			string tarPath; cin >> tarPath;
 			if (tarPath == "..") {	//跳转到上一级目录
+				if (!gotoFaDir (curDir)) {
+					cout << "已经处在根目录！" << endl;
+				}
 			}
 			else {
-				if (!gotoDir (tarPath)) {	//跳转到目标目录
+				if (!gotoPath (tarPath)) {	//跳转到目标目录
 					cout << "目标路径不存在" << endl;
 					goto out;
 				}
@@ -118,7 +125,20 @@ void bash () {			//命令行模式操作文件系统
 			string fileName; cin >> fileName;
 			touch (fileName);
 		}
-		else if (op1 == "rm") {} 
+		else if (op1 == "rm") {
+			string tmp, path; cin >> tmp;
+			if (tmp[0] == '-') {
+				cin >> path;
+				if (tmp != "-rf") {
+					cout << "参数有误！" << endl;
+					goto out;
+				}
+			}
+			else {
+				path = tmp;
+			}
+			delDir (curID, path, tmp == "-rf" ? 0 : 1);
+		} 
 		else if (op1 == "cp") {}
 		else if (op1 == "move") {}
 		else if (op1 == "find") {}
