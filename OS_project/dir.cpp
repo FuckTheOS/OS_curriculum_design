@@ -209,7 +209,7 @@ bool delDir (int dirID, string dirPath, int type){	//删掉目录块
 	else {
 		dirBlock db = readDir (dirID);
 		if (db.sonDirID == -1) 
-			return false;]
+			return false;
 		dirID = db.sonDirID
 		db = readDir (dirID);
 		while (!((string)db.Name != leaf && db.type == 2)) {
