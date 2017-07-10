@@ -228,7 +228,20 @@ bool delDir (int dirID, string dirPath, int type){	//删掉目录块
 //删除成功返回1 否则(路径不存在或者权限错误)是0
 
 bool delAllDir (int dirID) {		//递归删掉整个目录块
-	if (dirID.sonDirID == -1) {}
+	bool flag = true;
+	dirBlcok db;
+	if (dirID.sonDirID == -1) {
+		if (!checkMod (curUserID, dirID, 3)) 
+			return false;
+	}
+	else {
+		db = readDir (dirID);
+		flag = delAllDir (db.sonDirID);
+	}
+	if (db.nextDirID != -1) {
+		flag &= delAllDir (db.nextDirID);
+	}
+	return flag;
 }
 
 void releaseDir (int dirID) {		//释放一块目录块
