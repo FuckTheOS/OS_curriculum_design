@@ -139,9 +139,18 @@ void bash () {			//命令行模式操作文件系统
 			}
 			delDir (curID, path, tmp == "-rf" ? 0 : 1);
 		} 
-		else if (op1 == "cp") {}
-		else if (op1 == "move") {}
-		else if (op1 == "find") {}
+		else if (op1 == "cp") {
+			string fromPath, toPath;
+			cin >> fromPath >> toPath;
+		}
+		else if (op1 == "move") {
+			string fromPath, toPath;
+			cin >> fromPath >> toPath;
+		}
+		else if (op1 == "find") {
+			string target;
+			find (curDirID, target, curPath);
+		}
 		else if (op1 == "state") {}
 		else if (op1 == "rename") {}
 		else if (op1 == "cat") {}

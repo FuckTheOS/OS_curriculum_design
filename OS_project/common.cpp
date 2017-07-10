@@ -157,3 +157,28 @@ bool checkMod (int userID, int dirID, int type){    //权限判断
     else
         return false
 }
+
+void find (int curDirID, string target, vector <string> path){  //从当前路径下搜索目标文件（注意是文件）
+    //直接递归搜索
+    dirBlock db = readDir (curDirID);
+    if ((string)db.dirName == target && db.type == 2) {
+        for (int i = 0; i < path.size (); i++) {
+            cout << path[i] << '/';
+        }
+        cout << target << endl;
+        return ;
+    }
+    path.pb ((string)db.dirName);
+    if (db.sonDirID == -1)
+        return ;
+    else {
+        find (db.sonDirID, target, path);
+    }
+    path.pop_back ();
+    if (db.nextDirID != -1) {
+        find (db.nextDirID, target, path);
+    }
+}
+//参数表示目标文件的文件名
+//输出所有可能的结果路径
+

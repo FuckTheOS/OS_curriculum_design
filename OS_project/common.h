@@ -175,6 +175,9 @@ bool checkMod (int userID, int dirID, int type);	//权限判断
 //参数表示用户id 目录id 行为的权限类型
 //用户能否对文件进行权限为type的操作
 //可以返回1 否则返回0
+void find (int curDirID, string target, vector <string> path);	//从当前路径下搜索目标文件（注意是文件）
+//参数表示目标文件的文件名
+//输出所有可能的结果路径
 
 
 
