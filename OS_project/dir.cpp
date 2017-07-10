@@ -44,16 +44,14 @@ int giveDirBlock (){					//分配新的目录块
 //参数表示目录块类型
 //如果分配成功返回目录块ID 否则返回-1
 
-bool checkDirName (string newDirName){	//检查目录名是否和当前其他目录冲突
+bool checkDirName (string newDirName, int dirType){	//检查目录名是否和当前其他目录冲突
 	dirBlock db = readDir (curDirID);
 	if (db.sonDirID == -1) return true;
-	indexBlock ib = readIndex (db.sonDirID);
-	db = readDir (ib.offsetID);
-	if (db.dirName == newDirName) return false;
+	db = readDir (db.sonDirID);
+	if (db.dirName == newDirName && db.type == dirType) return false;
 	while (db.nextDirID != -1) {
-		ib = readIndex (db.nextDirID);
-		db = readDir (ib.offsetID);
-		if (db.dirName == newDirName) 
+		db = readDir (db.nextDirID);
+		if (db.dirName == newDirName && db.type == dirType) 
 			return false;
 	}
 	return true;
@@ -67,12 +65,10 @@ void showAllSonDir (){	//显示当前路径下所有子目录
 		cout << endl;
 		return ;
 	}
-	indexBlock ib = readIndex (db.sonDirID);
-	db = readDir (ib.offsetID);
+	db = readDir (db.nextDirID);
 	cout << db.dirName << " ";
 	while (db.nextDirID != -1) {
-		ib = readIndex (db.nextDirID);
-		db = readDir (ib.offsetID);
+		db = readDir (db.nextDirID);
 		cout << db.dirName << " ";
 	}
 	cout << endl;
@@ -92,20 +88,20 @@ bool mkdir (string newDirName, string newDirMod, int _curDirID = curDirID) {	//�
 			return false;
 		}
 	}
-	if (!checkDirName (newDirName)) { 	//目录名检查没通过
+	if (!checkDirName (newDirName, 1)) { 	//目录名检查没通过
 		cout << "文件名错误！" << endl;
 		return false;
 	}
 	int dirID = giveDirBlock (1);	//分配新的目录块
-	int indexID = giveIndexBlcok ();//分配新的索引块
-	if (dirID == -1 || indexID == -1) {
+	//int indexID = giveIndexBlcok ();//分配新的索引块
+	if (dirID == -1/* || indexID == -1*/) {
 		cout << "磁盘空间不足!" << endl;
 		return false;
 	}
-	indexBlock ib = readIndex (indexID);	//更新索引块信息
+	/*indexBlock ib = readIndex (indexID);
 	ib.used = 1;
 	ib.offsetID = dirID;
-	writeIndex (ib, indexID);
+	writeIndex (ib, indexID);*/
 
 	dirBlock db = readDir (_curDirID);
 	if (db.sonDirID == -1) {
@@ -130,7 +126,7 @@ bool mkdir (string newDirName, string newDirMod, int _curDirID = curDirID) {	//�
 		(newDirMod == "r" ? 1 : 2) :
 		(newDirMod == "p" ? 0 : 3));
 	db.textLocation = -1;
-	db.faDirID = curDirID;
+	db.faDirID = _curDirID;
 	db.sonDirID = -1;
 	db.nextDirID = -1;
 	db.dirMod = (newDirMod[0] == 'r' ? 
@@ -182,9 +178,8 @@ bool gotoFaDir () {						//跳转到父亲目录
 	if (db.faDirID == -1) {	 	//已经处在最上级目录
 		return false;
 	}
-	indexBlock ib = readIndex (db.faDirID);
 	curPath.pop_back ();		//擦掉路径的最末尾
-	curDirID = ib.diskOffset;	//修改当前目录块id
+	curDirID = db.faDirID;	//修改当前目录块id
 	return true;
 }
 
@@ -214,15 +209,13 @@ bool delDir (int dirID, string dirPath, int type){	//删掉目录块
 	else {
 		dirBlock db = readDir (dirID);
 		if (db.sonDirID == -1) 
-			return false;
-		indexBlock ib = readIndex (db.sonDirID);
-		dirID = ib.diskOffset;
+			return false;]
+		dirID = db.sonDirID
 		db = readDir (dirID);
 		while (!((string)db.Name != leaf && db.type == 2)) {
 			if (db.nextDirID == -1)
 				return false;
-			ib = readIndex (db.nextDirID);
-			dirID = ib.diskOffset;
+			dirID = db.nextDirID;
 			db = readDir (dirID);
 		}
 		if (!checkMod (curUserID, dirID, 3))
@@ -240,6 +233,8 @@ bool delAllDir (int dirID) {		//递归删掉整个目录块
 
 void releaseDir (int dirID) {		//释放一块目录块
 	superNodeBlock sn = readSuperNode ();
+	dirBlock db = readBlock (dirID);
+	db.used = 0;
 	if (sn.emptyDirBlock == -1) {	
 		sn.emptyDirBlock = dirID;
 		sn._emptyDirBlock = dirID;
@@ -250,9 +245,15 @@ void releaseDir (int dirID) {		//释放一块目录块
 		sn._emptyDirBlock = dirID;
 	}
 	writeSuperNode (sn);
-	dirBlock db, cur = readDir (dirID);
-	db = readDir (cur.faDirID);
-	if (cur.nextDirID == -1) {}
+	dirBlock faDir = read (db.faDirID);
+	if (db.nextDirID == -1) {
+		faDir.sonDirID = -1;
+	}
+	else {
+		faDir.sonDirID = db.nextDirID;
+	}
+	writeDir (dirID);
+	writeDir (db.faDirID);
 }
 
 

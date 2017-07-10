@@ -106,18 +106,16 @@ bool visitPath(dirBlock& cur, string target, int& curID)
     return true;
 }
 
-int findNextDir (int dirID, string target){     //访问dirID下的target目录
+int findNextDir (int dirID, string target){     //访问dirID下的target目录 目录类型为1
     dirBlock db = readDir (dirID), tmp;
     if (db.sonDirID == -1) return -1;
-    indexBlock ib = readIndex (db.sonDirID);
-    tmp = readDir (ib.diskOffset);
-    if (target == (string)tmp.dirName) {
+    tmp = readDir (db.sonDirID);
+    if (target == (string)tmp.dirName && tmp.type == 1) {
         return db.sonDirID;
     }
     db = tmp;
     while (db.nextDirID != -1) {
-        ib = readIndex (db.nextDirID);
-        tmp = readDir (ib.diskOffset);
+        tmp = readDir (db.nextDirID);
         if (target == (string)tmp.dirName && tmp.type == 1) {
             return db.nextDirID;
         }

@@ -33,3 +33,6 @@ void writeIndex (indexBlock ib, int id){ //将索引块信息写入索引块
 	fout.write ((char *)&ib, sizeof ib);
 	fout.close ();
 }
+
+void releaseIndex (int indexID){		//释放索引块
+}

@@ -7,6 +7,7 @@ dirBlock readDir (int id);				//根据目录块id读取目录块信息
 //访盘，注意保护原有数据
 void writeDir (dirBlock db, int id);  	//将目录块信息写入目录块
 //访盘，注意保护原有数据
+void releaseIndex (int indexID);		//释放索引块
 
 #endif // INDEX_H_INCLUDED
 

@@ -9,6 +9,7 @@ int openFile (string fileaName);//打开文件的目录块 返回对应的文件
 //参数表示当前路径下的文件名
 void vim (int id);				//对文件内容进行编辑
 //参数表示文件内容块的索引
+void releaseFile (int fileID);	//释放文件块
 
 #endif // FILE_H_INCLUDED
 
