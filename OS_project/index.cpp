@@ -35,4 +35,21 @@ void writeIndex (indexBlock ib, int id){ //将索引块信息写入索引块
 }
 
 void releaseIndex (int indexID){		//释放索引块
+    superNodeBlock sn = readSuperNode ();
+    indexBlock ib;
+    ib.used = 0;
+    ib.nextIndexID = -1;
+    if (sn.emptyIndexBlock = -1){
+        sn.emptyIndexBlock = indexID;
+        sn._emptyDirBlock = indexID;
+    }
+    else{
+        indexBlock ib1 = readIndex(sn._emptyIndexBlock);
+        ib1.nextIndexID = indexID;
+        writeIndex(ib1,sn._emptyIndexBlock);
+        sn._emptyDirBlock = indexID;
+    }
+    writeSuperNode(sn);
+    writeIndex(ib,indexID);
 }
+
