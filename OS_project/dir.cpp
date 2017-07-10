@@ -242,6 +242,7 @@ void releaseDir (int dirID) {		//释放一块目录块
 	else {
 		dirBlcok db = readDir (sn._emptyDirBlock);
 		db.nextDirID = dirID;
+		write (db, sn._emptyDirBlock);
 		sn._emptyDirBlock = dirID;
 	}
 	writeSuperNode (sn);
@@ -252,8 +253,8 @@ void releaseDir (int dirID) {		//释放一块目录块
 	else {
 		faDir.sonDirID = db.nextDirID;
 	}
-	writeDir (dirID);
-	writeDir (db.faDirID);
+	writeDir (db, dirID);
+	writeDir (faDir, db.faDirID);
 }
 
 
