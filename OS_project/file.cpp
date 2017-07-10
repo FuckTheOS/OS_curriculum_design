@@ -68,20 +68,6 @@ void releaseFile(int fileID){              //释放文件块
     writeFile (fb,fileID);
 }
 
-//我新加的   .你去写写就行了
-bool checkFileName (string newFileName){	//检查文件名是否和当前其他目录或文件有冲突
-	dirBlock db = readDir (curDirID);
-	if (db.sonDirID == -1) return true;
-	db = readDir (db.sonDirID);
-	if (db.dirName == newFileName) return false;
-	while (db.nextDirID != -1) {
-		db = readDir (db.nextDirID);
-		if (db.dirName == newFileName)
-			return false;
-	}
-	return true;
-}
-
 int  giveFileBlock(){           //分配文件块
     superNodeBlock sn = readSuperNode ();
     if (sn.emptyFileBlock == -1) {		//索引块空间不足
@@ -111,7 +97,7 @@ bool touch (string fileName,string newDirMod){           //当前目录下新建
 			return false;
 		}
 	} 
-	if (!checkFileName (newFileName)) { 	//文件名检查没通过
+	if (!checkDirName (newFileName)) { 	//文件名检查没通过
 		cout << "文件名错误！" << endl;
 		return false;
 	}
@@ -130,7 +116,7 @@ bool touch (string fileName,string newDirMod){           //当前目录下新建
 
 	indexBlock ib = readIndex (indexID);
 	ib.used = 1;
-	ib.offsetID = fileID;
+	ib.diskOffset = fileID;
 	writeIndex (ib, indexID);
 
 	dirBlock db = readDir (curDirID);
