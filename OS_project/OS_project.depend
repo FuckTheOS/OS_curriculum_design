@@ -68,3 +68,43 @@
 
 1499577491 e:\my_college\operatorsystem\os_curriculum_design\os_project\dir.h
 
+1499783874 source:\\mac\home\desktop\os_curriculum_design\os_project\common.cpp
+	"common.h"
+	"dir.h"
+
+1499783874 \\mac\home\desktop\os_curriculum_design\os_project\common.h
+	<cstdio>
+	<iostream>
+	<cstring>
+	<queue>
+	<cmath>
+	<algorithm>
+	<stack>
+	<map>
+	<string>
+	<set>
+	<stdlib.h>
+	<unistd.h>
+	<conio.h>
+	<windows.h>
+	<fstream>
+
+1499783874 \\mac\home\desktop\os_curriculum_design\os_project\dir.h
+
+1499783874 source:\\mac\home\desktop\os_curriculum_design\os_project\dir.cpp
+	"common.h"
+	"dir.h"
+	"index.h"
+
+1499783874 \\mac\home\desktop\os_curriculum_design\os_project\index.h
+
+1499783874 source:\\mac\home\desktop\os_curriculum_design\os_project\file.cpp
+	"common.h"
+	"file.h"
+
+1499783874 \\mac\home\desktop\os_curriculum_design\os_project\file.h
+
+1499783874 source:\\mac\home\desktop\os_curriculum_design\os_project\index.cpp
+	"common.h"
+	"index.h"
+
