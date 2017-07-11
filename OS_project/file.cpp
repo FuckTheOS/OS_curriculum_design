@@ -112,6 +112,7 @@ bool touch (string fileName,string newDirMod){           //当前目录下新建
 	fileBlock fb = readFile (fileID);
 	fb.used = true;
 	fb.nextFileID = -1;
+	Clear (fb.text, 0);
 	writeFile(fb,fileID);
 
 	indexBlock ib = readIndex (indexID);
