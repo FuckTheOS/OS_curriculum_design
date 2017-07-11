@@ -5,7 +5,7 @@ fileBlock readFile (int id){	//根据文件块id读取文件内容
 	fileBlcok fb;
 	ifstream fin (dis.c_str (), std::ios::binary);
 	fin.seekg (fileSegOffset+sizeof (fb)*id, ios::beg);
-	fb = fin.read ((char *)&fb, sizeof fb);
+	fin.read ((char *)&fb, sizeof fb);
 	fin.close ();
 	return fb;
 }
@@ -19,7 +19,7 @@ void writeFile (fileBlock db, int id){  	//将文件内容写入文件块
 
 int openFile (string fileaName){ 			//打开文件的目录块 返回对应的文件内容块编号
 	dirBlcok db;
-	db = readDir (curDirID); 
+	db = readDir (curDirID);
 	if (db.sonDirID == -1)
 		return -1;
 	db = readDir (db.sonDirID);
@@ -30,7 +30,7 @@ int openFile (string fileaName){ 			//打开文件的目录块 返回对应的�
 		indexBlock ib = readIndex (db.sonDirID);
 		return ib.diskOffset;
 	}
-	else 
+	else
 		return -1;
 }
 

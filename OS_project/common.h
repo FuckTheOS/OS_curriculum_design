@@ -152,8 +152,8 @@ int curDirID;			//当前目录块ID
 string disk = "disk";	//磁盘块文件名
 
 superNodeBlock readSuperNode ();	//读入超级节点信息
-void writeSuperNode ();				//吸入超级节点信息
-void showCurPath ();	//命令行输入指令前显示当前路径用户 格式为root>a/b admin$[space]
+void writeSuperNode (superNodeBlock sn);        //吸入超级节点信息
+void showCurPath (int type);	//命令行输入指令前显示当前路径用户 格式为root>a/b admin$[space]
 //0表示命令行输入指令前显示当前路径用户 格式为root>a/b admin$[space]
 //1表示输出当前绝对路径位置 格式为root>a/b[enter]
 //根据全局变量global直接按照格式输出

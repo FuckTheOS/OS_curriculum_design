@@ -1,11 +1,20 @@
 # depslib dependency file v1.0
-1499344338 source:c:\morejarphone\code相关\os_project\common.cpp
+1499783874 source:c:\morejarphone\code相关\os_project\common.cpp
+	"common.h"
+	"dir.h"
 
-1499344329 source:c:\morejarphone\code相关\os_project\dir.cpp
+1499783874 source:c:\morejarphone\code相关\os_project\dir.cpp
+	"common.h"
+	"dir.h"
+	"index.h"
 
-1499344385 source:c:\morejarphone\code相关\os_project\file.cpp
+1499783874 source:c:\morejarphone\code相关\os_project\file.cpp
+	"common.h"
+	"file.h"
 
-1499344368 source:c:\morejarphone\code相关\os_project\index.cpp
+1499783874 source:c:\morejarphone\code相关\os_project\index.cpp
+	"common.h"
+	"index.h"
 
 1499344402 source:c:\morejarphone\code相关\os_project\user.cpp
 
@@ -107,4 +116,27 @@
 1499783874 source:\\mac\home\desktop\os_curriculum_design\os_project\index.cpp
 	"common.h"
 	"index.h"
+
+1499786183 c:\morejarphone\code相关\os_project\common.h
+	<cstdio>
+	<iostream>
+	<cstring>
+	<queue>
+	<cmath>
+	<algorithm>
+	<stack>
+	<map>
+	<string>
+	<set>
+	<stdlib.h>
+	<unistd.h>
+	<conio.h>
+	<windows.h>
+	<fstream>
+
+1499783874 c:\morejarphone\code相关\os_project\dir.h
+
+1499783874 c:\morejarphone\code相关\os_project\index.h
+
+1499783874 c:\morejarphone\code相关\os_project\file.h
 

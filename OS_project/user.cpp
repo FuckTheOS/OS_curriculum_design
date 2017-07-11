@@ -9,7 +9,7 @@ userBlock readUser (int id){				//根据用户块id读取用户块信息
 	userBlock ub;
 	ifstream fin (disk.c_str (), std::ios::binary);
 	fin.seekg (userSegOffset+sizeof (ub)*id, ios::beg);
-	ub = fin.read ((char *)&ub, sizeof ub);
+	fin.read ((char *)&ub, sizeof ub);
 	fin.close ();
 	return ub;
 }
@@ -30,9 +30,9 @@ bool chuser (string name, string passwd){	//在当前目录下切换用户
 			int dirID = curDirID;
 			dirBlcok db;
 			while (dirID != -1) {		//往上追溯 看看是够和上面的目录冲突
-				if (dirID == 0) 
+				if (dirID == 0)
 					return true;
-				if (!checkMod (i, dirID, 1)) 
+				if (!checkMod (i, dirID, 1))
 					return false;
 				db = readDir (db.faDirID);
 			}

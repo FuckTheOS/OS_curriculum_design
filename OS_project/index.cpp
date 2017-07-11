@@ -23,7 +23,7 @@ indexBlock readIndex (int id){			//根据索引块id读取索引块信息
 	indexBlock ib;
 	ifstream fin (disk.c_str (), std::ios::binary);
 	fin.seekg (indexSegOffset+sizeof (ib)*id, ios::beg);
-	ib = fin.read ((char *)&ib, sizeof ib);
+	fin.read ((char *)&ib, sizeof ib);
 	fin.close ();
 	return ib;
 }

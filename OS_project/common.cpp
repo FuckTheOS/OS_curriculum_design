@@ -1,17 +1,21 @@
 #include "common.h"
 #include "dir.h"
+#include "user.h"
+#include "file.h"
+#include "user.h"
+#include "index.h"
 
 superNodeBlock readSuperNode (){    //读入超级节点信息
     superNodeBlock sn;
     ifstream fin (disk.c_str (), std::ios::binary);
-    fin.seekg (superNodeOffset, ios::beg);
-    sn = fin.read ((char *)&sn, sizeof sn);
+    fin.seekg (superNodeSegOffset, ios::beg);
+    fin.read ((char *)&sn, sizeof sn);
     fin.close ();
     return sn;
 }
-void writeSuperNode (superNodeBlcok sn) {   //吸入超级节点信息
+void writeSuperNode (superNodeBlock sn) {   //写入超级节点信息
     ofstream fout (disk.c_str (), std::ios::binary|ios::in|ios::out);
-    fout.seekp (superNodeOffset, ios::beg);
+    fout.seekp (superNodeSegOffset, ios::beg);
     fout.write ((char *)&sn, sizeof sn);
     fout.close ();
 }
@@ -74,7 +78,7 @@ bool visitPath(dirBlock& cur, string target, int& curID)
 //这里存在bug 访问下一级dir应该通过索引块
 {
     //权限检查待更新
-    indexBlock ib;
+    //indexBlock ib;
     if(target == "/CUR") return true;
     if(target == "/root")
     {
@@ -137,8 +141,8 @@ void printTime (long long num){     //根据时间值打印时间串
     cout << num/100000000LL << "年"; num %= 100000000LL;
     cout << num/1000000LL << "月"; num %= 1000000LL;
     cout << num/10000LL << "日 "; num %= 10000LL;
-    printf ("%02d:", num/100);
-    printf ("%02d\n", num%100);
+    printf ("%02d:", (int)num/100);
+    printf ("%02d\n", (int)num%100);
 }
 
 bool checkMod (int userID, int dirID, int type){    //权限判断
@@ -152,14 +156,14 @@ bool checkMod (int userID, int dirID, int type){    //权限判断
             return false;
     }
     else
-        return false
+        return false;
 }
 
 void find (int curDirID, string target, vector <string> path){  //从当前路径下搜索目标文件（注意是文件）
     //直接递归搜索
     dirBlock db = readDir (curDirID);
     if ((string)db.dirName == target && db.type == 2) {
-        for (int i = 0; i < path.size (); i++) {
+        for (int i = 0; i < (int)path.size (); i++) {
             cout << path[i] << '/';
         }
         cout << target << endl;
@@ -181,7 +185,7 @@ void find (int curDirID, string target, vector <string> path){  //从当前路�
 
 void state (){                      //显示内存使用情况
     superNodeBlock sn = readSuperNode ();
-    int cnt, tot, p;
+    int cnt, p;
     p = sn.emptyUserBlock;
     if (p == -1) p = USERSIZE+1;
     printf ("已经占用%d个用户块，使用率%.2f\n", USERSIZE-p+1, (USERSIZE-p+1)*1.0/USERSIZE);
@@ -199,8 +203,8 @@ void state (){                      //显示内存使用情况
     fileBlock fb;
     while (p != -1) {
         cnt++;
-        db = readFile (p);
-        p = db.nextFileID;
+        fb = readFile (p);
+        p = fb.nextFileID;
     }
     printf ("已经占用%d个文件块，使用率%.2f\n", cnt, cnt*1.0/FILESIZE);
 
@@ -208,8 +212,8 @@ void state (){                      //显示内存使用情况
     indexBlock ib;
     while (p != -1) {
         cnt++;
-        db = readIndex (p);
-        p = db.nextIndexID;
+        ib = readIndex (p);
+        p = ib.nextIndexID;
     }
     printf ("已经占用%d个索引块，使用率%.2f\n", cnt, cnt*1.0/INDEXSIZE);
 }

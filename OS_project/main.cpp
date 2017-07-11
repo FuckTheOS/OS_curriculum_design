@@ -5,14 +5,14 @@
 #include "index.h"
 #include "vim.h"
 void init () { //重新初始化磁盘块
-	//磁盘文件名
+	//磁盘文件名//
 	//写入超级节点块
-	superNodeBlcok sn;
+	superNodeBlock sn;
 	sn.root = 0;
 	sn.emptyUserBlock = 1;
-	sn.emptyDirBlcok = 1; sn.emptyDirBlcok = DIRSIZE-1;
-	sn.emptyFileBlock = 0; sn.emptyFileBLock = FILESIZE-1;
-	sn.emptyIndexBlcok = 0; sn.emptyIndexBlcok = INDEXSIZE-1;
+	sn.emptyDirBlock = 1; sn.emptyDirBlock = DIRSIZE-1;
+	sn.emptyFileBlock = 0; sn.emptyFileBlock = FILESIZE-1;
+	sn.emptyIndexBlock = 0; sn.emptyIndexBlock = INDEXSIZE-1;
 	ofstream fout (disk.c_str (), std::ios::binary);
 	fout.write ((char *)&sn, sizeof sn);
 	//写入用户块
@@ -27,7 +27,7 @@ void init () { //重新初始化磁盘块
 		fout.write ((char *)&ub, sizeof ub);
 	}
 	//写入目录块
-	dirBlcok db;
+	dirBlock db;
 	strcpy (db.dirName, "root");
 	strcpy (db.dirOwner, "admin");
 	db.type = 1;
@@ -35,22 +35,22 @@ void init () { //重新初始化磁盘块
 	db.used = true;
 	fout.write ((char *)&db, sizeof db);
 	for (int i = 1; i < DIRSIZE; i++) {
-		if (db != DIRSIZE-1) db.nextDirID = i+1;
+		if (i != DIRSIZE-1) db.nextDirID = i+1;
 		else db.nextDirID = -1;
 		fout.write ((char *)&db, sizeof db);
 	}
 	//写入文件块
 	fileBlock fb;
 	for (int i = 0; i < FILESIZE; i++) {
-		if (fb != FILESIZE-1) fb.nextFileBlock = i+1;
-		else fb.nextFileBlock = -1;
+		if (i != FILESIZE-1) fb.nextFileID = i+1;
+		else fb.nextFileID = -1;
 		fout.write ((char *)&fb, sizeof fb);
 	}
 	//写入索引块
-	indexBlcok ib;
+	indexBlock ib;
 	for (int i = 0; i < INDEXSIZE; i++) {
-		if (ib != INDEXSIZE-1) ib.nextIndexBlcok = i+1;
-		else ib.nextIndexBlock = -1;
+		if (i != INDEXSIZE-1) ib.nextIndexID = i+1;
+		else ib.nextIndexID = -1;
 		fout.write ((char *)&ib, sizeof ib);
 	}
 	fout.close ();
@@ -59,8 +59,8 @@ void init () { //重新初始化磁盘块
 
 void load () {			//载入磁盘文件
 	ifstream fin (disk.c_str ());
-		fin.close ();
 	if (fin.is_open ()) {
+        fin.close ();
 		return ;
 	}
 	else {
