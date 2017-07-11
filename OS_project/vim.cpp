@@ -111,6 +111,16 @@ void saveVim()
         writeChar(curFileID, curFileBlock, '\n', cnt);
     }
     writeFile(curFileBlock, curFileID);
+
+    //下方代码用于处理文件变小时释放空间的情况
+    curFileID = curFileBlock.nextFileID;
+    while(curFileID!=-1)
+    {
+        curFileBlock = readFile(curFileID);
+        int x = curFileBlock.nextFileID;
+        releaseFile(curFileID);
+        curFileID = x;
+    }
 }
 void workChar(int &x)
 {
