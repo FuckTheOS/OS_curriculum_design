@@ -18,6 +18,8 @@ std::vector<std::string> bufferString;
 static CONSOLE_SCREEN_BUFFER_INFO screen;
 const COORD left_top = { 0,0 };
 static bool isArrow = false;
+static bool quit;
+static int workFileBlockID;
 static enum WorkStatus
 {
 	normal = 0,
@@ -67,8 +69,31 @@ void displayVim() // 将当期缓存区当中的内容打印在终端屏幕上
 	*/
 	SetConsoleCursorPosition(console, pos);//
 }
+void quitVim()
+{
+    quit = true;
+}
 
 
+
+void saveVim()
+{
+    fileBlock curFileBlock = readFile(workFileBlockID);
+    int bf_sz = bufferString.size();
+    int cnt = 0;
+    for(int i=0;i<bufferString.size();i++)
+    {
+        int bf2_sz = bufferString[i].size();
+        for(int j=0;j<bf2_sz;j++)
+            if(cnt<1000)    curFileBlock.text[cnt++] = bufferString[i][j];
+            else // 如果当前块已被写满则考虑加入下一块，若下一块未被申请则申请新块
+            {
+                curFileBlock = readFile(curFileBlock.nextFileID);
+                if(!)
+            }
+        //在把当前单元的String写入之后，加个换行符
+    }
+}
 void workChar(int &x)
 {
 	if (curStatus == edit && !isArrow && x >= 32 && x <= 126)
@@ -180,17 +205,33 @@ void workChar(int &x)
 		break;
 	}
 }
-void initBuffer()
+void initBuffer(int fileBlockID)
 {
+	fileBlock curFileBlock = readFile(fileBlockID);
 	bufferString.push_back("");
+    int ld = strlen(curFileBlock.text);
+    int cnt = 0;
+    while(curFileBlock.used)
+    {
+        for(int i=0;i<ld;i++)
+        if(curFileBlock.text[i] == '\n')
+        {
+            cnt++;
+            bufferString.push_back("");
+        }
+        else bufferString[cnt].push_back(curFileBlock.text[i]);
+        curFileBlock = readFile(curFileBlock.nextFileID);
+    }
 }
-void runVim()
+void runVim(int fileBlockID);
 {
 	int input_c;
 	curStatus = edit;
-	initBuffer();
+	workFileBlockID = fileBlockID;
+	initBuffer(fileBlockID);
 	isArrow = false;
-	while (1)
+	quit = false;
+	while (!quit)
 	{
 		displayVim();
 		input_c = getch();
@@ -203,5 +244,6 @@ void runVim()
 		}
 		//std::cout.flush();
 	}
+	clearScreen();
 }
 

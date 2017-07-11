@@ -3,13 +3,13 @@
 #include "dir.h"
 #include "file.h"
 #include "index.h"
-
+#include "vim.h"
 void init () { //重新初始化磁盘块
 	//磁盘文件名
 	//写入超级节点块
 	superNodeBlcok sn;
 	sn.root = 0;
-	sn.emptyUserBlock = 1; 
+	sn.emptyUserBlock = 1;
 	sn.emptyDirBlcok = 1; sn.emptyDirBlcok = DIRSIZE-1;
 	sn.emptyFileBlock = 0; sn.emptyFileBLock = FILESIZE-1;
 	sn.emptyIndexBlcok = 0; sn.emptyIndexBlcok = INDEXSIZE-1;
@@ -138,7 +138,7 @@ void bash () {			//命令行模式操作文件系统
 				path = tmp;
 			}
 			delDir (curID, path, tmp == "-rf" ? 0 : 1);
-		} 
+		}
 		else if (op1 == "cp") {
 			string fromPath, toPath;
 			cin >> fromPath >> toPath;
@@ -168,7 +168,7 @@ void bash () {			//命令行模式操作文件系统
 				cout << "文件名有误！" << endl;
 				goto out;
 			}
-			vim (id);		//对文件内容进行编辑
+			runVim(id)		//对文件内容进行编辑
 		}
 		else {
 			cout << "输入的指令有误！" << endl;
