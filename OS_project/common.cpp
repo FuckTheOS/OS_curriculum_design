@@ -88,8 +88,7 @@ bool visitPath(dirBlock& cur, string target, int& curID)
         else
         {
             curID = cur.faDirID;
-            ib = readIndex(curID);
-            cur = readDir(ib.diskOffset);
+            cur = readDir(curID);
         }
         return true;
     }
@@ -97,12 +96,10 @@ bool visitPath(dirBlock& cur, string target, int& curID)
     {
         if(cur.nextDirID == -1) return false; //当前目录下并找不到指定的目录
         curID = cur.nextDirID;
-        ib = readIndex(curID);
-        cur = readDir(ib.diskOffset);
+        cur = readDir(curID);
     }
     curID = cur.sonDirID;
-    ib = readIndex(curID);
-    cur = readDir(ib.diskOffset);//进入该目录
+    cur = readDir(curID);//进入该目录
     return true;
 }
 
