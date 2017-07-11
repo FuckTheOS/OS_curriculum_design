@@ -1,5 +1,4 @@
 #include "vim.h"
-#include "stdafx.h"
 #include <cstdlib>
 #include <Windows.h>
 #include <conio.h>
@@ -27,18 +26,18 @@ static enum WorkStatus
 static HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);//获取输出窗口的句柄
 //清空屏幕
 void clearScreen(COORD &pos) {
-	//HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE); 
+	//HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 	DWORD written;
 	GetConsoleScreenBufferInfo(console, &screen);
 	FillConsoleOutputCharacterA(
 		console, ' ', screen.dwSize.X * screen.dwSize.Y, left_top, &written
 	);
-	
+
 	FillConsoleOutputAttribute(
 		console, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE,
 		screen.dwSize.X * screen.dwSize.Y, left_top, &written
 	);
-	
+
 }
 void displayVim() // 将当期缓存区当中的内容打印在终端屏幕上
 {
@@ -125,7 +124,7 @@ void workChar(int &x)
 	case KEY_UP: //UP
 		if (p_y) p_y--;
 		else if (begin_y) begin_y--;
-		
+
 		if (bufferString[GLOBAL_Y].size() <= p_x) p_x = bufferString[GLOBAL_Y].size() - 1;
 		if (p_x < 0) p_x = 0;
 		break;
