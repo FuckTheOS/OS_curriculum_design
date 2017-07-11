@@ -67,3 +67,89 @@ void releaseFile(int fileID){              //释放文件块
     writeSuperNode(sn);
     writeFile (fb,fileID);
 }
+int  giveFileBlock(){           //分配文件块
+    superNodeBlock sn = readSuperNode ();
+    if (sn.emptyFileBlock == -1) {		//文件块空间不足
+		return -1;
+	}
+	int res = sn.emptyFileBlock;
+	if (sn.emptyFileBlock == sn._emptyFileBlock) {	//文件块刚好用完
+		sn.emptyFileBlock = -1;
+		sn._emptyFileBlock = -1;
+	}
+	else {
+		fileBlock fb = readFile(sn.emptyFileBlock);	//读取空文件信息
+		sn.emptyFileBlock = fb.nextFileID;			//该块的下一块作为空文件块的首块
+	}
+	return res;
+ }
+
+bool touch (string fileName,string newDirMod){           //当前目录下新建文件
+    if (!checkMod (curUserID, curDirID, 2)) {	//权限检查没通过
+		cout << "权限错误！" << endl;
+		return false;
+	}
+	if (newDirMod == "p") {
+		userBlcok ub = readUser (curUserID);
+		if ((string)ub.userName != "admin") {
+			cout << "权限错误！" << endl;
+			return false;
+		}
+	}
+	if (!checkDirName (newFileName)) { 	//文件名检查没通过
+		cout << "文件名错误！" << endl;
+		return false;
+	}
+	int dirID = giveDirBlock ();	//分配新的目录块
+	int indexID = giveIndexBlcok ();//分配新的索引块
+	int fileID = giveFileBlock();
+	if (dirID == -1 || indexID == -1||fileID == -1) {
+		cout << "磁盘空间不足!" << endl;
+		return false;
+	}
+
+	fileBlock fb = readFile (fileID);
+	fb.used = true;
+	fb.nextFileID = -1;
+	writeFile(fb,fileID);
+
+	indexBlock ib = readIndex (indexID);
+	ib.used = 1;
+	ib.diskOffset = fileID;
+	writeIndex (ib, indexID);
+
+	dirBlock db = readDir (curDirID);
+	if (db.sonDirID == -1) {
+		db.sonDirID = indexID;
+		writeDir (db, curDirID);
+	}
+	else {
+		int tmp = db.sonDirID;
+		while (db.nextDirID != -1) {		//找到当前路径的最后一个目录
+			tmp = db.nextDirID;
+			db = readDir (db.nextDirID);
+		}
+		db.nextDirID = dirID;
+		writeDir (db, tmp);
+	}
+
+	db = readDir (dirID);
+	userBlock ub = readUser (curUserID);
+	strcpy (db.fileName, newFileName.c_str ());
+	strcpy (db.dirOwner, ub.name);
+	db.dirSize = 0;
+	db.dirCreateTime = getTime ();
+	db.dirChangeTime = db.dirCreateTime;
+	db.type =2;
+	db.textLocation =indexID;
+	db.faDirID = curDirID;
+	db.sonDirID = -1;
+	db.nextDirID = -1;
+	db.dirMod = (newDirMod[0] == 'r' ?
+		(newDirMod == "rw" ? 2 : 1) :
+		(newDirMod == "a" ? 3: 0));
+	db.used = true;
+	writeDir (db, dirID);	//将目录信息写入目录块
+	return true;
+}
+
