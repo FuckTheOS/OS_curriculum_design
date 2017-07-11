@@ -74,25 +74,43 @@ void quitVim()
     quit = true;
 }
 
-
+void writeChar(int& curFileID,fileBlock& curFileBlock, char x, int& cnt)
+{
+    if(cnt<1000)    curFileBlock.text[cnt++] = x;
+    else // 如果当前块已被写满则考虑加入下一块，若下一块未被申请则申请新块
+    {
+        writeFile(curFileBlock, curFileID);
+        curFileID = curFileBlock.nextFileID;
+        if(curFileID == -1)
+        {
+            curFileID =giveFileBlock();
+            if(curFileID == -1)
+            {
+                //分配文件块失败
+            }
+            curFileBlock.nextFileID = curFileID;
+        }
+        curFileBlock = readFile(curFileID);
+        cnt = 0;
+        curFileBlock.text[cnt++] = x;
+    }
+}
 
 void saveVim()
 {
     fileBlock curFileBlock = readFile(workFileBlockID);
+    int curFileID = workFileBlockID;
     int bf_sz = bufferString.size();
     int cnt = 0;
     for(int i=0;i<bufferString.size();i++)
     {
         int bf2_sz = bufferString[i].size();
         for(int j=0;j<bf2_sz;j++)
-            if(cnt<1000)    curFileBlock.text[cnt++] = bufferString[i][j];
-            else // 如果当前块已被写满则考虑加入下一块，若下一块未被申请则申请新块
-            {
-                curFileBlock = readFile(curFileBlock.nextFileID);
-                if(!)
-            }
+            writeChar(curFileID, curFileBlock, bufferString[i][j], cnt);
         //在把当前单元的String写入之后，加个换行符
+        writeChar(curFileID, curFileBlock, '\n', cnt);
     }
+    writeFile(curFileBlock, curFileID);
 }
 void workChar(int &x)
 {
@@ -220,6 +238,7 @@ void initBuffer(int fileBlockID)
             bufferString.push_back("");
         }
         else bufferString[cnt].push_back(curFileBlock.text[i]);
+        if(curFileBlock.nextFileID == -1) break;
         curFileBlock = readFile(curFileBlock.nextFileID);
     }
 }

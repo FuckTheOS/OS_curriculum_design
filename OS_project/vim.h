@@ -28,6 +28,9 @@ void saveVim();
 //有问题的点在于如果文件大小缩短时，需要将原来的文件块进行释放
 //过长时需要申请新的文件块
 
+void writeChar(int& curFileID,fileBlock& curFileBlock, char x, int& cnt);
+//将单个字符输出到文件当中,传送当前字符所应当存储的位置,文件块ID
+
 void quitVim();
 //退出当前Vim
 #endif // VIM_H_INCLUDED
