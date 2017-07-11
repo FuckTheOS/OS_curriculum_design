@@ -69,17 +69,17 @@ void releaseFile(int fileID){              //释放文件块
 }
 int  giveFileBlock(){           //分配文件块
     superNodeBlock sn = readSuperNode ();
-    if (sn.emptyFileBlock == -1) {		//索引块空间不足
+    if (sn.emptyFileBlock == -1) {		//文件块空间不足
 		return -1;
 	}
 	int res = sn.emptyFileBlock;
-	if (sn.emptyFileBlock == sn._emptyFileBlock) {	//索引块刚好用完
+	if (sn.emptyFileBlock == sn._emptyFileBlock) {	//文件块刚好用完
 		sn.emptyFileBlock = -1;
 		sn._emptyFileBlock = -1;
 	}
 	else {
-		fileBlock fb = readFile(sn.emptyFileBlock);	//读取空目索引信息
-		sn.emptyFileBlock = fb.nextFileID;			//该块的下一块作为空索引块的首块
+		fileBlock fb = readFile(sn.emptyFileBlock);	//读取空文件信息
+		sn.emptyFileBlock = fb.nextFileID;			//该块的下一块作为空文件块的首块
 	}
 	return res;
  }
@@ -121,13 +121,16 @@ bool touch (string fileName,string newDirMod){           //当前目录下新建
 	dirBlock db = readDir (curDirID);
 	if (db.sonDirID == -1) {
 		db.sonDirID = indexID;
+		writeDir (db, curDirID);
 	}
 	else {
 		int tmp = db.sonDirID;
 		while (db.nextDirID != -1) {		//找到当前路径的最后一个目录
+			tmp = db.nextDirID;
 			db = readDir (db.nextDirID);
 		}
 		db.nextDirID = dirID;
+		writeDir (db, tmp);
 	}
 
 	db = readDir (dirID);
