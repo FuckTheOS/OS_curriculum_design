@@ -81,6 +81,7 @@ int  giveFileBlock(){           //分配文件块
 		fileBlock fb = readFile(sn.emptyFileBlock);	//读取空文件信息
 		sn.emptyFileBlock = fb.nextFileID;			//该块的下一块作为空文件块的首块
 	}
+	writeSuperNode (sn);
 	return res;
  }
 

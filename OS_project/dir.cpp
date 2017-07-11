@@ -39,6 +39,7 @@ int giveDirBlock (){					//分配新的目录块
 		dirBlcok db = readDir (sn.emptyDirBlock);	//读取空目录块信息
 		sn.emptyDirBlock = db.nextDirID;			//该块的下一块作为空目录块的首块
 	}
+	writeSuperNode (sn);
 	return res;
 }
 //参数表示目录块类型

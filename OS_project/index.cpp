@@ -15,6 +15,7 @@ int giveIndexBlcok (){                       //分配新的索引块
 		indexBlock ib = readIndex(sn.emptyIndexBlock);	//读取空目索引信息
 		sn.emptyIndexBlock = ib.nextIndexID;			//该块的下一块作为空索引块的首块
 	}
+	writeSuperNode (sn);
 	return res;
  }
 
