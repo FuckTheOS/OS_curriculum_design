@@ -19,7 +19,7 @@ state	|	查看内存块占用情况
 rename file name | 文件/目录重命名
 cat file |	查看文件内容(只能看)
 chuser	|	切换用户(默认admin)
-crateuser |	新建用户	
-chmod -(rwap) xx |	修改此文件/目录的权限为(读写),默认是读写
+crateuser (-rwap) |	新建用户，权限是(读写删)
+chmod (-rwap) xx |	修改此文件/目录的权限为(读写),默认是读写
 link -h/s from to | 在目标路径下创建源文件/路径的链接,-h是硬链接,-s是软链接
 open xx	|	打开文件(另起一行,类似于vim)
