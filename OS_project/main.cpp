@@ -159,8 +159,34 @@ void bash () {			//命令行模式操作文件系统
 			string filename; cin >> filename;
 			cat (filename);
 		}
-		else if (op1 == "chuser") {}
-		else if (op1 == "createuser") {}
+		else if (op1 == "chuser") {
+			cout << "\n\n" << endl;
+			string name, passwd;
+			cout << "        请输入用户名："; cin >> name;
+			cout << "        请输入用户密码："; cin >> passwd;
+			if (!chuser (name, passwd)) 
+				cout << "无法切换用户！" << endl;
+		}
+		else if (op1 == "createuser") {
+			string newUserMod = "-a";
+			char ch; if ((ch = getchar ()) == ' ') cin >> newUserMod;
+			int userMod = (newUserMod[0] == 'r' ? 
+				(newUserMod == "r" ? 3 : 2) :
+				(newUserMod == "p" ? 0 : 1));
+			userBlock ub = readUser (curUserID);
+			if (userMod < db.userMod) {
+				cout << "权限错误！" << endl;
+			}
+			else {
+				cout << "\n\n" << endl;
+				string name, passwd;
+				cout << "        请输入用户名："; cin >> name;
+				cout << "        请输入用户密码："; cin >> passwd;
+				if (!createuser (name, passwd, userMod)) {
+					cout << "创建用户失败！" << endl;
+				}
+			}
+		}
 		else if (op1 == "open") {
 			string fileNmae; cin >> fileName;
 			int id = openFile (fileaName);		//打开文件的目录块 返回对应的文件内容块编号
@@ -168,7 +194,10 @@ void bash () {			//命令行模式操作文件系统
 				cout << "文件名有误！" << endl;
 				goto out;
 			}
+			readFile (id)
 			vim (id);		//对文件内容进行编辑
+		}
+		else if (op1 == "exit") {
 		}
 		else {
 			cout << "输入的指令有误！" << endl;
