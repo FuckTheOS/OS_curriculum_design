@@ -106,17 +106,17 @@ bool visitPath(dirBlock& cur, string target, int& curID)
     return true;
 }
 
-int findNextDir (int dirID, string target){     //访问dirID下的target目录 目录类型为1
+int findNextDir (int dirID, string target, int dirType = 1){     //访问dirID下的target目录 目录类型为1
     dirBlock db = readDir (dirID), tmp;
     if (db.sonDirID == -1) return -1;
     tmp = readDir (db.sonDirID);
-    if (target == (string)tmp.dirName && tmp.type == 1) {
+    if (target == (string)tmp.dirName && tmp.type == dirType) {
         return db.sonDirID;
     }
     db = tmp;
     while (db.nextDirID != -1) {
         tmp = readDir (db.nextDirID);
-        if (target == (string)tmp.dirName && tmp.type == 1) {
+        if (target == (string)tmp.dirName && tmp.type == dirType) {
             return db.nextDirID;
         }
         else
@@ -181,4 +181,40 @@ void find (int curDirID, string target, vector <string> path){  //从当前路�
 }
 //参数表示目标文件的文件名
 //输出所有可能的结果路径
+
+void state (){                      //显示内存使用情况
+    superNodeBlock sn = readSuperNode ();
+    int cnt, tot, p;
+    p = sn.emptyUserBlock;
+    if (p == -1) p = USERSIZE+1;
+    printf ("已经占用%d个用户块，使用率%.2f\n", USERSIZE-p+1, (USERSIZE-p+1)*1.0/USERSIZE);
+
+    cnt = 0, p = sn.emptyDirBlock;
+    dirBlock db;
+    while (p != -1) {
+        cnt++;
+        db = readDir (p);
+        p = db.nextDirID;
+    }
+    printf ("已经占用%d个目录块，使用率%.2f\n", cnt, cnt*1.0/DIRSIZE);
+
+    cnt = 0, p = sn.emptyFileBlock;
+    fileBlock fb;
+    while (p != -1) {
+        cnt++;
+        db = readFile (p);
+        p = db.nextFileID;
+    }
+    printf ("已经占用%d个文件块，使用率%.2f\n", cnt, cnt*1.0/FILESIZE);
+
+    cnt = 0, p = sn.emptyIndexBlock;
+    indexBlock ib;
+    while (p != -1) {
+        cnt++;
+        db = readIndex (p);
+        p = db.nextIndexID;
+    }
+    printf ("已经占用%d个索引块，使用率%.2f\n", cnt, cnt*1.0/INDEXSIZE);
+}
+//输出用户块 目录块 文件块 索引块剩下的块数和使用率
 

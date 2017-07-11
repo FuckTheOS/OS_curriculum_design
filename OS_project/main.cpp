@@ -151,9 +151,14 @@ void bash () {			//命令行模式操作文件系统
 			string target;
 			find (curDirID, target, curPath);
 		}
-		else if (op1 == "state") {}
+		else if (op1 == "state") {
+			state ();
+		}
 		else if (op1 == "rename") {}
-		else if (op1 == "cat") {}
+		else if (op1 == "cat") {
+			string filename; cin >> filename;
+			cat (filename);
+		}
 		else if (op1 == "chuser") {}
 		else if (op1 == "createuser") {}
 		else if (op1 == "open") {

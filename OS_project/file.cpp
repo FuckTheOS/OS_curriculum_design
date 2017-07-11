@@ -153,3 +153,15 @@ bool touch (string fileName,string newDirMod){           //当前目录下新建
 	return true;
 }
 
+void cat (string filename){		//输出当前目录下的文件内容
+	int dirID = findNextDir (curDirID, filename, 2);
+	if (!checkMod (curUserID, dirID, 1)) {
+		cout << "权限错误！" << endl;
+		return ;
+	}
+	dirBlcok db = readDir (dirID);
+	indexBlock ib = readIndex (db.textLocation);
+	fileBlock fb = readFile (ib.diskOffset);
+	cout << fb.text << endl;
+}
+
