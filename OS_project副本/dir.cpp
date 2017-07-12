@@ -121,7 +121,8 @@ bool mkDir (string newDirName, string newDirMod, int _curDirID) {	//在当前目录下
 }
 
 bool mkdirs (string newDirPath, string newDirMod){	//在当前目录下创建多级子目录
-	vector <string> tarDirPath = pathPrase (newDirPath);	//用自动机解析路径
+	vector <string> tarDirPath;
+	pathPrase (newDirPath, tarDirPath);	//用自动机解析路径
 	int dirID = (tarDirPath[0] == "/root" ? 0 : curDirID);
 	for (int i = 0; i < tarDirPath.size (); i++) {
 		string tmp = tarDirPath[i];
@@ -146,7 +147,8 @@ bool mkdirs (string newDirPath, string newDirMod){	//在当前目录下创建多级子目录
 //创建成功返回1 否则返回0
 
 bool gotoDir (string tarPath){			//跳转到新的目录
-	vector <string> path = pathPrase (tarPath);
+	vector <string> path;
+	pathPrase (tarPath, path);
 	dirBlock curDirBlock = readDir(curDirID);
 	int tmpDirID = curDirID;
     	for(auto op:path)
@@ -168,7 +170,8 @@ bool gotoFaDir () {						//跳转到父亲目录
 }
 
 bool delDir (int dirID, string dirPath, int type){	//删掉目录块
-	vector <string> path = pathPrase (dirPath);
+	vector <string> path;
+	pathPrase (dirPath, path);
 	if (path[0] == "error")
 		return false;
 	for (int i = 0; i < path.size ()-1; i++) {

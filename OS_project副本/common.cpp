@@ -3,7 +3,7 @@
 vector <string> curPath;//当前的绝对路径
 int curUserID;			//当前用户
 int curDirID;			//当前目录块ID
-string disk;	//磁盘块文件名
+string disk = "disk";	//磁盘块文件名
 
 long long getTime (){               //获取当前的时间
     SYSTEMTIME sys;
@@ -60,72 +60,72 @@ void showCurPath (int type, vector <string> curPath) {	//输出当前路径
     }
 }
 
-vector <string>& pathPrase (string tarPath){	//用自动机解析路径
-	vector <string> path;path.clear();
+void pathPrase(string tarPath, vector <string>& path) {	//用自动机解析路径
+	path.clear();
 	size_t x_point = 0; //未处理到的tarPath的字符下标
-	if(tarPath[0]=='/') //绝对路径
-    {
-        path.push_back("/root");
-        x_point = 1;
-    }
-    else
-        path.push_back("/CUR");
-    while(x_point != tarPath.npos)
+	if (tarPath[0] == '/') //绝对路径
 	{
-	    size_t tmp_pos = tarPath.find_first_of('/', x_point);
-	    if(tmp_pos == x_point) // 两个破折号堆叠在一起 ，非法
-        {
-          PATH_PRASER_ERROR;
-        }
-        string tmpString = tarPath.substr(x_point, (tmp_pos != tarPath.npos)? tmp_pos-x_point : tmp_pos);
-        if(tmpString == "*") //通配符不在末尾时，非法
-            if(tmp_pos == tarPath.npos) tmpString = "/TOT";
-            else
-            {
-                PATH_PRASER_ERROR;
-            }
-        if(tmpString == ".") tmpString = "/CUR";//当前目录
-        if(tmpString == "..") tmpString = "/BACK";//返回上级目录
-        if(tmpString == "null")
-            if(path.size()!=1 || tmp_pos != tarPath.npos) {PATH_PRASER_ERROR;}
-            else break;
-        path.push_back(tmpString);
-        if(tmp_pos == tarPath.npos) break;
-        x_point = tmp_pos+1;
+		path.push_back("/root");
+		x_point = 1;
 	}
-	return path;
+	else
+		path.push_back("/CUR");
+	while (x_point != tarPath.npos)
+	{
+		size_t tmp_pos = tarPath.find_first_of('/', x_point);
+		if (tmp_pos == x_point) // 两个破折号堆叠在一起 ，非法
+		{
+			PATH_PRASER_ERROR;
+		}
+		string tmpString = tarPath.substr(x_point, (tmp_pos != tarPath.npos) ? tmp_pos - x_point : tmp_pos);
+		if (tmpString == "*") //通配符不在末尾时，非法
+			if (tmp_pos == tarPath.npos) tmpString = "/TOT";
+			else
+			{
+				PATH_PRASER_ERROR;
+			}
+		if (tmpString == ".") tmpString = "/CUR";//当前目录
+		if (tmpString == "..") tmpString = "/BACK";//返回上级目录
+		if (tmpString == "null")
+			if (path.size() != 1 || tmp_pos != tarPath.npos) { PATH_PRASER_ERROR; }
+			else break;
+			path.push_back(tmpString);
+			if (tmp_pos == tarPath.npos) break;
+			x_point = tmp_pos + 1;
+	}
 }
 
 bool visitPath(dirBlock& cur, string target, int& curID)
 {
-    //权限检查待更新
-    //indexBlock ib;
-    if(target == "/CUR") return true;
-    if(target == "/root")
-    {
-        cur = readDir(0);
-        curID = 0;
-        return true;
-    }
-    if(target == "/BACK")
-    {
-        if(cur.faDirID <=0) return false;//已到根目录而无法返回
-        else
-        {
-            curID = cur.faDirID;
-            cur = readDir(curID);
-        }
-        return true;
-    }
-    while(strcmp(cur.dirName,target.c_str())!=0)
-    {
-        if(cur.nextDirID == -1) return false; //当前目录下并找不到指定的目录
-        curID = cur.nextDirID;
-        cur = readDir(curID);
-    }
-    curID = cur.sonDirID;
-    cur = readDir(curID);//进入该目录
-    return true;
+	//权限检查待更新
+	//indexBlock ib;
+	if (target == "/CUR") return true;
+	if (target == "/root")
+	{
+		cur = readDir(0);
+		curID = 0;
+		return true;
+	}
+	if (target == "/BACK")
+	{
+		if (cur.faDirID <= 0) return false;//已到根目录而无法返回
+		else
+		{
+			curID = cur.faDirID;
+			cur = readDir(curID);
+		}
+		return true;
+	}
+	curID = cur.sonDirID;
+	if (curID < 0) return false;
+	cur = readDir(curID);
+	while (strcmp(cur.dirName, target.c_str()) != 0)
+	{
+		if (cur.nextDirID == -1) return false; //当前目录下并找不到指定的目录
+		curID = cur.nextDirID;
+		cur = readDir(curID);
+	}
+	return true;
 }
 
 int findNextDir (int dirID, string target, int dirType){     //访问dirID下的target目录 目录类型为1

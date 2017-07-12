@@ -97,7 +97,7 @@ void showCurPath (int type, vector <string> curPath);	//命令行输入指令前显示当前
 //0表示命令行输入指令前显示当前路径用户 格式为root>a/b admin$[space]
 //1表示输出当前绝对路径位置 格式为root>a/b[enter]
 //根据全局变量global直接按照格式输出
-vector <string>& pathPrase (string tarPath);	//用自动机解析路径
+void pathPrase(string tarPath, vector <string>& path);	//用自动机解析路径
 //参数表示目标路径
 //如果目标路径以root开头表示绝对路径  否则是相对路径
 //返回路径上各个节点的目录名构成的向量

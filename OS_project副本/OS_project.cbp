@@ -38,6 +38,9 @@
 		<Unit filename="dir.h" />
 		<Unit filename="file.cpp" />
 		<Unit filename="file.h" />
+		<Unit filename="filestruct.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="index.cpp" />
 		<Unit filename="index.h" />
 		<Unit filename="main.cpp" />
