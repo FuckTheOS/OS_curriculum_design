@@ -1,0 +1,261 @@
+# depslib dependency file v1.0
+1499872407 source:c:\morejarphone\code相关\os_project\common.cpp
+	"common.h"
+
+1499872471 source:c:\morejarphone\code相关\os_project\dir.cpp
+	"dir.h"
+
+1499871029 source:c:\morejarphone\code相关\os_project\file.cpp
+	"common.h"
+	"file.h"
+	"user.h"
+	"index.h"
+
+1499872471 source:c:\morejarphone\code相关\os_project\index.cpp
+	"index.h"
+
+1499874115 source:c:\morejarphone\code相关\os_project\user.cpp
+	"user.h"
+
+1499439428 source:\\mac\home\desktop\os_project\common.cpp
+	"common.h"
+
+1499440509 source:\\mac\home\desktop\os_project\dir.cpp
+	"common.h"
+	"dir.h"
+
+1499344385 source:\\mac\home\desktop\os_project\file.cpp
+
+1499344368 source:\\mac\home\desktop\os_project\index.cpp
+
+1499344402 source:\\mac\home\desktop\os_project\user.cpp
+
+1499437542 source:\\mac\home\desktop\os_project\main.cpp
+	"common.h"
+
+1499440480 \\mac\home\desktop\os_project\common.h
+	<cstdio>
+	<iostream>
+	<cstring>
+	<queue>
+	<cmath>
+	<algorithm>
+	<stack>
+	<map>
+	<string>
+	<set>
+	<stdlib.h>
+	<unistd.h>
+	<conio.h>
+	<windows.h>
+	<fstream>
+
+1499440518 \\mac\home\desktop\os_project\dir.h
+	"common.h"
+
+1499585344 source:e:\my_college\operatorsystem\os_curriculum_design\os_project\common.cpp
+	"common.h"
+	"dir.h"
+
+1499585390 e:\my_college\operatorsystem\os_curriculum_design\os_project\common.h
+	<cstdio>
+	<iostream>
+	<cstring>
+	<queue>
+	<cmath>
+	<algorithm>
+	<stack>
+	<map>
+	<string>
+	<set>
+	<stdlib.h>
+	<unistd.h>
+	<conio.h>
+	<windows.h>
+	<fstream>
+
+1499577491 e:\my_college\operatorsystem\os_curriculum_design\os_project\dir.h
+
+1499783874 source:\\mac\home\desktop\os_curriculum_design\os_project\common.cpp
+	"common.h"
+	"dir.h"
+
+1499783874 \\mac\home\desktop\os_curriculum_design\os_project\common.h
+	<cstdio>
+	<iostream>
+	<cstring>
+	<queue>
+	<cmath>
+	<algorithm>
+	<stack>
+	<map>
+	<string>
+	<set>
+	<stdlib.h>
+	<unistd.h>
+	<conio.h>
+	<windows.h>
+	<fstream>
+
+1499783874 \\mac\home\desktop\os_curriculum_design\os_project\dir.h
+
+1499783874 source:\\mac\home\desktop\os_curriculum_design\os_project\dir.cpp
+	"common.h"
+	"dir.h"
+	"index.h"
+
+1499783874 \\mac\home\desktop\os_curriculum_design\os_project\index.h
+
+1499783874 source:\\mac\home\desktop\os_curriculum_design\os_project\file.cpp
+	"common.h"
+	"file.h"
+
+1499783874 \\mac\home\desktop\os_curriculum_design\os_project\file.h
+
+1499783874 source:\\mac\home\desktop\os_curriculum_design\os_project\index.cpp
+	"common.h"
+	"index.h"
+
+1499872407 c:\morejarphone\code相关\os_project\common.h
+	"dir.h"
+	"user.h"
+	"file.h"
+	"user.h"
+	"index.h"
+	"global.h"
+
+1499872432 c:\morejarphone\code相关\os_project\dir.h
+	"common.h"
+	"index.h"
+	"user.h"
+	"file.h"
+
+1499872486 c:\morejarphone\code相关\os_project\index.h
+	"common.h"
+	"global.h"
+
+1499845462 c:\morejarphone\code相关\os_project\file.h
+	"common.h"
+	"dir.h"
+	"index.h"
+
+1499872508 c:\morejarphone\code相关\os_project\user.h
+	"common.h"
+	"dir.h"
+	"global.h"
+
+1499874115 source:c:\morejarphone\code相关\os_project\main.cpp
+	"common.h"
+	"user.h"
+	"dir.h"
+	"file.h"
+	"index.h"
+	"vim.h"
+
+1499846575 c:\morejarphone\code相关\os_project\vim.h
+	<cstdlib>
+	<cstdio>
+	<windows.h>
+	"file.h"
+	"user.h"
+	"dir.h"
+
+1499870839 source:c:\morejarphone\code相关\os_project\vim.cpp
+	"vim.h"
+	<cstdlib>
+	<Windows.h>
+	<conio.h>
+	<iostream>
+	<vector>
+	<string>
+
+1499874273 c:\morejarphone\code相关\os_project\global.h
+	<cstdio>
+	<iostream>
+	<cstring>
+	<queue>
+	<cmath>
+	<algorithm>
+	<stack>
+	<map>
+	<string>
+	<set>
+	<stdlib.h>
+	<unistd.h>
+	<conio.h>
+	<windows.h>
+	<fstream>
+
+1499873977 source:c:\morejarphone\code相关\os_project\global.cpp
+	"global.h"
+
+1499870839 source:c:\morejarphone\code相关\os_project - 副本\vim.cpp
+	"vim.h"
+	<cstdlib>
+	<Windows.h>
+	<conio.h>
+	<iostream>
+	<vector>
+	<string>
+
+1499846575 c:\morejarphone\code相关\os_project - 副本\vim.h
+	<cstdlib>
+	<cstdio>
+	<windows.h>
+	"file.h"
+	"user.h"
+	"dir.h"
+
+1499876723 c:\morejarphone\code相关\os_project - 副本\file.h
+	"dir.h"
+
+1499876667 c:\morejarphone\code相关\os_project - 副本\dir.h
+	"user.h"
+
+1499876667 c:\morejarphone\code相关\os_project - 副本\user.h
+	"common.h"
+
+1499876858 c:\morejarphone\code相关\os_project - 副本\common.h
+	<cstdio>
+	<iostream>
+	<cstring>
+	<queue>
+	<cmath>
+	<algorithm>
+	<stack>
+	<map>
+	<string>
+	<set>
+	<stdlib.h>
+	<unistd.h>
+	<conio.h>
+	<windows.h>
+	<fstream>
+
+1499876872 c:\morejarphone\code相关\os_project - 副本\global.h
+
+1499876667 source:c:\morejarphone\code相关\os_project - 副本\dir.cpp
+	"dir.h"
+
+1499876723 source:c:\morejarphone\code相关\os_project - 副本\file.cpp
+	"file.h"
+
+1499876667 source:c:\morejarphone\code相关\os_project - 副本\index.cpp
+	"index.h"
+
+1499876667 c:\morejarphone\code相关\os_project - 副本\index.h
+	"common.h"
+	"global.h"
+
+1499876667 source:c:\morejarphone\code相关\os_project - 副本\main.cpp
+	"file.h"
+
+1499876667 source:c:\morejarphone\code相关\os_project - 副本\user.cpp
+	"user.h"
+
+1499876848 source:c:\morejarphone\code相关\os_project - 副本\common.cpp
+	"common.h"
+
+1499876858 source:c:\morejarphone\code相关\os_project - 副本\global.cpp
+	"global.h"
+
