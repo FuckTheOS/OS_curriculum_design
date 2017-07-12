@@ -1,7 +1,7 @@
 #include "common.h"
 #include "index.h"
 
-int giveIndexBlcok (){                       //分配新的索引块
+int giveIndexBlock (){                       //分配新的索引块
     superNodeBlock sn = readSuperNode ();
     if (sn.emptyIndexBlock == -1) {		//索引块空间不足
 		return -1;

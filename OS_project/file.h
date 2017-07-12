@@ -1,5 +1,8 @@
 #ifndef FILE_H_INCLUDED
 #define FILE_H_INCLUDED
+#include "common.h"
+#include "dir.h"
+#include "index.h"
 
 fileBlock readFile (int id);	//根据文件块id读取文件内容
 //访盘，注意保护原有数据

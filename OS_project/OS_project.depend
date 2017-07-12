@@ -7,22 +7,27 @@
 	"user.h"
 	"index.h"
 
-1499844160 source:c:\morejarphone\code相关\os_project\dir.cpp
+1499849576 source:c:\morejarphone\code相关\os_project\dir.cpp
 	"common.h"
 	"dir.h"
 	"index.h"
 	"user.h"
 	"file.h"
 
-1499844160 source:c:\morejarphone\code相关\os_project\file.cpp
+1499846009 source:c:\morejarphone\code相关\os_project\file.cpp
 	"common.h"
 	"file.h"
+	"user.h"
+	"index.h"
 
-1499844160 source:c:\morejarphone\code相关\os_project\index.cpp
+1499846344 source:c:\morejarphone\code相关\os_project\index.cpp
 	"common.h"
 	"index.h"
 
-1499344402 source:c:\morejarphone\code相关\os_project\user.cpp
+1499848632 source:c:\morejarphone\code相关\os_project\user.cpp
+	"common.h"
+	"user.h"
+	"dir.h"
 
 1499439428 source:\\mac\home\desktop\os_project\common.cpp
 	"common.h"
@@ -123,7 +128,7 @@
 	"common.h"
 	"index.h"
 
-1499844160 c:\morejarphone\code相关\os_project\common.h
+1499849885 c:\morejarphone\code相关\os_project\common.h
 	<cstdio>
 	<iostream>
 	<cstring>
@@ -140,15 +145,18 @@
 	<windows.h>
 	<fstream>
 
-1499844160 c:\morejarphone\code相关\os_project\dir.h
+1499845897 c:\morejarphone\code相关\os_project\dir.h
 
-1499844160 c:\morejarphone\code相关\os_project\index.h
+1499845947 c:\morejarphone\code相关\os_project\index.h
 
-1499844160 c:\morejarphone\code相关\os_project\file.h
+1499845462 c:\morejarphone\code相关\os_project\file.h
+	"common.h"
+	"dir.h"
+	"index.h"
 
 1499844160 c:\morejarphone\code相关\os_project\user.h
 
-1499844759 source:c:\morejarphone\code相关\os_project\main.cpp
+1499849712 source:c:\morejarphone\code相关\os_project\main.cpp
 	"common.h"
 	"user.h"
 	"dir.h"
@@ -156,8 +164,20 @@
 	"index.h"
 	"vim.h"
 
-1499844160 c:\morejarphone\code相关\os_project\vim.h
+1499846575 c:\morejarphone\code相关\os_project\vim.h
 	<cstdlib>
 	<cstdio>
 	<windows.h>
+	"file.h"
+	"user.h"
+	"dir.h"
+
+1499846575 source:c:\morejarphone\code相关\os_project\vim.cpp
+	"vim.h"
+	<cstdlib>
+	<Windows.h>
+	<conio.h>
+	<iostream>
+	<vector>
+	<string>
 

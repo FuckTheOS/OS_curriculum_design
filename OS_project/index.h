@@ -1,7 +1,7 @@
 #ifndef INDEX_H_INCLUDED
 #define INDEX_H_INCLUDED
 
-int giveIndexBlcok ();		//分配新的索引块
+int giveIndexBlock ();		//分配新的索引块
 //如果分配成功返回索引块的ID 否则输出-1
 indexBlock readIndex (int id);				//根据索引块id读取索引块信息
 //访盘，注意保护原有数据

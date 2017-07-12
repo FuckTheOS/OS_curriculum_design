@@ -27,7 +27,7 @@ static enum WorkStatus
 }curStatus;
 static HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);//获取输出窗口的句柄
 //清空屏幕
-void clearScreen(COORD &pos) {
+void clearScreen(COORD pos) {
 	//HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 	DWORD written;
 	GetConsoleScreenBufferInfo(console, &screen);
@@ -252,7 +252,7 @@ void initBuffer(int fileBlockID)
         curFileBlock = readFile(curFileBlock.nextFileID);
     }
 }
-void runVim(int fileBlockID);
+void runVim(int fileBlockID)
 {
 	int input_c;
 	curStatus = edit;
@@ -273,6 +273,7 @@ void runVim(int fileBlockID);
 		}
 		//std::cout.flush();
 	}
-	clearScreen();
+	clearScreen(left_top);
+	SetConsoleCursorPosition(console, left_top);
 }
 

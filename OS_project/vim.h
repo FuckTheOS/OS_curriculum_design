@@ -3,6 +3,9 @@
 #include <cstdlib>
 #include <cstdio>
 #include <windows.h>
+#include "file.h"
+#include "user.h"
+#include "dir.h"
 using namespace std;
 // Edit by Kelukin to support the file modify operation in file system
 void displayVim();
@@ -13,7 +16,7 @@ void runVim(int fileBlockID);
 //运行Vim
 //传入的参数为文件块的序号
 
-void clearScreen();
+void clearScreen(COORD pos);
 //清空屏幕
 
 void workChar(char &x);

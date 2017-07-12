@@ -74,7 +74,7 @@ using namespace std;
 //定义四个块的偏移
 #define superNodeSegOffset 0
 #define userSegOffset sizeof(superNodeBlock)
-#define dirSegOffset (userSegOffset+sizeof(userBlock)*USERSIZE)
+#define dirSegOffset (userSegOffset+sizeof(dirBlock)*DIRSIZE)
 #define fileSegOffset (dirSegOffset+sizeof(fileBlock)*FILESIZE)
 #define indexSegOffset (fileSegOffset+sizeof(indexBlock)*INDEXSIZE)
 /*
@@ -146,10 +146,10 @@ struct indexBlock {
 	int used;			//是否被占用
 };
 
-vector <string> curPath;//当前的绝对路径
-int curUserID;			//当前用户
-int curDirID;			//当前目录块ID
-string disk = "disk";	//磁盘块文件名
+static vector <string> curPath;//当前的绝对路径
+static int curUserID;			//当前用户
+static int curDirID;			//当前目录块ID
+static string disk = "disk";	//磁盘块文件名
 
 superNodeBlock readSuperNode ();	//读入超级节点信息
 void writeSuperNode (superNodeBlock sn);        //吸入超级节点信息

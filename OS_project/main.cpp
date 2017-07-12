@@ -10,9 +10,9 @@ void init () { //重新初始化磁盘块
 	superNodeBlock sn;
 	sn.root = 0;
 	sn.emptyUserBlock = 1;
-	sn.emptyDirBlock = 1; sn.emptyDirBlock = DIRSIZE-1;
-	sn.emptyFileBlock = 0; sn.emptyFileBlock = FILESIZE-1;
-	sn.emptyIndexBlock = 0; sn.emptyIndexBlock = INDEXSIZE-1;
+	sn.emptyDirBlock = 1; sn._emptyDirBlock = DIRSIZE-1;
+	sn.emptyFileBlock = 0; sn._emptyFileBlock = FILESIZE-1;
+	sn.emptyIndexBlock = 0; sn._emptyIndexBlock = INDEXSIZE-1;
 	ofstream fout (disk.c_str (), std::ios::binary);
 	fout.write ((char *)&sn, sizeof sn);
 	//写入用户块
@@ -32,8 +32,10 @@ void init () { //重新初始化磁盘块
 	strcpy (db.dirOwner, "admin");
 	db.type = 1;
 	db.faDirID = -1;
+	db.sonDirID = -1;
 	db.used = true;
 	fout.write ((char *)&db, sizeof db);
+	db.used = false;
 	for (int i = 1; i < DIRSIZE; i++) {
 		if (i != DIRSIZE-1) db.nextDirID = i+1;
 		else db.nextDirID = -1;
@@ -54,16 +56,23 @@ void init () { //重新初始化磁盘块
 		fout.write ((char *)&ib, sizeof ib);
 	}
 	fout.close ();
+	curDirID = 0;
+	curPath.clear (); curPath.pb ("root");
 	return ;
 }
 
 void load () {			//载入磁盘文件
+    //const char *disk = "disk";
+    cout << "fuck" << endl;
 	ifstream fin (disk.c_str ());
+	//cout << disk.c_str () << endl;
 	if (fin.is_open ()) {
+        cout << "open" << endl;
         fin.close ();
 		return ;
 	}
 	else {
+        cout << "init" << endl;
 		init ();		//磁盘块丢失，重新初始化
 	}
 }
@@ -71,8 +80,13 @@ void load () {			//载入磁盘文件
 void bash () {			//命令行模式操作文件系统
 	string op1, op2, op3;
 	showCurPath (0);	//命令行显示当前路径用户
+	//cout << "test_bash" << endl;
+	//while (cin >> op1) cout << op1 << endl;
 	while (cin >> op1) {
+	    cout << "test_" << op1 << endl;
+	    //while (1) {}
 		if (op1 == "ls") {
+            //cout << "ls" << endl;
 			showAllSonDir ();	//显示当前路径下所有子目录
 		}
 		else if (op1 == "mkdir") { 			//创建单级子目录
@@ -193,24 +207,25 @@ void bash () {			//命令行模式操作文件系统
 				}
 			}
 		}
-		else if (op1 == "open") {
-			string fileName; cin >> fileName;
-			int id = openFile (fileName);		//打开文件的目录块 返回对应的文件内容块编号
-			if (id == -1) {
-				cout << "文件名有误！" << endl;
-				goto out;
-			}
-			runVim(id);		//对文件内容进行编辑
-		}
+//		else if (op1 == "open") {
+//			string fileName; cin >> fileName;
+//			int id = openFile (fileName);		//打开文件的目录块 返回对应的文件内容块编号
+//			if (id == -1) {
+//				cout << "文件名有误！" << endl;
+//				goto out;
+//			}
+//			runVim(id);		//对文件内容进行编辑
+//		}
 		else if (op1 == "exit") {
+            return ;
 		}
 		else {
 			cout << "输入的指令有误！" << endl;
 			goto out;
 		}
+		out: ;
+		showCurPath (0);
 	}
-	out: ;
-	showCurPath (0);
 }
 
 

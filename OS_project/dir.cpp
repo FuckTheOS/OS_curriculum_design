@@ -22,7 +22,7 @@ void writeDir (dirBlock db, int id){	//将目录块信息写入目录块
 		exit (0);
 	}
 	ofstream fout (disk.c_str (), std::ios::binary|ios::in|ios::out);
-	fout.seekp (userSegOffset+sizeof (db)*id, ios::beg);
+	fout.seekp (dirSegOffset+sizeof (db)*id, ios::beg);
 	fout.write ((char *)&db, sizeof db);
 	fout.close ();
 }
@@ -47,7 +47,7 @@ int giveDirBlock (){					//分配新的目录块
 //参数表示目录块类型
 //如果分配成功返回目录块ID 否则返回-1
 
-bool checkDirName (string newDirName, int dirType = 1){	//检查目录名是否和当前其他目录冲突
+bool checkDirName (string newDirName, int dirType){	//检查目录名是否和当前其他目录冲突
 	dirBlock db = readDir (curDirID);
 	if (db.sonDirID == -1) return true;
 	db = readDir (db.sonDirID);
@@ -64,11 +64,18 @@ bool checkDirName (string newDirName, int dirType = 1){	//检查目录名是否�
 
 void showAllSonDir (){	//显示当前路径下所有子目录
 	dirBlock db = readDir (curDirID);
+	//cout << 1 <<endl;
+	cout << db.dirName << endl;
+	cout << db.sonDirID << endl;
 	if (db.sonDirID == -1) { 			//空目录
+//        cout << "test" << endl;
 		cout << endl;
+//		while (1) {}
 		return ;
 	}
-	db = readDir (db.nextDirID);
+	cout << ".." << endl;
+	while (1) {}
+	db = readDir (db.sonDirID);
 	cout << db.dirName << " ";
 	while (db.nextDirID != -1) {
 		db = readDir (db.nextDirID);
@@ -238,13 +245,12 @@ bool delDir (int dirID, string dirPath, int type){	//删掉目录块
 
 bool delAllDir (int dirID) {		//递归删掉整个目录块
 	bool flag = true;
-	dirBlock db;
-	if (dirID.sonDirID == -1) {
+	dirBlock db = readDir (dirID);
+	if (db.sonDirID == -1) {
 		if (!checkMod (curUserID, dirID, 3))
 			return false;
 	}
 	else {
-		db = readDir (dirID);
 		flag = delAllDir (db.sonDirID);
 	}
 	if (db.nextDirID != -1) {
@@ -255,7 +261,7 @@ bool delAllDir (int dirID) {		//递归删掉整个目录块
 
 void releaseDir (int dirID) {		//释放一块目录块
 	superNodeBlock sn = readSuperNode ();
-	dirBlock db = readBlock (dirID);
+	dirBlock db = readDir (dirID);
 	db.used = 0;
 	if (sn.emptyDirBlock == -1) {
 		sn.emptyDirBlock = dirID;
@@ -264,11 +270,11 @@ void releaseDir (int dirID) {		//释放一块目录块
 	else {
 		dirBlock db = readDir (sn._emptyDirBlock);
 		db.nextDirID = dirID;
-		write (db, sn._emptyDirBlock);
+		writeDir (db, sn._emptyDirBlock);
 		sn._emptyDirBlock = dirID;
 	}
 	writeSuperNode (sn);
-	dirBlock faDir = read (db.faDirID);
+	dirBlock faDir = readDir (db.faDirID);
 	if (db.nextDirID == -1) {
 		faDir.sonDirID = -1;
 	}

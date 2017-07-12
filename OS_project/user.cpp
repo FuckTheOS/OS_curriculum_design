@@ -3,6 +3,19 @@
 #include "dir.h"
 
 bool userLogin () {			//刚开始时的用户登录
+    string userName, passwd;
+    cout << "        请输入用户名: "; cin >> userName;
+    cout << "        请输入密码: "; cin >> passwd;
+    system ("CLS");
+    userBlock ub;
+	superNodeBlock sn = readSuperNode ();
+	for (int i = 0; i < sn.emptyUserBlock; i++) {
+		ub = readUser (i);
+		if (userName == (string)ub.userName && passwd == (string)ub.userPassword) {  //找到该用户
+		    curUserID = i;
+		    return true;
+		}
+	}
 	return 0;
 }
 
@@ -61,6 +74,7 @@ bool createuser (string name, string passwd, int userMod){	//创建用户
 	writeUser (ub, sn.emptyUserBlock);
 	sn.emptyUserBlock = (sn.emptyUserBlock+1 == USERSIZE ? -1 : sn.emptyUserBlock+1);
 	writeSuperNode (sn);
+	return true;
 }
 //参数表示用户名和用户密码 被创建用户的权限
 //成功返回1 否则返回0

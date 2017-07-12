@@ -1,9 +1,11 @@
 #include "common.h"
 #include "file.h"
+#include "user.h"
+#include "index.h"
 
 fileBlock readFile (int id){	//根据文件块id读取文件内容
-	fileBlcok fb;
-	ifstream fin (dis.c_str (), std::ios::binary);
+	fileBlock fb;
+	ifstream fin (disk.c_str (), std::ios::binary);
 	fin.seekg (fileSegOffset+sizeof (fb)*id, ios::beg);
 	fin.read ((char *)&fb, sizeof fb);
 	fin.close ();
@@ -11,14 +13,15 @@ fileBlock readFile (int id){	//根据文件块id读取文件内容
 }
 
 void writeFile (fileBlock db, int id){  	//将文件内容写入文件块
-	ofstream fout (dis.c_str (), std::ios::binary|ios::in|ios::out);
+    fileBlock fb;
+	ofstream fout (disk.c_str (), std::ios::binary|ios::in|ios::out);
 	fout.seekp (fileSegOffset+sizeof (fb)*id, ios::beg);
 	fout.write ((char *)&fb, sizeof fb);
 	fout.close ();
 }
 
 int openFile (string fileaName){ 			//打开文件的目录块 返回对应的文件内容块编号
-	dirBlcok db;
+	dirBlock db;
 	db = readDir (curDirID);
 	if (db.sonDirID == -1)
 		return -1;
@@ -44,7 +47,7 @@ void vim (int id){				//对文件内容进行编辑
 	while (true) {
 		//用getch实现的小型vim 待完善
 	}
-	write (fb, id);
+	writeFile (fb, id);
 }
 //参数表示文件内容块的索引
 
@@ -61,7 +64,7 @@ void releaseFile(int fileID){              //释放文件块
      else{
          fileBlock fb1 = readFile(sn._emptyFileBlock);
          fb1.nextFileID = fileID;
-         writeFile(ib1,sn._emptyIndexBlock);
+         writeFile(fb1,sn._emptyIndexBlock);
          sn._emptyFileBlock = fileID;
     }
     writeSuperNode(sn);
@@ -91,18 +94,18 @@ bool touch (string fileName,string newDirMod){           //当前目录下新建
 		return false;
 	}
 	if (newDirMod == "p") {
-		userBlcok ub = readUser (curUserID);
+		userBlock ub = readUser (curUserID);
 		if ((string)ub.userName != "admin") {
 			cout << "权限错误！" << endl;
 			return false;
 		}
 	}
-	if (!checkDirName (newFileName)) { 	//文件名检查没通过
+	if (!checkDirName (fileName)) { 	//文件名检查没通过
 		cout << "文件名错误！" << endl;
 		return false;
 	}
 	int dirID = giveDirBlock ();	//分配新的目录块
-	int indexID = giveIndexBlcok ();//分配新的索引块
+	int indexID = giveIndexBlock ();//分配新的索引块
 	int fileID = giveFileBlock();
 	if (dirID == -1 || indexID == -1||fileID == -1) {
 		cout << "磁盘空间不足!" << endl;
@@ -137,8 +140,8 @@ bool touch (string fileName,string newDirMod){           //当前目录下新建
 
 	db = readDir (dirID);
 	userBlock ub = readUser (curUserID);
-	strcpy (db.fileName, newFileName.c_str ());
-	strcpy (db.dirOwner, ub.name);
+	strcpy (db.dirName, fileName.c_str ());
+	strcpy (db.dirOwner, ub.userName);
 	db.dirSize = 0;
 	db.dirCreateTime = getTime ();
 	db.dirChangeTime = db.dirCreateTime;
@@ -161,7 +164,7 @@ void cat (string filename){		//输出当前目录下的文件内容
 		cout << "权限错误！" << endl;
 		return ;
 	}
-	dirBlcok db = readDir (dirID);
+	dirBlock db = readDir (dirID);
 	indexBlock ib = readIndex (db.textLocation);
 	fileBlock fb = readFile (ib.diskOffset);
 	cout << fb.text << endl;
