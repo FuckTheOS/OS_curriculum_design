@@ -1,5 +1,7 @@
 #include "file.h"
-
+#include "common.h"
+#include "dir.h"
+#include "user.h"
 void init () { //重新初始化磁盘块
 	//磁盘文件名//
 	//写入超级节点块
@@ -96,7 +98,7 @@ void bash () {			//命令行模式操作文件系统
 					cin >> newDirMod;
 				}
 			}
-			mkdir (newDirName, newDirMod);	//在当前目录下创建子目录
+			mkDir (newDirName, newDirMod);	//在当前目录下创建子目录
 		}
 		else if (op1 == "mkdirs") {			//创建多级子目录
 			string newDirPath;

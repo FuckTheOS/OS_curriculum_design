@@ -3,9 +3,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <windows.h>
-#include "file.h"
-#include "user.h"
-#include "dir.h"
+#include "filestruct.h"
 using namespace std;
 // Edit by Kelukin to support the file modify operation in file system
 void displayVim();

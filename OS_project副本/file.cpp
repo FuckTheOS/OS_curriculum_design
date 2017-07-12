@@ -1,5 +1,6 @@
 #include "file.h"
-
+#include "dir.h"
+#include "common.h"
 int openFile (string fileaName){ 			//打开文件的目录块 返回对应的文件内容块编号
 	dirBlock db;
 	db = readDir (curDirID);

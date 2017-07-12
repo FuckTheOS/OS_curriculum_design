@@ -1,5 +1,5 @@
 #include "user.h"
-
+#include "common.h"
 bool userLogin () {			//刚开始时的用户登录
     string userName, passwd;
     cout << "        input username: "; cin >> userName;

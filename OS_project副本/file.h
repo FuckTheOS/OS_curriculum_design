@@ -1,7 +1,7 @@
 #ifndef FILE_H_INCLUDED
 #define FILE_H_INCLUDED
-
-#include "dir.h"
+#include <string>
+using namespace std;
 
 int openFile (string fileaName);//打开文件的目录块 返回对应的文件内容块编号
 //参数表示当前路径下的文件名

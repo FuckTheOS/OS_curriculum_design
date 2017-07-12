@@ -1,7 +1,7 @@
 #ifndef DIR_H_INCLUDED
 #define DIR_H_INCLUDED
-
-#include "user.h"
+#include <string>
+using namespace std;
 
 void showAllSonDir ();	//显示当前路径下所有子目录
 //当前路径直接用全局变量
@@ -13,7 +13,7 @@ bool checkDirName (string newDirName, int dirType = 1);	//检查目录名是否和当前其
 //参数表示希望新建的文件名
 //如果不冲突返回1 否则返回0
 //当前路径直接是全局变量
-bool mkdir (string newDirName, string newDirMod, int _curDirID = curDirID);	//在目录下创建子目录
+bool mkDir (string newDirName, string newDirMod, int _curDirID = -1);	//在目录下创建子目录
 //第三个参数缺省表示目前所在的目录 否则表示给定目录
 //新目录的名字 新目录的权限(空串表示-a)
 //创建成功返回1 否则返回0

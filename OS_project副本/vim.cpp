@@ -10,6 +10,10 @@
 #define KEY_LEFT 75
 #define KEY_DOWN 80
 #define KEY_RIGHT 77
+#include "file.h"
+#include "user.h"
+#include "dir.h"
+#include "common.h"
 static short p_x = 0, p_y = 0;//光标目前所处的位置 仅为窗口中的相对位置
 static int x_backup, y_backup;
 static int begin_y;//窗口目前所处的位置相对于全部Buffer而言的位置

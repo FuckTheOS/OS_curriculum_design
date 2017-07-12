@@ -1,7 +1,7 @@
 #ifndef USER_H_INCLUDED
 #define USER_H_INCLUDED
-
-#include "common.h"
+#include <string>
+using namespace std;
 
 bool userLogin ();	//刚开始时的用户登录
 					//可以选择admin，普通用户，访问模式(无用户不用输入账号密码)

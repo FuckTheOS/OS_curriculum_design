@@ -1,5 +1,7 @@
 #include "dir.h"
-
+#include "user.h"
+#include "common.h"
+using namespace std;
 int giveDirBlock (){					//分配新的目录块
 	superNodeBlock sn = readSuperNode ();
 	if (sn.emptyDirBlock == -1) {		//目录块空间不足
@@ -52,7 +54,8 @@ void showAllSonDir (){	//显示当前路径下所有子目录
 //当前路径直接用全局变量
 //按照a b.txt c d.cpp 的格式输出
 
-bool mkdir (string newDirName, string newDirMod, int _curDirID) {	//在当前目录下创建子目录
+bool mkDir (string newDirName, string newDirMod, int _curDirID) {	//在当前目录下创建子目录
+	if(_curDirID == -1) _curDirID = curDirID;
 	if (!checkMod (curUserID, curDirID, 2)) {	//权限检查没通过
 		cout << "Mod fault!" << endl;
 		return false;
@@ -129,7 +132,7 @@ bool mkdirs (string newDirPath, string newDirMod){	//在当前目录下创建多级子目录
 		if (tmp == "/CUR") continue;
 		int nextID = findNextDir (dirID, tarDirPath[i]);
 		if (nextID == -1) {	//不存在需要新创建
-			if (!mkdir (tarDirPath[i], (string)"a",  dirID));
+			if (!mkDir (tarDirPath[i], (string)"a",  dirID));
 				return false;
 		}
 		else {
