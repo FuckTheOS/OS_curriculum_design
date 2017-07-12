@@ -75,7 +75,6 @@ vector <string>& pathPrase (string tarPath){	//用自动机解析路径
 }
 
 bool visitPath(dirBlock& cur, string target, int& curID)
-//这里存在bug 访问下一级dir应该通过索引块
 {
     //权限检查待更新
     //indexBlock ib;
