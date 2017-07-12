@@ -11,6 +11,7 @@ bool userLogin () {			//刚开始时的用户登录
 		ub = readUser (i);
 		if (userName == (string)ub.userName && passwd == (string)ub.userPassword) {  //找到该用户
 		    curUserID = i;
+		    cout << "userID" << curUserID << endl;
 		    return true;
 		}
 	}

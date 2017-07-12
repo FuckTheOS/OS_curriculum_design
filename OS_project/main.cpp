@@ -236,6 +236,7 @@ void bash () {			//命令行模式操作文件系统
 int main () {
 	load ();			//载入磁盘文件
 	if (!userLogin ()) {//用户登录
+	    cout << "userID2" << curUserID << endl;
 		system ("CLS");
 		cout << "fail to longin!" << endl;
 		exit (0);
