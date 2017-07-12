@@ -1,5 +1,6 @@
 #include "common.h"
 #include "user.h"
+#include "dir.h"
 
 bool userLogin () {			//刚开始时的用户登录
 	return 0;
@@ -26,9 +27,9 @@ bool chuser (string name, string passwd){	//在当前目录下切换用户
 	userBlock ub;
 	for (int i = 0; i < USERSIZE; i++) {
 		ub = readUser (i);
-		if ((string)un.userName == name && (string)ub.userPassword == passwd) {
+		if ((string)ub.userName == name && (string)ub.userPassword == passwd) {
 			int dirID = curDirID;
-			dirBlcok db;
+			dirBlock db;
 			while (dirID != -1) {		//往上追溯 看看是够和上面的目录冲突
 				if (dirID == 0)
 					return true;
@@ -57,9 +58,9 @@ bool createuser (string name, string passwd, int userMod){	//创建用户
 	strcpy (ub.userPassword, passwd.c_str ());
 	ub.userMod = userMod;
 	ub.used = 1;
-	writeUser (sn.emptyUserBlock, ub);
-	sn.emptyUserBlock = (sn.emptyUserBlock+1 == USERSIZE ? -1 : superNodeBlock+1);
-	writeSuperNode (superNodeBlock);
+	writeUser (ub, sn.emptyUserBlock);
+	sn.emptyUserBlock = (sn.emptyUserBlock+1 == USERSIZE ? -1 : sn.emptyUserBlock+1);
+	writeSuperNode (sn);
 }
 //参数表示用户名和用户密码 被创建用户的权限
 //成功返回1 否则返回0

@@ -107,12 +107,12 @@ void bash () {			//命令行模式操作文件系统
 			}
 			string tarPath; cin >> tarPath;
 			if (tarPath == "..") {	//跳转到上一级目录
-				if (!gotoFaDir (curDir)) {
+				if (!gotoFaDir ()) {
 					cout << "已经处在根目录！" << endl;
 				}
 			}
 			else {
-				if (!gotoPath (tarPath)) {	//跳转到目标目录
+				if (!gotoDir (tarPath)) {	//跳转到目标目录
 					cout << "目标路径不存在" << endl;
 					goto out;
 				}
@@ -123,7 +123,13 @@ void bash () {			//命令行模式操作文件系统
 		}
 		else if (op1 == "touch") {
 			string fileName; cin >> fileName;
-			touch (fileName);
+			string newDirMod = "a"; char ch;
+			ch = getchar ();
+			if (ch == ' ') {
+                getchar ();
+                cin >> newDirMod;
+			}
+			touch (fileName, newDirMod);
 		}
 		else if (op1 == "rm") {
 			string tmp, path; cin >> tmp;
@@ -137,7 +143,7 @@ void bash () {			//命令行模式操作文件系统
 			else {
 				path = tmp;
 			}
-			delDir (curID, path, tmp == "-rf" ? 0 : 1);
+			delDir (curDirID, path, tmp == "-rf" ? 0 : 1);
 		}
 		else if (op1 == "cp") {
 			string fromPath, toPath;
@@ -174,7 +180,7 @@ void bash () {			//命令行模式操作文件系统
 				(newUserMod == "r" ? 3 : 2) :
 				(newUserMod == "p" ? 0 : 1));
 			userBlock ub = readUser (curUserID);
-			if (userMod < db.userMod) {
+			if (userMod < ub.userMod) {
 				cout << "权限错误！" << endl;
 			}
 			else {
@@ -188,13 +194,13 @@ void bash () {			//命令行模式操作文件系统
 			}
 		}
 		else if (op1 == "open") {
-			string fileNmae; cin >> fileName;
-			int id = openFile (fileaName);		//打开文件的目录块 返回对应的文件内容块编号
+			string fileName; cin >> fileName;
+			int id = openFile (fileName);		//打开文件的目录块 返回对应的文件内容块编号
 			if (id == -1) {
 				cout << "文件名有误！" << endl;
 				goto out;
 			}
-			runVim(id)		//对文件内容进行编辑
+			runVim(id);		//对文件内容进行编辑
 		}
 		else if (op1 == "exit") {
 		}

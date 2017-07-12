@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1499842299 source:c:\morejarphone\code相关\os_project\common.cpp
+1499844160 source:c:\morejarphone\code相关\os_project\common.cpp
 	"common.h"
 	"dir.h"
 	"user.h"
@@ -7,16 +7,18 @@
 	"user.h"
 	"index.h"
 
-1499783874 source:c:\morejarphone\code相关\os_project\dir.cpp
+1499844160 source:c:\morejarphone\code相关\os_project\dir.cpp
 	"common.h"
 	"dir.h"
 	"index.h"
+	"user.h"
+	"file.h"
 
-1499783874 source:c:\morejarphone\code相关\os_project\file.cpp
+1499844160 source:c:\morejarphone\code相关\os_project\file.cpp
 	"common.h"
 	"file.h"
 
-1499783874 source:c:\morejarphone\code相关\os_project\index.cpp
+1499844160 source:c:\morejarphone\code相关\os_project\index.cpp
 	"common.h"
 	"index.h"
 
@@ -121,7 +123,7 @@
 	"common.h"
 	"index.h"
 
-1499842266 c:\morejarphone\code相关\os_project\common.h
+1499844160 c:\morejarphone\code相关\os_project\common.h
 	<cstdio>
 	<iostream>
 	<cstring>
@@ -138,11 +140,24 @@
 	<windows.h>
 	<fstream>
 
-1499842366 c:\morejarphone\code相关\os_project\dir.h
+1499844160 c:\morejarphone\code相关\os_project\dir.h
 
-1499792238 c:\morejarphone\code相关\os_project\index.h
+1499844160 c:\morejarphone\code相关\os_project\index.h
 
-1499783874 c:\morejarphone\code相关\os_project\file.h
+1499844160 c:\morejarphone\code相关\os_project\file.h
 
-1499783874 c:\morejarphone\code相关\os_project\user.h
+1499844160 c:\morejarphone\code相关\os_project\user.h
+
+1499844759 source:c:\morejarphone\code相关\os_project\main.cpp
+	"common.h"
+	"user.h"
+	"dir.h"
+	"file.h"
+	"index.h"
+	"vim.h"
+
+1499844160 c:\morejarphone\code相关\os_project\vim.h
+	<cstdlib>
+	<cstdio>
+	<windows.h>
 
