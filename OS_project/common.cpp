@@ -96,7 +96,7 @@ bool visitPath(dirBlock& cur, string target, int& curID)
         }
         return true;
     }
-    while(stricmp(cur.dirName,target.c_str())!=0)
+    while(strcmp(cur.dirName,target.c_str())!=0)
     {
         if(cur.nextDirID == -1) return false; //当前目录下并找不到指定的目录
         curID = cur.nextDirID;
@@ -107,7 +107,7 @@ bool visitPath(dirBlock& cur, string target, int& curID)
     return true;
 }
 
-int findNextDir (int dirID, string target, int dirType = 1){     //访问dirID下的target目录 目录类型为1
+int findNextDir (int dirID, string target, int dirType){     //访问dirID下的target目录 目录类型为1
     dirBlock db = readDir (dirID), tmp;
     if (db.sonDirID == -1) return -1;
     tmp = readDir (db.sonDirID);

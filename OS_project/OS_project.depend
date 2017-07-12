@@ -1,7 +1,11 @@
 # depslib dependency file v1.0
-1499783874 source:c:\morejarphone\code相关\os_project\common.cpp
+1499842299 source:c:\morejarphone\code相关\os_project\common.cpp
 	"common.h"
 	"dir.h"
+	"user.h"
+	"file.h"
+	"user.h"
+	"index.h"
 
 1499783874 source:c:\morejarphone\code相关\os_project\dir.cpp
 	"common.h"
@@ -117,7 +121,7 @@
 	"common.h"
 	"index.h"
 
-1499786183 c:\morejarphone\code相关\os_project\common.h
+1499842266 c:\morejarphone\code相关\os_project\common.h
 	<cstdio>
 	<iostream>
 	<cstring>
@@ -134,9 +138,11 @@
 	<windows.h>
 	<fstream>
 
-1499783874 c:\morejarphone\code相关\os_project\dir.h
+1499842366 c:\morejarphone\code相关\os_project\dir.h
 
-1499783874 c:\morejarphone\code相关\os_project\index.h
+1499792238 c:\morejarphone\code相关\os_project\index.h
 
 1499783874 c:\morejarphone\code相关\os_project\file.h
+
+1499783874 c:\morejarphone\code相关\os_project\user.h
 

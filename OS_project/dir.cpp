@@ -1,6 +1,8 @@
 #include "common.h"
 #include "dir.h"
 #include "index.h"
+#include "user.h"
+#include "file.h"
 
 dirBlock readDir (int id) {				//根据文件块id读取文件块信息
 	if (id >= DIRSIZE || id < 0) {
@@ -19,7 +21,7 @@ void writeDir (dirBlock db, int id){	//将目录块信息写入目录块
 		cout << "段错误！" << endl;
 		exit (0);
 	}
-	ofstream fout (dis.c_str (), std::ios::binary|ios::in|ios::out);
+	ofstream fout (disk.c_str (), std::ios::binary|ios::in|ios::out);
 	fout.seekp (userSegOffset+sizeof (db)*id, ios::beg);
 	fout.write ((char *)&db, sizeof db);
 	fout.close ();
@@ -36,7 +38,7 @@ int giveDirBlock (){					//分配新的目录块
 		sn._emptyDirBlock = -1;
 	}
 	else {
-		dirBlcok db = readDir (sn.emptyDirBlock);	//读取空目录块信息
+		dirBlock db = readDir (sn.emptyDirBlock);	//读取空目录块信息
 		sn.emptyDirBlock = db.nextDirID;			//该块的下一块作为空目录块的首块
 	}
 	writeSuperNode (sn);
@@ -45,7 +47,7 @@ int giveDirBlock (){					//分配新的目录块
 //参数表示目录块类型
 //如果分配成功返回目录块ID 否则返回-1
 
-bool checkDirName (string newDirName){	//检查目录名是否和当前其他目录冲突
+bool checkDirName (string newDirName, int dirType = 1){	//检查目录名是否和当前其他目录冲突
 	dirBlock db = readDir (curDirID);
 	if (db.sonDirID == -1) return true;
 	db = readDir (db.sonDirID);
@@ -61,7 +63,7 @@ bool checkDirName (string newDirName){	//检查目录名是否和当前其他目
 //如果不冲突返回1 否则返回0
 
 void showAllSonDir (){	//显示当前路径下所有子目录
-	dirBlcok db = readDir (curDirID);
+	dirBlock db = readDir (curDirID);
 	if (db.sonDirID == -1) { 			//空目录
 		cout << endl;
 		return ;
@@ -77,13 +79,13 @@ void showAllSonDir (){	//显示当前路径下所有子目录
 //当前路径直接用全局变量
 //按照a b.txt c d.cpp 的格式输出
 
-bool mkdir (string newDirName, string newDirMod, int _curDirID = curDirID) {	//在当前目录下创建子目录
+bool mkdir (string newDirName, string newDirMod, int _curDirID) {	//在当前目录下创建子目录
 	if (!checkMod (curUserID, curDirID, 2)) {	//权限检查没通过
 		cout << "权限错误！" << endl;
 		return false;
 	}
 	if (newDirMod == "p") {
-		userBlcok ub = readUser (curUserID);
+		userBlock ub = readUser (curUserID);
 		if ((string)ub.userName != "admin") {
 			cout << "权限错误！" << endl;
 			return false;
@@ -93,8 +95,8 @@ bool mkdir (string newDirName, string newDirMod, int _curDirID = curDirID) {	//�
 		cout << "文件名错误！" << endl;
 		return false;
 	}
-	int dirID = giveDirBlock (1);	//分配新的目录块
-	//int indexID = giveIndexBlcok ();//分配新的索引块
+	int dirID = giveDirBlock ();	//分配新的目录块
+	//int indexID = giveIndexBlock ();//分配新的索引块
 	if (dirID == -1/* || indexID == -1*/) {
 		cout << "磁盘空间不足!" << endl;
 		return false;
@@ -106,7 +108,7 @@ bool mkdir (string newDirName, string newDirMod, int _curDirID = curDirID) {	//�
 
 	dirBlock db = readDir (_curDirID);
 	if (db.sonDirID == -1) {
-		db.sonDirID = indexID;
+		db.sonDirID = dirID;
 	}
 	else {
 		int tmp = db.sonDirID;
@@ -118,8 +120,8 @@ bool mkdir (string newDirName, string newDirMod, int _curDirID = curDirID) {	//�
 
 	db = readDir (dirID);
 	userBlock ub = readUser (curUserID);
-	strcpy (db.fileName, newDirName.c_str ());
-	strcpy (db.dirOwner, ub.name);
+	strcpy (db.dirName, newDirName.c_str ());
+	strcpy (db.dirOwner, ub.userName);
 	db.dirSize = 0;
 	db.dirCreateTime = getTime ();
 	db.dirChangeTime = db.dirCreateTime;
@@ -146,11 +148,11 @@ bool mkdirs (string newDirPath, string newDirMod){	//在当前目录下创建多
 		if (tmp == "/TOT") {
 			return 0;
 		}
-		if (i == 0 && tmp == root) continue;
-		if (tmp == "CUR") continue;
+		if (i == 0 && tmp == "/root") continue;
+		if (tmp == "/CUR") continue;
 		int nextID = findNextDir (dirID, tarDirPath[i]);
 		if (nextID == -1) {	//不存在需要新创建
-			if (!mkdir (newDirPath[i], (string)"a",  dirID));
+			if (!mkdir (tarDirPath[i], (string)"a",  dirID));
 				return false;
 		}
 		else {
@@ -175,7 +177,7 @@ bool gotoDir (string tarPath){			//跳转到新的目录
 //跳转成功返回1 否则返回0
 
 bool gotoFaDir () {						//跳转到父亲目录
-	dirBlcok db = readDir (curDirID);
+	dirBlock db = readDir (curDirID);
 	if (db.faDirID == -1) {	 	//已经处在最上级目录
 		return false;
 	}
@@ -197,7 +199,7 @@ bool delDir (int dirID, string dirPath, int type){	//删掉目录块
 		if (!checkMod (curUserID, dirID, 2))
 			return false;		//用户权限错误
 	}
-	string leaf = path[path.szie ()-1];
+	string leaf = path[path.size ()-1];
 	if (type == 0) {	//删除整个目录块
 		dirID = findNextDir (dirID, leaf);
 		if (dirID == -1)
@@ -211,9 +213,9 @@ bool delDir (int dirID, string dirPath, int type){	//删掉目录块
 		dirBlock db = readDir (dirID);
 		if (db.sonDirID == -1)
 			return false;
-		dirID = db.sonDirID
+		dirID = db.sonDirID;
 		db = readDir (dirID);
-		while (!((string)db.Name != leaf && db.type == 2)) {
+		while (!((string)db.dirName != leaf && db.type == 2)) {
 			if (db.nextDirID == -1)
 				return false;
 			dirID = db.nextDirID;
@@ -221,7 +223,12 @@ bool delDir (int dirID, string dirPath, int type){	//删掉目录块
 		}
 		if (!checkMod (curUserID, dirID, 3))
 			return false;
-		delFile (dirID);	//删除一个文件块
+        int indexID = db.textLocation;
+        indexBlock ib = readIndex (indexID);
+        int fileID = ib.diskOffset;
+        releaseIndex (indexID);
+        releaseDir (dirID);
+        releaseFile (fileID);
 	}
 	return true;
 }
@@ -230,7 +237,7 @@ bool delDir (int dirID, string dirPath, int type){	//删掉目录块
 
 bool delAllDir (int dirID) {		//递归删掉整个目录块
 	bool flag = true;
-	dirBlcok db;
+	dirBlock db;
 	if (dirID.sonDirID == -1) {
 		if (!checkMod (curUserID, dirID, 3))
 			return false;
@@ -254,7 +261,7 @@ void releaseDir (int dirID) {		//释放一块目录块
 		sn._emptyDirBlock = dirID;
 	}
 	else {
-		dirBlcok db = readDir (sn._emptyDirBlock);
+		dirBlock db = readDir (sn._emptyDirBlock);
 		db.nextDirID = dirID;
 		write (db, sn._emptyDirBlock);
 		sn._emptyDirBlock = dirID;

@@ -8,10 +8,10 @@ void writeDir (dirBlock db, int id);  	//将目录块信息写入目录块
 void showAllSonDir ();	//显示当前路径下所有子目录
 //当前路径直接用全局变量
 //按照a b.txt c d.cpp 的格式输出
-int giveDirBlock ();					//分配新的目录块 
+int giveDirBlock ();					//分配新的目录块
 //参数表示目录块类型
 //如果分配成功返回目录块ID 否则返回-1
-bool checkDirName (string newDirName);	//检查目录名是否和当前其他目录冲突
+bool checkDirName (string newDirName, int dirType);	//检查目录名是否和当前其他目录冲突
 //参数表示希望新建的文件名
 //如果不冲突返回1 否则返回0
 //当前路径直接是全局变量
