@@ -1,17 +1,15 @@
-#include "common.h"
 #include "user.h"
-#include "dir.h"
 
-bool userLogin () {			//åˆšå¼€å§‹æ—¶çš„ç”¨æˆ·ç™»å½•
+bool userLogin () {			//¸Õ¿ªÊ¼Ê±µÄÓÃ»§µÇÂ¼
     string userName, passwd;
-    cout << "        è¯·è¾“å…¥ç”¨æˆ·å: "; cin >> userName;
-    cout << "        è¯·è¾“å…¥å¯†ç : "; cin >> passwd;
+    cout << "        input username: "; cin >> userName;
+    cout << "        input password: "; cin >> passwd;
     system ("CLS");
     userBlock ub;
 	superNodeBlock sn = readSuperNode ();
 	for (int i = 0; i < sn.emptyUserBlock; i++) {
 		ub = readUser (i);
-		if (userName == (string)ub.userName && passwd == (string)ub.userPassword) {  //æ‰¾åˆ°è¯¥ç”¨æˆ·
+		if (userName == (string)ub.userName && passwd == (string)ub.userPassword) {  //ÕÒµ½¸ÃÓÃ»§
 		    curUserID = i;
 		    return true;
 		}
@@ -19,7 +17,7 @@ bool userLogin () {			//åˆšå¼€å§‹æ—¶çš„ç”¨æˆ·ç™»å½•
 	return 0;
 }
 
-userBlock readUser (int id){				//æ ¹æ®ç”¨æˆ·å—idè¯»å–ç”¨æˆ·å—ä¿¡æ¯
+userBlock readUser (int id){				//¸ù¾ÝÓÃ»§¿éid¶ÁÈ¡ÓÃ»§¿éÐÅÏ¢
 	userBlock ub;
 	ifstream fin (disk.c_str (), std::ios::binary);
 	fin.seekg (userSegOffset+sizeof (ub)*id, ios::beg);
@@ -28,42 +26,43 @@ userBlock readUser (int id){				//æ ¹æ®ç”¨æˆ·å—idè¯»å–ç”¨æˆ·å—ä¿¡æ¯
 	return ub;
 }
 
-void writeUser (userBlock ub, int id){  	//å°†ç”¨æˆ·å—ä¿¡æ¯å†™å…¥ç”¨æˆ·å—
+void writeUser (userBlock ub, int id){  	//½«ÓÃ»§¿éÐÅÏ¢Ð´ÈëÓÃ»§¿é
 	ofstream fout (disk.c_str (), std::ios::binary|ios::in|ios::out);
 	fout.seekp (userSegOffset+sizeof (ub)*id, ios::beg);
 	fout.write ((char *)&ub, sizeof ub);
 	fout.close ();
 }
-//è®¿ç›˜ï¼Œæ³¨æ„ä¿æŠ¤åŽŸæœ‰æ•°æ®
+//·ÃÅÌ£¬×¢Òâ±£»¤Ô­ÓÐÊý¾Ý
 
-bool chuser (string name, string passwd){	//åœ¨å½“å‰ç›®å½•ä¸‹åˆ‡æ¢ç”¨æˆ·
+bool chuser (string name, string passwd){	//ÔÚµ±Ç°Ä¿Â¼ÏÂÇÐ»»ÓÃ»§
 	userBlock ub;
 	for (int i = 0; i < USERSIZE; i++) {
 		ub = readUser (i);
 		if ((string)ub.userName == name && (string)ub.userPassword == passwd) {
 			int dirID = curDirID;
 			dirBlock db;
-			while (dirID != -1) {		//å¾€ä¸Šè¿½æº¯ çœ‹çœ‹æ˜¯å¤Ÿå’Œä¸Šé¢çš„ç›®å½•å†²çª
+			while (dirID != -1) {		//ÍùÉÏ×·ËÝ ¿´¿´ÊÇ¹»ºÍÉÏÃæµÄÄ¿Â¼³åÍ»
 				if (dirID == 0)
 					return true;
 				if (!checkMod (i, dirID, 1))
 					return false;
 				db = readDir (db.faDirID);
 			}
+			curUserID = i;
 			return true;
 		}
 	}
 	return false;
 }
-//å‚æ•°è¡¨ç¤ºç”¨æˆ·åå’Œç”¨æˆ·å¯†ç 
-//æˆåŠŸè¿”å›ž1 å¦åˆ™è¿”å›ž0
+//²ÎÊý±íÊ¾ÓÃ»§ÃûºÍÓÃ»§ÃÜÂë
+//³É¹¦·µ»Ø1 ·ñÔò·µ»Ø0
 
-bool createuser (string name, string passwd, int userMod){	//åˆ›å»ºç”¨æˆ·
+bool createuser (string name, string passwd, int userMod){	//´´½¨ÓÃ»§
 	userBlock ub;
 	superNodeBlock sn = readSuperNode ();
 	for (int i = 0; i < sn.emptyUserBlock; i++) {
 		ub = readUser (i);
-		if (name == (string)ub.userName) 	//ç”¨æˆ·åå·²ç»å­˜åœ¨
+		if (name == (string)ub.userName) 	//ÓÃ»§ÃûÒÑ¾­´æÔÚ
 			return false;
 	}
 	ub = readUser (sn.emptyUserBlock);
@@ -76,8 +75,8 @@ bool createuser (string name, string passwd, int userMod){	//åˆ›å»ºç”¨æˆ·
 	writeSuperNode (sn);
 	return true;
 }
-//å‚æ•°è¡¨ç¤ºç”¨æˆ·åå’Œç”¨æˆ·å¯†ç  è¢«åˆ›å»ºç”¨æˆ·çš„æƒé™
-//æˆåŠŸè¿”å›ž1 å¦åˆ™è¿”å›ž0
+//²ÎÊý±íÊ¾ÓÃ»§ÃûºÍÓÃ»§ÃÜÂë ±»´´½¨ÓÃ»§µÄÈ¨ÏÞ
+//³É¹¦·µ»Ø1 ·ñÔò·µ»Ø0
 
 
 

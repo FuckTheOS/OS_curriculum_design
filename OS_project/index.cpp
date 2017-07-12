@@ -1,25 +1,24 @@
-#include "common.h"
 #include "index.h"
 
-int giveIndexBlock (){                       //åˆ†é…æ–°çš„ç´¢å¼•å—
+int giveIndexBlock (){                       //·ÖÅäĞÂµÄË÷Òı¿é
     superNodeBlock sn = readSuperNode ();
-    if (sn.emptyIndexBlock == -1) {		//ç´¢å¼•å—ç©ºé—´ä¸è¶³
+    if (sn.emptyIndexBlock == -1) {		//Ë÷Òı¿é¿Õ¼ä²»×ã
 		return -1;
 	}
 	int res = sn.emptyIndexBlock;
-	if (sn.emptyIndexBlock == sn._emptyIndexBlock) {	//ç´¢å¼•å—åˆšå¥½ç”¨å®Œ
+	if (sn.emptyIndexBlock == sn._emptyIndexBlock) {	//Ë÷Òı¿é¸ÕºÃÓÃÍê
 		sn.emptyIndexBlock = -1;
 		sn._emptyIndexBlock = -1;
 	}
 	else {
-		indexBlock ib = readIndex(sn.emptyIndexBlock);	//è¯»å–ç©ºç›®ç´¢å¼•ä¿¡æ¯
-		sn.emptyIndexBlock = ib.nextIndexID;			//è¯¥å—çš„ä¸‹ä¸€å—ä½œä¸ºç©ºç´¢å¼•å—çš„é¦–å—
+		indexBlock ib = readIndex(sn.emptyIndexBlock);	//¶ÁÈ¡¿ÕÄ¿Ë÷ÒıĞÅÏ¢
+		sn.emptyIndexBlock = ib.nextIndexID;			//¸Ã¿éµÄÏÂÒ»¿é×÷Îª¿ÕË÷Òı¿éµÄÊ×¿é
 	}
 	writeSuperNode (sn);
 	return res;
  }
 
-indexBlock readIndex (int id){			//æ ¹æ®ç´¢å¼•å—idè¯»å–ç´¢å¼•å—ä¿¡æ¯
+indexBlock readIndex (int id){			//¸ù¾İË÷Òı¿éid¶ÁÈ¡Ë÷Òı¿éĞÅÏ¢
 	indexBlock ib;
 	ifstream fin (disk.c_str (), std::ios::binary);
 	fin.seekg (indexSegOffset+sizeof (ib)*id, ios::beg);
@@ -28,14 +27,14 @@ indexBlock readIndex (int id){			//æ ¹æ®ç´¢å¼•å—idè¯»å–ç´¢å¼•å—ä¿¡æ¯
 	return ib;
 }
 
-void writeIndex (indexBlock ib, int id){ //å°†ç´¢å¼•å—ä¿¡æ¯å†™å…¥ç´¢å¼•å—
+void writeIndex (indexBlock ib, int id){ //½«Ë÷Òı¿éĞÅÏ¢Ğ´ÈëË÷Òı¿é
 	ofstream fout (disk.c_str (), std::ios::binary|ios::in|ios::out);
 	fout.seekp (indexSegOffset+sizeof (ib)*id, ios::beg);
 	fout.write ((char *)&ib, sizeof ib);
 	fout.close ();
 }
 
-void releaseIndex (int indexID){		//é‡Šæ”¾ç´¢å¼•å—
+void releaseIndex (int indexID){		//ÊÍ·ÅË÷Òı¿é
     superNodeBlock sn = readSuperNode ();
     indexBlock ib;
     ib.used = 0;

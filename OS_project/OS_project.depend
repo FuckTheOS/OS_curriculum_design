@@ -1,33 +1,21 @@
 # depslib dependency file v1.0
-1499844160 source:c:\morejarphone\code相关\os_project\common.cpp
+1499872407 source:c:\morejarphone\code相关\os_project\common.cpp
 	"common.h"
-	"dir.h"
-	"user.h"
-	"file.h"
-	"user.h"
-	"index.h"
 
-1499849576 source:c:\morejarphone\code相关\os_project\dir.cpp
-	"common.h"
+1499872471 source:c:\morejarphone\code相关\os_project\dir.cpp
 	"dir.h"
-	"index.h"
-	"user.h"
-	"file.h"
 
-1499846009 source:c:\morejarphone\code相关\os_project\file.cpp
+1499871029 source:c:\morejarphone\code相关\os_project\file.cpp
 	"common.h"
 	"file.h"
 	"user.h"
 	"index.h"
 
-1499846344 source:c:\morejarphone\code相关\os_project\index.cpp
-	"common.h"
+1499872471 source:c:\morejarphone\code相关\os_project\index.cpp
 	"index.h"
 
-1499848632 source:c:\morejarphone\code相关\os_project\user.cpp
-	"common.h"
+1499872508 source:c:\morejarphone\code相关\os_project\user.cpp
 	"user.h"
-	"dir.h"
 
 1499439428 source:\\mac\home\desktop\os_project\common.cpp
 	"common.h"
@@ -128,35 +116,35 @@
 	"common.h"
 	"index.h"
 
-1499849885 c:\morejarphone\code相关\os_project\common.h
-	<cstdio>
-	<iostream>
-	<cstring>
-	<queue>
-	<cmath>
-	<algorithm>
-	<stack>
-	<map>
-	<string>
-	<set>
-	<stdlib.h>
-	<unistd.h>
-	<conio.h>
-	<windows.h>
-	<fstream>
+1499872407 c:\morejarphone\code相关\os_project\common.h
+	"dir.h"
+	"user.h"
+	"file.h"
+	"user.h"
+	"index.h"
+	"global.h"
 
-1499845897 c:\morejarphone\code相关\os_project\dir.h
+1499872432 c:\morejarphone\code相关\os_project\dir.h
+	"common.h"
+	"index.h"
+	"user.h"
+	"file.h"
 
-1499845947 c:\morejarphone\code相关\os_project\index.h
+1499872486 c:\morejarphone\code相关\os_project\index.h
+	"common.h"
+	"global.h"
 
 1499845462 c:\morejarphone\code相关\os_project\file.h
 	"common.h"
 	"dir.h"
 	"index.h"
 
-1499844160 c:\morejarphone\code相关\os_project\user.h
+1499872508 c:\morejarphone\code相关\os_project\user.h
+	"common.h"
+	"dir.h"
+	"global.h"
 
-1499849712 source:c:\morejarphone\code相关\os_project\main.cpp
+1499872303 source:c:\morejarphone\code相关\os_project\main.cpp
 	"common.h"
 	"user.h"
 	"dir.h"
@@ -172,7 +160,7 @@
 	"user.h"
 	"dir.h"
 
-1499846575 source:c:\morejarphone\code相关\os_project\vim.cpp
+1499870839 source:c:\morejarphone\code相关\os_project\vim.cpp
 	"vim.h"
 	<cstdlib>
 	<Windows.h>
@@ -180,4 +168,21 @@
 	<iostream>
 	<vector>
 	<string>
+
+1499872232 c:\morejarphone\code相关\os_project\global.h
+	<cstdio>
+	<iostream>
+	<cstring>
+	<queue>
+	<cmath>
+	<algorithm>
+	<stack>
+	<map>
+	<string>
+	<set>
+	<stdlib.h>
+	<unistd.h>
+	<conio.h>
+	<windows.h>
+	<fstream>
 

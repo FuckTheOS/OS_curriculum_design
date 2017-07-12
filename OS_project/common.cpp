@@ -1,11 +1,6 @@
 #include "common.h"
-#include "dir.h"
-#include "user.h"
-#include "file.h"
-#include "user.h"
-#include "index.h"
 
-superNodeBlock readSuperNode (){    //è¯»å…¥è¶…çº§èŠ‚ç‚¹ä¿¡æ¯
+superNodeBlock readSuperNode (){    //¶ÁÈë³¬¼¶½ÚµãĞÅÏ¢
     superNodeBlock sn;
     ifstream fin (disk.c_str (), std::ios::binary);
     fin.seekg (superNodeSegOffset, ios::beg);
@@ -13,7 +8,7 @@ superNodeBlock readSuperNode (){    //è¯»å…¥è¶…çº§èŠ‚ç‚¹ä¿¡æ¯
     fin.close ();
     return sn;
 }
-void writeSuperNode (superNodeBlock sn) {   //å†™å…¥è¶…çº§èŠ‚ç‚¹ä¿¡æ¯
+void writeSuperNode (superNodeBlock sn) {   //Ğ´Èë³¬¼¶½ÚµãĞÅÏ¢
     ofstream fout (disk.c_str (), std::ios::binary|ios::in|ios::out);
     fout.seekp (superNodeSegOffset, ios::beg);
     fout.write ((char *)&sn, sizeof sn);
@@ -21,7 +16,7 @@ void writeSuperNode (superNodeBlock sn) {   //å†™å…¥è¶…çº§èŠ‚ç‚¹ä¿¡æ¯
 }
 
 #define PATH_PRASER_ERROR  path.clear();path.push_back("error");break;
-void showCurPath (int type) {	//è¾“å‡ºå½“å‰è·¯å¾„
+void showCurPath (int type, vector <string> curPath) {	//Êä³öµ±Ç°Â·¾¶
     if (type == 0) {
         cout << "root>";
         for (int i = 1; i < curPath.size (); i++) {
@@ -38,10 +33,10 @@ void showCurPath (int type) {	//è¾“å‡ºå½“å‰è·¯å¾„
     }
 }
 
-vector <string>& pathPrase (string tarPath){	//ç”¨è‡ªåŠ¨æœºè§£æè·¯å¾„
+vector <string>& pathPrase (string tarPath){	//ÓÃ×Ô¶¯»ú½âÎöÂ·¾¶
 	vector <string> path;path.clear();
-	size_t x_point = 0; //æœªå¤„ç†åˆ°çš„tarPathçš„å­—ç¬¦ä¸‹æ ‡
-	if(tarPath[0]=='/') //ç»å¯¹è·¯å¾„
+	size_t x_point = 0; //Î´´¦Àíµ½µÄtarPathµÄ×Ö·ûÏÂ±ê
+	if(tarPath[0]=='/') //¾ø¶ÔÂ·¾¶
     {
         path.push_back("/root");
         x_point = 1;
@@ -51,19 +46,19 @@ vector <string>& pathPrase (string tarPath){	//ç”¨è‡ªåŠ¨æœºè§£æè·¯å¾„
     while(x_point != tarPath.npos)
 	{
 	    size_t tmp_pos = tarPath.find_first_of('/', x_point);
-	    if(tmp_pos == x_point) // ä¸¤ä¸ªç ´æŠ˜å·å †å åœ¨ä¸€èµ· ï¼Œéæ³•
+	    if(tmp_pos == x_point) // Á½¸öÆÆÕÛºÅ¶ÑµşÔÚÒ»Æğ £¬·Ç·¨
         {
           PATH_PRASER_ERROR;
         }
         string tmpString = tarPath.substr(x_point, (tmp_pos != tarPath.npos)? tmp_pos-x_point : tmp_pos);
-        if(tmpString == "*") //é€šé…ç¬¦ä¸åœ¨æœ«å°¾æ—¶ï¼Œéæ³•
+        if(tmpString == "*") //Í¨Åä·û²»ÔÚÄ©Î²Ê±£¬·Ç·¨
             if(tmp_pos == tarPath.npos) tmpString = "/TOT";
             else
             {
                 PATH_PRASER_ERROR;
             }
-        if(tmpString == ".") tmpString = "/CUR";//å½“å‰ç›®å½•
-        if(tmpString == "..") tmpString = "/BACK";//è¿”å›ä¸Šçº§ç›®å½•
+        if(tmpString == ".") tmpString = "/CUR";//µ±Ç°Ä¿Â¼
+        if(tmpString == "..") tmpString = "/BACK";//·µ»ØÉÏ¼¶Ä¿Â¼
         if(tmpString == "null")
             if(path.size()!=1 || tmp_pos != tarPath.npos) {PATH_PRASER_ERROR;}
             else break;
@@ -76,7 +71,7 @@ vector <string>& pathPrase (string tarPath){	//ç”¨è‡ªåŠ¨æœºè§£æè·¯å¾„
 
 bool visitPath(dirBlock& cur, string target, int& curID)
 {
-    //æƒé™æ£€æŸ¥å¾…æ›´æ–°
+    //È¨ÏŞ¼ì²é´ı¸üĞÂ
     //indexBlock ib;
     if(target == "/CUR") return true;
     if(target == "/root")
@@ -87,7 +82,7 @@ bool visitPath(dirBlock& cur, string target, int& curID)
     }
     if(target == "/BACK")
     {
-        if(cur.faDirID <=0) return false;//å·²åˆ°æ ¹ç›®å½•è€Œæ— æ³•è¿”å›
+        if(cur.faDirID <=0) return false;//ÒÑµ½¸ùÄ¿Â¼¶øÎŞ·¨·µ»Ø
         else
         {
             curID = cur.faDirID;
@@ -97,16 +92,16 @@ bool visitPath(dirBlock& cur, string target, int& curID)
     }
     while(strcmp(cur.dirName,target.c_str())!=0)
     {
-        if(cur.nextDirID == -1) return false; //å½“å‰ç›®å½•ä¸‹å¹¶æ‰¾ä¸åˆ°æŒ‡å®šçš„ç›®å½•
+        if(cur.nextDirID == -1) return false; //µ±Ç°Ä¿Â¼ÏÂ²¢ÕÒ²»µ½Ö¸¶¨µÄÄ¿Â¼
         curID = cur.nextDirID;
         cur = readDir(curID);
     }
     curID = cur.sonDirID;
-    cur = readDir(curID);//è¿›å…¥è¯¥ç›®å½•
+    cur = readDir(curID);//½øÈë¸ÃÄ¿Â¼
     return true;
 }
 
-int findNextDir (int dirID, string target, int dirType){     //è®¿é—®dirIDä¸‹çš„targetç›®å½• ç›®å½•ç±»å‹ä¸º1
+int findNextDir (int dirID, string target, int dirType){     //·ÃÎÊdirIDÏÂµÄtargetÄ¿Â¼ Ä¿Â¼ÀàĞÍÎª1
     dirBlock db = readDir (dirID), tmp;
     if (db.sonDirID == -1) return -1;
     tmp = readDir (db.sonDirID);
@@ -124,9 +119,9 @@ int findNextDir (int dirID, string target, int dirType){     //è®¿é—®dirIDä¸‹çš„
     }
     return -1;
 }
-//è¿”å›è¿™ä¸ªä¸‹çº§ç›®å½•çš„ID ä¸å­˜åœ¨è¿”å›-1
+//·µ»ØÕâ¸öÏÂ¼¶Ä¿Â¼µÄID ²»´æÔÚ·µ»Ø-1
 
-long long getTime (){               //è·å–å½“å‰çš„æ—¶é—´
+long long getTime (){               //»ñÈ¡µ±Ç°µÄÊ±¼ä
     SYSTEMTIME sys;
     GetLocalTime( &sys );
     long long year, month, day, hour, minute;
@@ -135,22 +130,24 @@ long long getTime (){               //è·å–å½“å‰çš„æ—¶é—´
     long long ans = year*100000000LL+month*1000000LL+day*10000LL+hour*100+minute;
     return ans;
 }
-//æŒ‰ç…§å¹´æœˆæ—¥æ—¶åˆ† å³å¹´*100000000+æœˆ*1000000+æ—¥*10000+æ—¶*100+åˆ†
-void printTime (long long num){     //æ ¹æ®æ—¶é—´å€¼æ‰“å°æ—¶é—´ä¸²
-    cout << num/100000000LL << "å¹´"; num %= 100000000LL;
-    cout << num/1000000LL << "æœˆ"; num %= 1000000LL;
-    cout << num/10000LL << "æ—¥ "; num %= 10000LL;
+//°´ÕÕÄêÔÂÈÕÊ±·Ö ¼´Äê*100000000+ÔÂ*1000000+ÈÕ*10000+Ê±*100+·Ö
+void printTime (long long num){     //¸ù¾İÊ±¼äÖµ´òÓ¡Ê±¼ä´®
+    cout << num/100000000LL << "-"; num %= 100000000LL;
+    cout << num/1000000LL << "-"; num %= 1000000LL;
+    cout << num/10000LL << " "; num %= 10000LL;
     printf ("%02d:", (int)num/100);
     printf ("%02d\n", (int)num%100);
 }
 
-bool checkMod (int userID, int dirID, int type){    //æƒé™åˆ¤æ–­
+bool checkMod (int userID, int dirID, int type){    //È¨ÏŞÅĞ¶Ï
+    cout << userID << " " << dirID << " " << type << endl;
     userBlock ub = readUser (userID);
     dirBlock db = readDir (dirID);
     int utype = ub.userMod, dtype = db.dirMod;
-    if (type == 1 || (type == 2 && utype < 3) || (type == 3 && utype < 2)) { //æ“ä½œæ»¡è¶³ç”¨æˆ·æƒé™
+    cout << utype << " " << dtype << endl;
+    if (type == 1 || (type == 2 && utype < 3) || (type == 3 && utype < 2)) { //²Ù×÷Âú×ãÓÃ»§È¨ÏŞ
         if ((type == 1 && dtype) || (type == 2 && dtype > 1) || (type == 3 && dtype > 2))
-            return true;    //æ“ä½œæ»¡è¶³æ–‡ä»¶æƒé™
+            return true;    //²Ù×÷Âú×ãÎÄ¼şÈ¨ÏŞ
         else
             return false;
     }
@@ -158,8 +155,8 @@ bool checkMod (int userID, int dirID, int type){    //æƒé™åˆ¤æ–­
         return false;
 }
 
-void find (int curDirID, string target, vector <string> path){  //ä»å½“å‰è·¯å¾„ä¸‹æœç´¢ç›®æ ‡æ–‡ä»¶ï¼ˆæ³¨æ„æ˜¯æ–‡ä»¶ï¼‰
-    //ç›´æ¥é€’å½’æœç´¢
+void find (int curDirID, string target, vector <string> path){  //´Óµ±Ç°Â·¾¶ÏÂËÑË÷Ä¿±êÎÄ¼ş£¨×¢ÒâÊÇÎÄ¼ş£©
+    //Ö±½Óµİ¹éËÑË÷
     dirBlock db = readDir (curDirID);
     if ((string)db.dirName == target && db.type == 2) {
         for (int i = 0; i < (int)path.size (); i++) {
@@ -179,15 +176,15 @@ void find (int curDirID, string target, vector <string> path){  //ä»å½“å‰è·¯å¾
         find (db.nextDirID, target, path);
     }
 }
-//å‚æ•°è¡¨ç¤ºç›®æ ‡æ–‡ä»¶çš„æ–‡ä»¶å
-//è¾“å‡ºæ‰€æœ‰å¯èƒ½çš„ç»“æœè·¯å¾„
+//²ÎÊı±íÊ¾Ä¿±êÎÄ¼şµÄÎÄ¼şÃû
+//Êä³öËùÓĞ¿ÉÄÜµÄ½á¹ûÂ·¾¶
 
-void state (){                      //æ˜¾ç¤ºå†…å­˜ä½¿ç”¨æƒ…å†µ
+void state (){                      //ÏÔÊ¾ÄÚ´æÊ¹ÓÃÇé¿ö
     superNodeBlock sn = readSuperNode ();
     int cnt, p;
     p = sn.emptyUserBlock;
     if (p == -1) p = USERSIZE+1;
-    printf ("å·²ç»å ç”¨%dä¸ªç”¨æˆ·å—ï¼Œä½¿ç”¨ç‡%.2f\n", USERSIZE-p+1, (USERSIZE-p+1)*1.0/USERSIZE);
+    printf ("%d user blocks empty, unilization ratio %.2f\n", USERSIZE-p, (USERSIZE-p+1)*1.0/USERSIZE);
 
     cnt = 0, p = sn.emptyDirBlock;
     dirBlock db;
@@ -196,7 +193,7 @@ void state (){                      //æ˜¾ç¤ºå†…å­˜ä½¿ç”¨æƒ…å†µ
         db = readDir (p);
         p = db.nextDirID;
     }
-    printf ("å·²ç»å ç”¨%dä¸ªç›®å½•å—ï¼Œä½¿ç”¨ç‡%.2f\n", cnt, cnt*1.0/DIRSIZE);
+    printf ("%d dir blocks empty, unilization ratio %.2f\n", cnt, cnt*1.0/DIRSIZE);
 
     cnt = 0, p = sn.emptyFileBlock;
     fileBlock fb;
@@ -205,7 +202,7 @@ void state (){                      //æ˜¾ç¤ºå†…å­˜ä½¿ç”¨æƒ…å†µ
         fb = readFile (p);
         p = fb.nextFileID;
     }
-    printf ("å·²ç»å ç”¨%dä¸ªæ–‡ä»¶å—ï¼Œä½¿ç”¨ç‡%.2f\n", cnt, cnt*1.0/FILESIZE);
+    printf ("%d file blocks empty, unilization ratio %.2f\n", cnt, cnt*1.0/FILESIZE);
 
     cnt = 0, p = sn.emptyIndexBlock;
     indexBlock ib;
@@ -214,7 +211,7 @@ void state (){                      //æ˜¾ç¤ºå†…å­˜ä½¿ç”¨æƒ…å†µ
         ib = readIndex (p);
         p = ib.nextIndexID;
     }
-    printf ("å·²ç»å ç”¨%dä¸ªç´¢å¼•å—ï¼Œä½¿ç”¨ç‡%.2f\n", cnt, cnt*1.0/INDEXSIZE);
+    printf ("%d index blocks empty, unilization ratio %.2f\n", cnt, cnt*1.0/INDEXSIZE);
 }
-//è¾“å‡ºç”¨æˆ·å— ç›®å½•å— æ–‡ä»¶å— ç´¢å¼•å—å‰©ä¸‹çš„å—æ•°å’Œä½¿ç”¨ç‡
+//Êä³öÓÃ»§¿é Ä¿Â¼¿é ÎÄ¼ş¿é Ë÷Òı¿éÊ£ÏÂµÄ¿éÊıºÍÊ¹ÓÃÂÊ
 

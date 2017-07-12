@@ -4,9 +4,10 @@
 #include "file.h"
 #include "index.h"
 #include "vim.h"
-void init () { //é‡æ–°åˆå§‹åŒ–ç£ç›˜å—
-	//ç£ç›˜æ–‡ä»¶å//
-	//å†™å…¥è¶…çº§èŠ‚ç‚¹å—
+
+void init () { //ÖØĞÂ³õÊ¼»¯´ÅÅÌ¿é
+	//´ÅÅÌÎÄ¼şÃû//
+	//Ğ´Èë³¬¼¶½Úµã¿é
 	superNodeBlock sn;
 	sn.root = 0;
 	sn.emptyUserBlock = 1;
@@ -15,7 +16,8 @@ void init () { //é‡æ–°åˆå§‹åŒ–ç£ç›˜å—
 	sn.emptyIndexBlock = 0; sn._emptyIndexBlock = INDEXSIZE-1;
 	ofstream fout (disk.c_str (), std::ios::binary);
 	fout.write ((char *)&sn, sizeof sn);
-	//å†™å…¥ç”¨æˆ·å—
+	//cout << sizeof (superNodeBlock) << " " << userSegOffset << endl; while (1) {}
+	//Ğ´ÈëÓÃ»§¿é
 	userBlock ub;
 	strcpy (ub.userName, "admin");
 	strcpy (ub.userPassword, "000000");
@@ -26,29 +28,35 @@ void init () { //é‡æ–°åˆå§‹åŒ–ç£ç›˜å—
 	for (int i = 1; i < USERSIZE; i++) {
 		fout.write ((char *)&ub, sizeof ub);
 	}
-	//å†™å…¥ç›®å½•å—
+	//cout << dirSegOffset << " " << sizeof(superNodeBlock)+sizeof(userBlock)*USERSIZE << endl; while (1) {}
+	//ub = readUser (0); cout << ub.userName << " " << ub.userPassword << endl; while (1) {}
+	//Ğ´ÈëÄ¿Â¼¿é
 	dirBlock db;
 	strcpy (db.dirName, "root");
 	strcpy (db.dirOwner, "admin");
 	db.type = 1;
 	db.faDirID = -1;
 	db.sonDirID = -1;
+	db.dirMod = 2;
 	db.used = true;
 	fout.write ((char *)&db, sizeof db);
+//	cout << ub.userName << endl;
+//	cout <<ub.userPassword << endl;
+//	while (1) {}
 	db.used = false;
 	for (int i = 1; i < DIRSIZE; i++) {
 		if (i != DIRSIZE-1) db.nextDirID = i+1;
 		else db.nextDirID = -1;
 		fout.write ((char *)&db, sizeof db);
 	}
-	//å†™å…¥æ–‡ä»¶å—
+	//Ğ´ÈëÎÄ¼ş¿é
 	fileBlock fb;
 	for (int i = 0; i < FILESIZE; i++) {
 		if (i != FILESIZE-1) fb.nextFileID = i+1;
 		else fb.nextFileID = -1;
 		fout.write ((char *)&fb, sizeof fb);
 	}
-	//å†™å…¥ç´¢å¼•å—
+	//Ğ´ÈëË÷Òı¿é
 	indexBlock ib;
 	for (int i = 0; i < INDEXSIZE; i++) {
 		if (i != INDEXSIZE-1) ib.nextIndexID = i+1;
@@ -61,79 +69,74 @@ void init () { //é‡æ–°åˆå§‹åŒ–ç£ç›˜å—
 	return ;
 }
 
-void load () {			//è½½å…¥ç£ç›˜æ–‡ä»¶
-    //const char *disk = "disk";
-    cout << "fuck" << endl;
+void load () {			//ÔØÈë´ÅÅÌÎÄ¼ş
 	ifstream fin (disk.c_str ());
-	//cout << disk.c_str () << endl;
 	if (fin.is_open ()) {
-        cout << "open" << endl;
+        curDirID = 0;
+        curPath.clear (); curPath.pb ("root");
         fin.close ();
 		return ;
 	}
 	else {
         cout << "init" << endl;
-		init ();		//ç£ç›˜å—ä¸¢å¤±ï¼Œé‡æ–°åˆå§‹åŒ–
+		init ();		//´ÅÅÌ¿é¶ªÊ§£¬ÖØĞÂ³õÊ¼»¯
 	}
 }
 
-void bash () {			//å‘½ä»¤è¡Œæ¨¡å¼æ“ä½œæ–‡ä»¶ç³»ç»Ÿ
+void bash () {			//ÃüÁîĞĞÄ£Ê½²Ù×÷ÎÄ¼şÏµÍ³
+    cout << curUserID << ".." << endl;
 	string op1, op2, op3;
-	showCurPath (0);	//å‘½ä»¤è¡Œæ˜¾ç¤ºå½“å‰è·¯å¾„ç”¨æˆ·
-	//cout << "test_bash" << endl;
-	//while (cin >> op1) cout << op1 << endl;
+	showCurPath (0, curPath);	//ÃüÁîĞĞÏÔÊ¾µ±Ç°Â·¾¶ÓÃ»§
 	while (cin >> op1) {
-	    cout << "test_" << op1 << endl;
-	    //while (1) {}
 		if (op1 == "ls") {
             //cout << "ls" << endl;
-			showAllSonDir ();	//æ˜¾ç¤ºå½“å‰è·¯å¾„ä¸‹æ‰€æœ‰å­ç›®å½•
+			showAllSonDir ();	//ÏÔÊ¾µ±Ç°Â·¾¶ÏÂËùÓĞ×ÓÄ¿Â¼
 		}
-		else if (op1 == "mkdir") { 			//åˆ›å»ºå•çº§å­ç›®å½•
+		else if (op1 == "mkdir") { 			//´´½¨µ¥¼¶×ÓÄ¿Â¼
 			string newDirName;
-			cin >> newDirName;	//æƒ³æ–°åˆ›å»ºçš„ç›®å½•å
-			char ch; string newDirMod; //æ–°æ–‡ä»¶çš„æƒé™è¾“å…¥
+			cin >> newDirName;	//ÏëĞÂ´´½¨µÄÄ¿Â¼Ãû
+			char ch; string newDirMod = "a"; //ĞÂÎÄ¼şµÄÈ¨ÏŞÊäÈë
 			while ((ch = getchar ()) != '\n') {
 				if (ch == '-') {
 					cin >> newDirMod;
 				}
 			}
-			mkdir (newDirName, newDirMod);	//åœ¨å½“å‰ç›®å½•ä¸‹åˆ›å»ºå­ç›®å½•
+			mkdir (newDirName, newDirMod);	//ÔÚµ±Ç°Ä¿Â¼ÏÂ´´½¨×ÓÄ¿Â¼
 		}
-		else if (op1 == "mkdirs") {			//åˆ›å»ºå¤šçº§å­ç›®å½•
+		else if (op1 == "mkdirs") {			//´´½¨¶à¼¶×ÓÄ¿Â¼
 			string newDirPath;
-			cin >> newDirPath;	//æƒ³åˆ›å»ºçš„å¤šçº§å­ç›®å½•è·¯å¾„
-			char ch; string newDirMod; //æ–°æ–‡ä»¶çš„æƒé™è¾“å…¥
+			cin >> newDirPath;	//Ïë´´½¨µÄ¶à¼¶×ÓÄ¿Â¼Â·¾¶
+			char ch; string newDirMod; //ĞÂÎÄ¼şµÄÈ¨ÏŞÊäÈë
 			while ((ch = getchar ()) != '\n') {
 				if (ch == '-') {
 					cin >> newDirMod;
 				}
 			}
-			mkdirs (newDirPath, newDirMod);	//åœ¨å½“å‰ç›®å½•ä¸‹åˆ›å»ºå¤šçº§å­ç›®å½•
+			mkdirs (newDirPath, newDirMod);	//ÔÚµ±Ç°Ä¿Â¼ÏÂ´´½¨¶à¼¶×ÓÄ¿Â¼
 		}
 		else if (op1 == "cd") {
 			char ch = getchar ();
-			if (ch == '\n') {		//è·³è½¬åˆ°æ ¹ç›®å½•
+			if (ch == '\n') {		//Ìø×ªµ½¸ùÄ¿Â¼
 				curPath.clear ();
 				curPath.pb ("root");
 				curDirID = 0;
 				goto out;
 			}
 			string tarPath; cin >> tarPath;
-			if (tarPath == "..") {	//è·³è½¬åˆ°ä¸Šä¸€çº§ç›®å½•
+			if (tarPath == "..") {	//Ìø×ªµ½ÉÏÒ»¼¶Ä¿Â¼
 				if (!gotoFaDir ()) {
-					cout << "å·²ç»å¤„åœ¨æ ¹ç›®å½•ï¼" << endl;
+					cout << "already in root!" << endl;
 				}
 			}
 			else {
-				if (!gotoDir (tarPath)) {	//è·³è½¬åˆ°ç›®æ ‡ç›®å½•
-					cout << "ç›®æ ‡è·¯å¾„ä¸å­˜åœ¨" << endl;
+				if (!gotoDir (tarPath)) {	//Ìø×ªµ½Ä¿±êÄ¿Â¼
+					cout << "no such path!" << endl;
 					goto out;
 				}
 			}
 		}
 		else if (op1 == "pwd") {
-			showCurPath (1);
+			showCurPath (1, curPath);
 		}
 		else if (op1 == "touch") {
 			string fileName; cin >> fileName;
@@ -143,6 +146,7 @@ void bash () {			//å‘½ä»¤è¡Œæ¨¡å¼æ“ä½œæ–‡ä»¶ç³»ç»Ÿ
                 getchar ();
                 cin >> newDirMod;
 			}
+			cout << fileName << " " << newDirMod << endl;
 			touch (fileName, newDirMod);
 		}
 		else if (op1 == "rm") {
@@ -150,7 +154,7 @@ void bash () {			//å‘½ä»¤è¡Œæ¨¡å¼æ“ä½œæ–‡ä»¶ç³»ç»Ÿ
 			if (tmp[0] == '-') {
 				cin >> path;
 				if (tmp != "-rf") {
-					cout << "å‚æ•°æœ‰è¯¯ï¼" << endl;
+					cout << "parameter error" << endl;
 					goto out;
 				}
 			}
@@ -182,10 +186,10 @@ void bash () {			//å‘½ä»¤è¡Œæ¨¡å¼æ“ä½œæ–‡ä»¶ç³»ç»Ÿ
 		else if (op1 == "chuser") {
 			cout << "\n\n" << endl;
 			string name, passwd;
-			cout << "        è¯·è¾“å…¥ç”¨æˆ·åï¼š"; cin >> name;
-			cout << "        è¯·è¾“å…¥ç”¨æˆ·å¯†ç ï¼š"; cin >> passwd;
+			cout << "        input username:"; cin >> name;
+			cout << "        input password:"; cin >> passwd;
 			if (!chuser (name, passwd))
-				cout << "æ— æ³•åˆ‡æ¢ç”¨æˆ·ï¼" << endl;
+				cout << "can't change user" << endl;
 		}
 		else if (op1 == "createuser") {
 			string newUserMod = "-a";
@@ -195,48 +199,48 @@ void bash () {			//å‘½ä»¤è¡Œæ¨¡å¼æ“ä½œæ–‡ä»¶ç³»ç»Ÿ
 				(newUserMod == "p" ? 0 : 1));
 			userBlock ub = readUser (curUserID);
 			if (userMod < ub.userMod) {
-				cout << "æƒé™é”™è¯¯ï¼" << endl;
+				cout << "Mod fault" << endl;
 			}
 			else {
 				cout << "\n\n" << endl;
 				string name, passwd;
-				cout << "        è¯·è¾“å…¥ç”¨æˆ·åï¼š"; cin >> name;
-				cout << "        è¯·è¾“å…¥ç”¨æˆ·å¯†ç ï¼š"; cin >> passwd;
+				cout << "        input username:"; cin >> name;
+				cout << "        input password:"; cin >> passwd;
 				if (!createuser (name, passwd, userMod)) {
-					cout << "åˆ›å»ºç”¨æˆ·å¤±è´¥ï¼" << endl;
+					cout << "can't crate user!" << endl;
 				}
 			}
 		}
 //		else if (op1 == "open") {
 //			string fileName; cin >> fileName;
-//			int id = openFile (fileName);		//æ‰“å¼€æ–‡ä»¶çš„ç›®å½•å— è¿”å›å¯¹åº”çš„æ–‡ä»¶å†…å®¹å—ç¼–å·
+//			int id = openFile (fileName);		//´ò¿ªÎÄ¼şµÄÄ¿Â¼¿é ·µ»Ø¶ÔÓ¦µÄÎÄ¼şÄÚÈİ¿é±àºÅ
 //			if (id == -1) {
-//				cout << "æ–‡ä»¶åæœ‰è¯¯ï¼" << endl;
+//				cout << "ÎÄ¼şÃûÓĞÎó£¡" << endl;
 //				goto out;
 //			}
-//			runVim(id);		//å¯¹æ–‡ä»¶å†…å®¹è¿›è¡Œç¼–è¾‘
+//			runVim(id);		//¶ÔÎÄ¼şÄÚÈİ½øĞĞ±à¼­
 //		}
 		else if (op1 == "exit") {
             return ;
 		}
 		else {
-			cout << "è¾“å…¥çš„æŒ‡ä»¤æœ‰è¯¯ï¼" << endl;
+			cout << "instruction error!" << endl;
 			goto out;
 		}
 		out: ;
-		showCurPath (0);
+		showCurPath (0, curPath);
 	}
 }
 
 
 int main () {
-	load ();			//è½½å…¥ç£ç›˜æ–‡ä»¶
-	if (!userLogin ()) {//ç”¨æˆ·ç™»å½•
+	load ();			//ÔØÈë´ÅÅÌÎÄ¼ş
+	if (!userLogin ()) {//ÓÃ»§µÇÂ¼
 		system ("CLS");
-		cout << "ç™»å½•å¤±è´¥-ã€‚-,è¯·é‡æ–°ç™»å½•" << endl;
+		cout << "fail to longin!" << endl;
 		exit (0);
 	}
-	bash ();			//å‘½ä»¤è¡Œæ¨¡å¼æ“ä½œæ–‡ä»¶ç³»ç»Ÿ
+	bash ();			//ÃüÁîĞĞÄ£Ê½²Ù×÷ÎÄ¼şÏµÍ³
     return 0;
 }
 

@@ -53,7 +53,7 @@ void displayVim() // 将当期缓存区当中的内容打印在终端屏幕上
 	}
 	else
 	{
-		std::cout << "指令模式" << std::endl;
+		std::cout << "---edit---" << std::endl;
 		std::cout << "(S)ave (Q)uit" << std::endl << std::endl;
 		for (int i = begin_y; i - begin_y < screen.dwSize.Y-4&&i < bufferString.size(); i++)
 		{

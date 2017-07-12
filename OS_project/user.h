@@ -1,19 +1,23 @@
 #ifndef USER_H_INCLUDED
 #define USER_H_INCLUDED
 
-bool userLogin ();	//åˆšå¼€å§‹æ—¶çš„ç”¨æˆ·ç™»å½•
-					//å¯ä»¥é€‰æ‹©adminï¼Œæ™®é€šç”¨æˆ·ï¼Œè®¿é—®æ¨¡å¼(æ— ç”¨æˆ·ä¸ç”¨è¾“å…¥è´¦å·å¯†ç )
-					//æ­£å¸¸ç™»é™†è¿”å›1 å¦åˆ™è¿”å›0
-userBlock readUser (int id);				//æ ¹æ®ç”¨æˆ·å—idè¯»å–ç”¨æˆ·å—ä¿¡æ¯
-//è®¿ç›˜ï¼Œæ³¨æ„ä¿æŠ¤åŸæœ‰æ•°æ®
-void writeUser (userBlock ub, int id);  	//å°†ç”¨æˆ·å—ä¿¡æ¯å†™å…¥ç”¨æˆ·å—
-//è®¿ç›˜ï¼Œæ³¨æ„ä¿æŠ¤åŸæœ‰æ•°æ®
-bool chuser (string name, string passwd);	//åœ¨å½“å‰ç›®å½•ä¸‹åˆ‡æ¢ç”¨æˆ·
-//å‚æ•°è¡¨ç¤ºç”¨æˆ·åå’Œç”¨æˆ·å¯†ç 
-//æˆåŠŸè¿”å›1 å¦åˆ™è¿”å›0
-bool createuser (string name, string passwd, int userMod);	//åˆ›å»ºç”¨æˆ·
-//å‚æ•°è¡¨ç¤ºç”¨æˆ·åå’Œç”¨æˆ·å¯†ç  è¢«åˆ›å»ºç”¨æˆ·çš„æƒé™
-//æˆåŠŸè¿”å›1 å¦åˆ™è¿”å›0
+#include "common.h"
+#include "dir.h"
+#include "global.h"
+
+bool userLogin ();	//¸Õ¿ªÊ¼Ê±µÄÓÃ»§µÇÂ¼
+					//¿ÉÒÔÑ¡Ôñadmin£¬ÆÕÍ¨ÓÃ»§£¬·ÃÎÊÄ£Ê½(ÎŞÓÃ»§²»ÓÃÊäÈëÕËºÅÃÜÂë)
+					//Õı³£µÇÂ½·µ»Ø1 ·ñÔò·µ»Ø0
+userBlock readUser (int id);				//¸ù¾İÓÃ»§¿éid¶ÁÈ¡ÓÃ»§¿éĞÅÏ¢
+//·ÃÅÌ£¬×¢Òâ±£»¤Ô­ÓĞÊı¾İ
+void writeUser (userBlock ub, int id);  	//½«ÓÃ»§¿éĞÅÏ¢Ğ´ÈëÓÃ»§¿é
+//·ÃÅÌ£¬×¢Òâ±£»¤Ô­ÓĞÊı¾İ
+bool chuser (string name, string passwd);	//ÔÚµ±Ç°Ä¿Â¼ÏÂÇĞ»»ÓÃ»§
+//²ÎÊı±íÊ¾ÓÃ»§ÃûºÍÓÃ»§ÃÜÂë
+//³É¹¦·µ»Ø1 ·ñÔò·µ»Ø0
+bool createuser (string name, string passwd, int userMod);	//´´½¨ÓÃ»§
+//²ÎÊı±íÊ¾ÓÃ»§ÃûºÍÓÃ»§ÃÜÂë ±»´´½¨ÓÃ»§µÄÈ¨ÏŞ
+//³É¹¦·µ»Ø1 ·ñÔò·µ»Ø0
 
 #endif // USER_H_INCLUDED
 

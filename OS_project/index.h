@@ -1,13 +1,15 @@
 #ifndef INDEX_H_INCLUDED
 #define INDEX_H_INCLUDED
+#include "common.h"
+#include "global.h"
 
-int giveIndexBlock ();		//åˆ†é…æ–°çš„ç´¢å¼•å—
-//å¦‚æœåˆ†é…æˆåŠŸè¿”å›ç´¢å¼•å—çš„ID å¦åˆ™è¾“å‡º-1
-indexBlock readIndex (int id);				//æ ¹æ®ç´¢å¼•å—idè¯»å–ç´¢å¼•å—ä¿¡æ¯
-//è®¿ç›˜ï¼Œæ³¨æ„ä¿æŠ¤åŸæœ‰æ•°æ®
-void writeIndex (indexBlock db, int id);  	//å°†ç´¢å¼•å—ä¿¡æ¯å†™å…¥ç´¢å¼•å—
-//è®¿ç›˜ï¼Œæ³¨æ„ä¿æŠ¤åŸæœ‰æ•°æ®
-void releaseIndex (int indexID);		//é‡Šæ”¾ç´¢å¼•å—
+int giveIndexBlock ();		//·ÖÅäĞÂµÄË÷Òı¿é
+//Èç¹û·ÖÅä³É¹¦·µ»ØË÷Òı¿éµÄID ·ñÔòÊä³ö-1
+indexBlock readIndex (int id);				//¸ù¾İË÷Òı¿éid¶ÁÈ¡Ë÷Òı¿éĞÅÏ¢
+//·ÃÅÌ£¬×¢Òâ±£»¤Ô­ÓĞÊı¾İ
+void writeIndex (indexBlock db, int id);  	//½«Ë÷Òı¿éĞÅÏ¢Ğ´ÈëË÷Òı¿é
+//·ÃÅÌ£¬×¢Òâ±£»¤Ô­ÓĞÊı¾İ
+void releaseIndex (int indexID);		//ÊÍ·ÅË÷Òı¿é
 
 #endif // INDEX_H_INCLUDED
 
