@@ -85,7 +85,7 @@ using namespace std;
 extern vector <string> curPath;//当前的绝对路径
 extern int curUserID;			//当前用户
 extern int curDirID;			//当前目录块ID
-extern string disk = "disk";	//磁盘块文件名
+extern string disk;	//磁盘块文件名
 
 long long getTime ();				//获取当前的时间
 //按照年月日时分 即年*100000000+月*1000000+日*10000+时*100+分

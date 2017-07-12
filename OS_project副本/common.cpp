@@ -1,5 +1,10 @@
 #include "common.h"
 
+vector <string> curPath;//当前的绝对路径
+int curUserID;			//当前用户
+int curDirID;			//当前目录块ID
+string disk;	//磁盘块文件名
+
 long long getTime (){               //获取当前的时间
     SYSTEMTIME sys;
     GetLocalTime( &sys );
