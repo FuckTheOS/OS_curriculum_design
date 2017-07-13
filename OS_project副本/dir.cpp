@@ -135,6 +135,7 @@ bool mkdirs (string newDirPath, string newDirMod){	//在当前目录下创建多级子目录
 		if (nextID == -1) {	//不存在需要新创建
 			if (!mkDir (tarDirPath[i], (string)"a",  dirID));
 				return false;
+            dirID = findNextDir (dirID, tarDirPath[i]);
 		}
 		else {
 			dirID = nextID;
