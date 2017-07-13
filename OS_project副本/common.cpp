@@ -276,8 +276,11 @@ fileBlock readFile (int id){	//根据文件块id读取文件内容
 	return fb;
 }
 
-void writeFile (fileBlock db, int id){  	//将文件内容写入文件块
-    fileBlock fb;
+void writeFile (fileBlock fb, int id){  	//将文件内容写入文件块
+    if (id >= FILESIZE || id < 0) {
+        cout <<"segment fault!" << endl;
+        exit (0);
+    }
 	ofstream fout (disk.c_str (), std::ios::binary|ios::in|ios::out);
 	fout.seekp (fileSegOffset+sizeof (fb)*id, ios::beg);
 	fout.write ((char *)&fb, sizeof fb);
