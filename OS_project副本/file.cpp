@@ -1,7 +1,7 @@
 #include "file.h"
 #include "dir.h"
 #include "common.h"
-int openFile (string fileaName){ 			//´ò¿ªÎÄ¼şµÄÄ¿Â¼¿é ·µ»Ø¶ÔÓ¦µÄÎÄ¼şÄÚÈİ¿é±àºÅ
+int openFile (string fileaName){ 			//æ‰“å¼€æ–‡ä»¶çš„ç›®å½•å— è¿”å›å¯¹åº”çš„æ–‡ä»¶å†…å®¹å—ç¼–å·
 	dirBlock db;
 	db = readDir (curDirID);
 	if (db.sonDirID == -1)
@@ -20,7 +20,7 @@ int openFile (string fileaName){ 			//´ò¿ªÎÄ¼şµÄÄ¿Â¼¿é ·µ»Ø¶ÔÓ¦µÄÎÄ¼şÄÚÈİ¿é±àºÅ
 		return -1;
 }
 
-void vim (int id){				//¶ÔÎÄ¼şÄÚÈİ½øĞĞ±à¼­
+void vim (int id){				//å¯¹æ–‡ä»¶å†…å®¹è¿›è¡Œç¼–è¾‘
 	fileBlock fb = readFile (id);
 	string buffer = (string)fb.text;
 	system ("CLS");
@@ -28,32 +28,32 @@ void vim (int id){				//¶ÔÎÄ¼şÄÚÈİ½øĞĞ±à¼­
 	cout << buffer << endl;
 	char ch, op;
 	while (true) {
-		//ÓÃgetchÊµÏÖµÄĞ¡ĞÍvim ´ıÍêÉÆ
+		//ç”¨getchå®ç°çš„å°å‹vim å¾…å®Œå–„
 	}
 	writeFile (fb, id);
 }
-//²ÎÊı±íÊ¾ÎÄ¼şÄÚÈİ¿éµÄË÷Òı
+//å‚æ•°è¡¨ç¤ºæ–‡ä»¶å†…å®¹å—çš„ç´¢å¼•
 
-int  giveFileBlock(){           //·ÖÅäÎÄ¼ş¿é
+int  giveFileBlock(){           //åˆ†é…æ–‡ä»¶å—
     superNodeBlock sn = readSuperNode ();
-    if (sn.emptyFileBlock == -1) {		//ÎÄ¼ş¿é¿Õ¼ä²»×ã
+    if (sn.emptyFileBlock == -1) {		//æ–‡ä»¶å—ç©ºé—´ä¸è¶³
 		return -1;
 	}
 	int res = sn.emptyFileBlock;
-	if (sn.emptyFileBlock == sn._emptyFileBlock) {	//ÎÄ¼ş¿é¸ÕºÃÓÃÍê
+	if (sn.emptyFileBlock == sn._emptyFileBlock) {	//æ–‡ä»¶å—åˆšå¥½ç”¨å®Œ
 		sn.emptyFileBlock = -1;
 		sn._emptyFileBlock = -1;
 	}
 	else {
-		fileBlock fb = readFile(sn.emptyFileBlock);	//¶ÁÈ¡¿ÕÎÄ¼şĞÅÏ¢
-		sn.emptyFileBlock = fb.nextFileID;			//¸Ã¿éµÄÏÂÒ»¿é×÷Îª¿ÕÎÄ¼ş¿éµÄÊ×¿é
+		fileBlock fb = readFile(sn.emptyFileBlock);	//è¯»å–ç©ºæ–‡ä»¶ä¿¡æ¯
+		sn.emptyFileBlock = fb.nextFileID;			//è¯¥å—çš„ä¸‹ä¸€å—ä½œä¸ºç©ºæ–‡ä»¶å—çš„é¦–å—
 	}
 	writeSuperNode (sn);
 	return res;
  }
 
-bool touch (string fileName,string newDirMod){           //µ±Ç°Ä¿Â¼ÏÂĞÂ½¨ÎÄ¼ş
-    if (!checkMod (curUserID, curDirID, 2)) {	//È¨ÏŞ¼ì²éÃ»Í¨¹ı
+bool touch (string fileName,string newDirMod){           //å½“å‰ç›®å½•ä¸‹æ–°å»ºæ–‡ä»¶
+    if (!checkMod (curUserID, curDirID, 2)) {	//æƒé™æ£€æŸ¥æ²¡é€šè¿‡
 		cout << "Mod fault!" << endl;
 		return false;
 	}
@@ -64,12 +64,12 @@ bool touch (string fileName,string newDirMod){           //µ±Ç°Ä¿Â¼ÏÂĞÂ½¨ÎÄ¼ş
 			return false;
 		}
 	}
-	if (!checkDirName (fileName)) { 	//ÎÄ¼şÃû¼ì²éÃ»Í¨¹ı
+	if (!checkDirName (fileName)) { 	//æ–‡ä»¶åæ£€æŸ¥æ²¡é€šè¿‡
 		cout << "filename error!" << endl;
 		return false;
 	}
-	int dirID = giveDirBlock ();	//·ÖÅäĞÂµÄÄ¿Â¼¿é
-	int indexID = giveIndexBlock ();//·ÖÅäĞÂµÄË÷Òı¿é
+	int dirID = giveDirBlock ();	//åˆ†é…æ–°çš„ç›®å½•å—
+	int indexID = giveIndexBlock ();//åˆ†é…æ–°çš„ç´¢å¼•å—
 	int fileID = giveFileBlock();
 	if (dirID == -1 || indexID == -1||fileID == -1) {
 		cout << "no more disk space!" << endl;
@@ -95,7 +95,7 @@ bool touch (string fileName,string newDirMod){           //µ±Ç°Ä¿Â¼ÏÂĞÂ½¨ÎÄ¼ş
 	else {
 		int tmp = db.sonDirID;
 		db = readDir (db.sonDirID);
-		while (db.nextDirID != -1) {		//ÕÒµ½µ±Ç°Â·¾¶µÄ×îºóÒ»¸öÄ¿Â¼
+		while (db.nextDirID != -1) {		//æ‰¾åˆ°å½“å‰è·¯å¾„çš„æœ€åä¸€ä¸ªç›®å½•
 			tmp = db.nextDirID;
 			db = readDir (db.nextDirID);
 		}
@@ -119,11 +119,11 @@ bool touch (string fileName,string newDirMod){           //µ±Ç°Ä¿Â¼ÏÂĞÂ½¨ÎÄ¼ş
 		(newDirMod == "rw" ? 2 : 1) :
 		(newDirMod == "a" ? 3: 0));
 	db.used = true;
-	writeDir (db, dirID);	//½«Ä¿Â¼ĞÅÏ¢Ğ´ÈëÄ¿Â¼¿é
+	writeDir (db, dirID);	//å°†ç›®å½•ä¿¡æ¯å†™å…¥ç›®å½•å—
 	return true;
 }
 
-void cat (string filename){		//Êä³öµ±Ç°Ä¿Â¼ÏÂµÄÎÄ¼şÄÚÈİ
+void cat (string filename){		//è¾“å‡ºå½“å‰ç›®å½•ä¸‹çš„æ–‡ä»¶å†…å®¹
 	int dirID = findNextDir (curDirID, filename, 2);
 	if (!checkMod (curUserID, dirID, 1)) {
 		cout << "Mod fault!" << endl;
@@ -133,5 +133,39 @@ void cat (string filename){		//Êä³öµ±Ç°Ä¿Â¼ÏÂµÄÎÄ¼şÄÚÈİ
 	indexBlock ib = readIndex (db.textLocation);
 	fileBlock fb = readFile (ib.diskOffset);
 	cout << fb.text << endl;
+}
+bool rename(string oldFilename,string newFilename){
+    dirBlock db = readDir (curDirID);
+	if (db.sonDirID == -1){
+        cout<<"can't find this filename!"<<endl;
+        return false;
+	}
+    int tmp = db.sonDirID;
+	db = readDir (db.sonDirID);
+	if (strcmp(db.dirName,oldFilename.c_str ())==0){
+        if (!checkDirName (newFilename)) { 	//æ–‡ä»¶åæ£€æŸ¥æ²¡é€šè¿‡
+            cout << "newfilename exisit!" << endl;
+		    return false;
+	    }
+	    strcpy(db.dirName,newFilename.c_str ());
+	    writeDir(db,tmp);
+        return true;
+    }
+	while (db.nextDirID != -1) {
+        tmp =db.nextDirID;
+		db = readDir (db.nextDirID);
+		if (strcmp(db.dirName,oldFilename.c_str ())==0){
+            if (!checkDirName (newFilename)) { 	//æ–‡ä»¶åæ£€æŸ¥æ²¡é€šè¿‡
+                cout << "newfilename exisit!" << endl;
+		        return false;
+	        }
+		   strcpy(db.dirName,newFilename.c_str ());
+		   writeDir(db,tmp);
+		   return true;
+		}
+
+	}
+	cout<<"can't find this filename!"<<endl;
+	return false;
 }
 
