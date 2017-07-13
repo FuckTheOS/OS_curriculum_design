@@ -285,7 +285,7 @@ void releaseDir(int dirID) {		//ÊÍ·ÅÒ»¿éÄ¿Â¼¿é
 	}
 	else {
 		dirBlock tmp = readDir(sn._emptyDirBlock);
-		db.nextDirID = dirID;
+		tmp.nextDirID = dirID;
 		writeDir(tmp, sn._emptyDirBlock);
 		sn._emptyDirBlock = dirID;
 	}
