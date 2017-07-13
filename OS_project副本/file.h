@@ -12,7 +12,8 @@ int  giveFileBlock();           //分配文件块
 //如果成功返回分配的文件块的编号 否则返回-1
 bool touch (string fileName, string newDirMod);	//当前目录下新建文件
 //新建的文件名 新建的文件权限类型
-bool rename(string oldFilename,string newFilename);  //修改当前目录下的文件名
 
+//rename 函数权限验证待补充
+bool rename(string oldFilename,string newFilename);  //修改当前目录下的文件名
 #endif // FILE_H_INCLUDED
 
