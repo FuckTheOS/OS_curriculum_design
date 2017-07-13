@@ -39,13 +39,13 @@ bool checkDirName(string newDirName, int dirType) {	//检查目录名是否和当前其他目
 
 void showAllSonDir() {	//显示当前路径下所有子目录
 	dirBlock db = readDir(curDirID);
-	if (db.sonDirID == -1) { 			//空目录
+	if (db.sonDirID == -1 || !db.used) { 			//空目录
 		cout << endl;
 		return;
 	}
 	db = readDir(db.sonDirID);
 	cout << db.dirName << " ";
-	while (db.nextDirID != -1) {
+	while (db.nextDirID != -1 || !db.used) {
 		db = readDir(db.nextDirID);
 		cout << db.dirName << " ";
 	}
@@ -206,25 +206,51 @@ bool delDir(int dirID, string dirPath, int type) {	//删掉目录块
 			return false;
 	}
 	else {
-		dirBlock db = readDir(dirID);
+        //cout << "fuck" << endl;
+		dirBlock db = readDir(dirID), tmp;
 		if (db.sonDirID == -1)
 			return false;
-		dirID = db.sonDirID;
-		db = readDir(dirID);
-		while (!((string)db.dirName != leaf && db.type == 2)) {
-			if (db.nextDirID == -1)
+		//dirID = db.sonDirID;
+		tmp = db;
+		db = readDir(db.sonDirID);
+		bool flag = 1;
+		while ((string)db.dirName != leaf) {
+			if (db.nextDirID == -1 || !db.used)
 				return false;
-			dirID = db.nextDirID;
-			db = readDir(dirID);
+            if (flag) dirID = tmp.sonDirID, flag = 0;
+            else dirID = tmp.nextDirID;
+			tmp = db;
+			db = readDir(tmp.nextDirID);
+			if ((string)db.dirName == leaf) {   //找到了
+			    if (!checkMod(curUserID, dirID, 2))
+                    return false;
+                int indexID = db.textLocation;
+                indexBlock ib = readIndex(indexID);
+                int fileID = ib.diskOffset;
+                releaseIndex(indexID);
+                releaseDir(tmp.nextDirID);
+                releaseFile(fileID);
+                tmp.nextDirID = -1;
+                writeDir (tmp, dirID);
+                return true;
+			}
 		}
-		if (!checkMod(curUserID, dirID, 3))
+       // cout << ".." << dirID << endl;
+        //cout << tmp.dirName << endl;
+		if (!checkMod(curUserID, dirID, 2)) {
+            //cout << "//" << endl;
 			return false;
+		}
 		int indexID = db.textLocation;
 		indexBlock ib = readIndex(indexID);
 		int fileID = ib.diskOffset;
 		releaseIndex(indexID);
-		releaseDir(dirID);
+		releaseDir(tmp.sonDirID);
 		releaseFile(fileID);
+
+		tmp.sonDirID = -1;
+		writeDir (tmp, dirID);
+		//tmp = readDir (dirID); cout << tmp.dirName << " " << tmp.sonDirID << "[[" << endl;
 	}
 	return true;
 }
@@ -256,20 +282,13 @@ void releaseDir(int dirID) {		//释放一块目录块
 		sn._emptyDirBlock = dirID;
 	}
 	else {
-		dirBlock db = readDir(sn._emptyDirBlock);
+		dirBlock tmp = readDir(sn._emptyDirBlock);
 		db.nextDirID = dirID;
-		writeDir(db, sn._emptyDirBlock);
+		writeDir(tmp, sn._emptyDirBlock);
 		sn._emptyDirBlock = dirID;
 	}
 	writeSuperNode(sn);
-	dirBlock faDir = readDir(db.faDirID);
-	if (db.nextDirID == -1) {
-		faDir.sonDirID = -1;
-	}
-	else {
-		faDir.sonDirID = db.nextDirID;
-	}
+	db.sonDirID = db.faDirID = -1;
 	writeDir(db, dirID);
-	writeDir(faDir, db.faDirID);
 }
 

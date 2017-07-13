@@ -149,11 +149,10 @@ int findNextDir (int dirID, string target, int dirType){     //访问dirID下的targ
 //返回这个下级目录的ID 不存在返回-1
 
 bool checkMod (int userID, int dirID, int type){    //权限判断
-    cout << userID << " " << dirID << " " << type << endl;
+    //cout << userID << " " << dirID << " " << type << endl;
     userBlock ub = readUser (userID);
     dirBlock db = readDir (dirID);
     int utype = ub.userMod, dtype = db.dirMod;
-    cout << utype << " " << dtype << endl;
     if (type == 1 || (type == 2 && utype < 3) || (type == 3 && utype < 2)) { //操作满足用户权限
         if ((type == 1 && dtype) || (type == 2 && dtype > 1) || (type == 3 && dtype > 2))
             return true;    //操作满足文件权限
