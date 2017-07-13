@@ -326,7 +326,7 @@ void releaseIndex (int indexID){		//释放索引块
     indexBlock ib;
     ib.used = 0;
     ib.nextIndexID = -1;
-    if (sn.emptyIndexBlock = -1){
+    if (sn.emptyIndexBlock == -1){
         sn.emptyIndexBlock = indexID;
         sn._emptyIndexBlock = indexID;
     }
@@ -346,14 +346,14 @@ void releaseFile(int fileID){              //释放文件块
      memset(fb.text,0,sizeof(fb.text));
      fb.used = 0;
      fb.nextFileID = -1;
-     if(sn.emptyFileBlock = -1){
+     if(sn.emptyFileBlock == -1){
          sn.emptyFileBlock = fileID;
          sn._emptyFileBlock = fileID;
     }
      else{
          fileBlock fb1 = readFile(sn._emptyFileBlock);
          fb1.nextFileID = fileID;
-         writeFile(fb1,sn._emptyIndexBlock);
+         writeFile(fb1,sn._emptyFileBlock);
          sn._emptyFileBlock = fileID;
     }
     writeSuperNode(sn);

@@ -241,6 +241,7 @@ bool delDir(int dirID, string dirPath, int type) {	//É¾µôÄ¿Â¼¿é
             //cout << "//" << endl;
 			return false;
 		}
+		//state ();
 		int indexID = db.textLocation;
 		indexBlock ib = readIndex(indexID);
 		int fileID = ib.diskOffset;
@@ -248,6 +249,7 @@ bool delDir(int dirID, string dirPath, int type) {	//É¾µôÄ¿Â¼¿é
 		releaseDir(tmp.sonDirID);
 		releaseFile(fileID);
 
+        //state ();
 		tmp.sonDirID = -1;
 		writeDir (tmp, dirID);
 		//tmp = readDir (dirID); cout << tmp.dirName << " " << tmp.sonDirID << "[[" << endl;
