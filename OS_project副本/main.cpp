@@ -49,6 +49,7 @@ void init () { //重新初始化磁盘块
 	}
 	//写入文件块
 	fileBlock fb;
+	Clear (fb.text, 0);
 	for (int i = 0; i < FILESIZE; i++) {
 		if (i != FILESIZE-1) fb.nextFileID = i+1;
 		else fb.nextFileID = -1;
