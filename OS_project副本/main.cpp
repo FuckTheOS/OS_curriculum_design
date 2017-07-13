@@ -2,6 +2,7 @@
 #include "common.h"
 #include "dir.h"
 #include "user.h"
+#include "vim.h"
 void init () { //重新初始化磁盘块
 	//磁盘文件名//
 	//写入超级节点块
@@ -146,7 +147,7 @@ void bash () {			//命令行模式操作文件系统
                 getchar ();
                 cin >> newDirMod;
 			}
-			cout << fileName << " " << newDirMod << endl;
+			//cout << fileName << " " << newDirMod << endl;
 			touch (fileName, newDirMod);
 		}
 		else if (op1 == "rm") {
@@ -211,15 +212,15 @@ void bash () {			//命令行模式操作文件系统
 				}
 			}
 		}
-//		else if (op1 == "open") {
-//			string fileName; cin >> fileName;
-//			int id = openFile (fileName);		//打开文件的目录块 返回对应的文件内容块编号
-//			if (id == -1) {
-//				cout << "文件名有误！" << endl;
-//				goto out;
-//			}
-//			runVim(id);		//对文件内容进行编辑
-//		}
+		else if (op1 == "open") {
+			string fileName; cin >> fileName;
+			int id = openFile (fileName);		//打开文件的目录块 返回对应的文件内容块编号
+			if (id == -1) {
+				cout << "filename error!" << endl;
+				goto out;
+			}
+			runVim(id);		//对文件内容进行编辑
+		}
 		else if (op1 == "exit") {
             return ;
 		}

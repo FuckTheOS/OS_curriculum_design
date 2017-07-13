@@ -8,7 +8,9 @@ int openFile (string fileaName){ 			//打开文件的目录块 返回对应的文件内容块编号
 		return -1;
 	db = readDir (db.sonDirID);
 	while (!((string)db.dirName == fileaName && db.type == 2)) {
+        if (db.nextDirID == -1) return -1;
 		db = readDir (db.nextDirID);
+        if (!db.used) return -1;
 	}
 	if ((string)db.dirName == fileaName && db.type == 2) {
 		indexBlock ib = readIndex (db.textLocation);

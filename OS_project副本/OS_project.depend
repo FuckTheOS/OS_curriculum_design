@@ -372,7 +372,7 @@
 1499879632 c:\morejarphone\code相关\os_project副本\user.h
 	<string>
 
-1499879298 source:c:\morejarphone\code相关\os_project副本\file.cpp
+1499911307 source:c:\morejarphone\code相关\os_project副本\file.cpp
 	"file.h"
 	"dir.h"
 	"common.h"
@@ -386,17 +386,18 @@
 
 1499879088 c:\morejarphone\code相关\os_project副本\index.h
 
-1499885438 source:c:\morejarphone\code相关\os_project副本\main.cpp
+1499911195 source:c:\morejarphone\code相关\os_project副本\main.cpp
 	"file.h"
 	"common.h"
 	"dir.h"
 	"user.h"
+	"vim.h"
 
 1499883832 source:c:\morejarphone\code相关\os_project副本\user.cpp
 	"user.h"
 	"common.h"
 
-1499880065 source:c:\morejarphone\code相关\os_project副本\vim.cpp
+1499908799 source:c:\morejarphone\code相关\os_project副本\vim.cpp
 	"vim.h"
 	<cstdlib>
 	<Windows.h>
