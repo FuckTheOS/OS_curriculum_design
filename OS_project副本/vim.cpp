@@ -118,7 +118,7 @@ void saveVim()
 
     //下方代码用于处理文件变小时释放空间的情况
     curFileID = curFileBlock.nextFileID;
-    while(curFileID>=0)
+    while(curFileID >= 0)
     {
         curFileBlock = readFile(curFileID);
         int x = curFileBlock.nextFileID;
@@ -252,7 +252,7 @@ void initBuffer(int fileBlockID)
             bufferString.push_back("");
         }
         else bufferString[cnt].push_back(curFileBlock.text[i]);
-        if(curFileBlock.nextFileID <0) break;
+        if(curFileBlock.nextFileID < 0) break;
         curFileBlock = readFile(curFileBlock.nextFileID);
     }
 }

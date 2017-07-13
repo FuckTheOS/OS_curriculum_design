@@ -47,7 +47,7 @@ void showCurPath (int type, vector <string> curPath) {	//输出当前路径
     if (type == 0) {
         cout << "root>";
         for (int i = 1; i < curPath.size (); i++) {
-            cout << curPath[i] << (i == curPath.size ()-1 ? '/' : ' ');
+            cout << curPath[i] << (i == curPath.size ()-1 ? ' ' : '/');
         }
         userBlock ub = readUser (curUserID);
         cout << ub.userName << "$ ";

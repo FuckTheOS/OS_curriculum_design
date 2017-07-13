@@ -154,6 +154,19 @@ bool gotoDir (string tarPath){			//跳转到新的目录
     for(auto op:path)
         if(!visitPath(curDirBlock, op, tmpDirID)) return false;
     curDirID = tmpDirID;
+    if (path[0] == "/root") {
+        curPath.clear (); curPath.pb ("/root");
+        for (int i = 1; i < path.size (); i++) {
+            if (path[i] == "/CUR" || path[i] == "/TOT") continue;
+            curPath.pb (path[i]);
+        }
+    }
+    else {
+        for (int i = 0; i < path.size (); i++) {
+            if (path[i] == "/CUR" || path[i] == "/TOT") continue;
+            curPath.pb (path[i]);
+        }
+    }
     return true;
 }
 //参数是相对或绝对路径 需要路径解析自动机解析路径
