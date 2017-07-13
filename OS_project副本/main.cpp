@@ -34,6 +34,7 @@ void init () { //重新初始化磁盘块
 	db.type = 1;
 	db.faDirID = -1;
 	db.sonDirID = -1;
+	db.nextDirID = -1;
 	db.dirMod = 2;
 	db.used = true;
 	fout.write ((char *)&db, sizeof db);
@@ -67,6 +68,7 @@ void init () { //重新初始化磁盘块
 }
 
 void load () {			//载入磁盘文件
+    cout << disk << endl;
 	ifstream fin (disk.c_str ());
 	if (fin.is_open ()) {
         curDirID = 0;
@@ -169,7 +171,7 @@ void bash () {			//命令行模式操作文件系统
 			cin >> fromPath >> toPath;
 		}
 		else if (op1 == "find") {
-			string target;
+			string target; cin >> target;
 			find (curDirID, target, curPath);
 		}
 		else if (op1 == "state") {

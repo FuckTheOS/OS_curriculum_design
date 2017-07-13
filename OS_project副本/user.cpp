@@ -26,6 +26,7 @@ bool chuser (string name, string passwd){	//在当前目录下切换用户
 		if ((string)ub.userName == name && (string)ub.userPassword == passwd) {
 			int dirID = curDirID;
 			dirBlock db;
+			curUserID = i;
 			while (dirID != -1) {		//往上追溯 看看是够和上面的目录冲突
 				if (dirID == 0)
 					return true;
@@ -33,7 +34,6 @@ bool chuser (string name, string passwd){	//在当前目录下切换用户
 					return false;
 				db = readDir (db.faDirID);
 			}
-			curUserID = i;
 			return true;
 		}
 	}

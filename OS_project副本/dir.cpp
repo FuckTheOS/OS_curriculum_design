@@ -151,10 +151,10 @@ bool gotoDir (string tarPath){			//跳转到新的目录
 	pathPrase (tarPath, path);
 	dirBlock curDirBlock = readDir(curDirID);
 	int tmpDirID = curDirID;
-    	for(auto op:path)
-        	if(!visitPath(curDirBlock, op, tmpDirID)) return false;
-    	curDirID = tmpDirID;
-		return true;
+    for(auto op:path)
+        if(!visitPath(curDirBlock, op, tmpDirID)) return false;
+    curDirID = tmpDirID;
+    return true;
 }
 //参数是相对或绝对路径 需要路径解析自动机解析路径
 //跳转成功返回1 否则返回0
