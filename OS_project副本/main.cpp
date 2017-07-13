@@ -3,9 +3,9 @@
 #include "dir.h"
 #include "user.h"
 #include "vim.h"
-void init () { //ÖØĞÂ³õÊ¼»¯´ÅÅÌ¿é
-	//´ÅÅÌÎÄ¼şÃû//
-	//Ğ´Èë³¬¼¶½Úµã¿é
+void init () { //é‡æ–°åˆå§‹åŒ–ç£ç›˜å—
+	//ç£ç›˜æ–‡ä»¶å//
+	//å†™å…¥è¶…çº§èŠ‚ç‚¹å—
 	superNodeBlock sn;
 	sn.root = 0;
 	sn.emptyUserBlock = 1;
@@ -15,7 +15,7 @@ void init () { //ÖØĞÂ³õÊ¼»¯´ÅÅÌ¿é
 	ofstream fout (disk.c_str (), std::ios::binary);
 	fout.write ((char *)&sn, sizeof sn);
 	//cout << sizeof (superNodeBlock) << " " << userSegOffset << endl; while (1) {}
-	//Ğ´ÈëÓÃ»§¿é
+	//å†™å…¥ç”¨æˆ·å—
 	userBlock ub;
 	strcpy (ub.userName, "admin");
 	strcpy (ub.userPassword, "000000");
@@ -28,7 +28,7 @@ void init () { //ÖØĞÂ³õÊ¼»¯´ÅÅÌ¿é
 	}
 	//cout << dirSegOffset << " " << sizeof(superNodeBlock)+sizeof(userBlock)*USERSIZE << endl; while (1) {}
 	//ub = readUser (0); cout << ub.userName << " " << ub.userPassword << endl; while (1) {}
-	//Ğ´ÈëÄ¿Â¼¿é
+	//å†™å…¥ç›®å½•å—
 	dirBlock db;
 	strcpy (db.dirName, "root");
 	strcpy (db.dirOwner, "admin");
@@ -48,7 +48,7 @@ void init () { //ÖØĞÂ³õÊ¼»¯´ÅÅÌ¿é
 		else db.nextDirID = -1;
 		fout.write ((char *)&db, sizeof db);
 	}
-	//Ğ´ÈëÎÄ¼ş¿é
+	//å†™å…¥æ–‡ä»¶å—
 	fileBlock fb;
 	Clear (fb.text, 0);
 	for (int i = 0; i < FILESIZE; i++) {
@@ -56,7 +56,7 @@ void init () { //ÖØĞÂ³õÊ¼»¯´ÅÅÌ¿é
 		else fb.nextFileID = -1;
 		fout.write ((char *)&fb, sizeof fb);
 	}
-	//Ğ´ÈëË÷Òı¿é
+	//å†™å…¥ç´¢å¼•å—
 	indexBlock ib;
 	for (int i = 0; i < INDEXSIZE; i++) {
 		if (i != INDEXSIZE-1) ib.nextIndexID = i+1;
@@ -69,7 +69,7 @@ void init () { //ÖØĞÂ³õÊ¼»¯´ÅÅÌ¿é
 	return ;
 }
 
-void load () {			//ÔØÈë´ÅÅÌÎÄ¼ş
+void load () {			//è½½å…¥ç£ç›˜æ–‡ä»¶
     cout << disk << endl;
 	ifstream fin (disk.c_str ());
 	if (fin.is_open ()) {
@@ -80,57 +80,57 @@ void load () {			//ÔØÈë´ÅÅÌÎÄ¼ş
 	}
 	else {
         cout << "init" << endl;
-		init ();		//´ÅÅÌ¿é¶ªÊ§£¬ÖØĞÂ³õÊ¼»¯
+		init ();		//ç£ç›˜å—ä¸¢å¤±ï¼Œé‡æ–°åˆå§‹åŒ–
 	}
 }
 
-void bash () {			//ÃüÁîĞĞÄ£Ê½²Ù×÷ÎÄ¼şÏµÍ³
+void bash () {			//å‘½ä»¤è¡Œæ¨¡å¼æ“ä½œæ–‡ä»¶ç³»ç»Ÿ
     cout << curUserID << ".." << endl;
 	string op1, op2, op3;
-	showCurPath (0, curPath);	//ÃüÁîĞĞÏÔÊ¾µ±Ç°Â·¾¶ÓÃ»§
+	showCurPath (0, curPath);	//å‘½ä»¤è¡Œæ˜¾ç¤ºå½“å‰è·¯å¾„ç”¨æˆ·
 	while (cin >> op1) {
 		if (op1 == "ls") {
             //cout << "ls" << endl;
-			showAllSonDir ();	//ÏÔÊ¾µ±Ç°Â·¾¶ÏÂËùÓĞ×ÓÄ¿Â¼
+			showAllSonDir ();	//æ˜¾ç¤ºå½“å‰è·¯å¾„ä¸‹æ‰€æœ‰å­ç›®å½•
 		}
-		else if (op1 == "mkdir") { 			//´´½¨µ¥¼¶×ÓÄ¿Â¼
+		else if (op1 == "mkdir") { 			//åˆ›å»ºå•çº§å­ç›®å½•
 			string newDirName;
-			cin >> newDirName;	//ÏëĞÂ´´½¨µÄÄ¿Â¼Ãû
-			char ch; string newDirMod = "a"; //ĞÂÎÄ¼şµÄÈ¨ÏŞÊäÈë
+			cin >> newDirName;	//æƒ³æ–°åˆ›å»ºçš„ç›®å½•å
+			char ch; string newDirMod = "a"; //æ–°æ–‡ä»¶çš„æƒé™è¾“å…¥
 			while ((ch = getchar ()) != '\n') {
 				if (ch == '-') {
 					cin >> newDirMod;
 				}
 			}
-			mkDir (newDirName, newDirMod);	//ÔÚµ±Ç°Ä¿Â¼ÏÂ´´½¨×ÓÄ¿Â¼
+			mkDir (newDirName, newDirMod);	//åœ¨å½“å‰ç›®å½•ä¸‹åˆ›å»ºå­ç›®å½•
 		}
-		else if (op1 == "mkdirs") {			//´´½¨¶à¼¶×ÓÄ¿Â¼
+		else if (op1 == "mkdirs") {			//åˆ›å»ºå¤šçº§å­ç›®å½•
 			string newDirPath;
-			cin >> newDirPath;	//Ïë´´½¨µÄ¶à¼¶×ÓÄ¿Â¼Â·¾¶
-			char ch; string newDirMod; //ĞÂÎÄ¼şµÄÈ¨ÏŞÊäÈë
+			cin >> newDirPath;	//æƒ³åˆ›å»ºçš„å¤šçº§å­ç›®å½•è·¯å¾„
+			char ch; string newDirMod; //æ–°æ–‡ä»¶çš„æƒé™è¾“å…¥
 			while ((ch = getchar ()) != '\n') {
 				if (ch == '-') {
 					cin >> newDirMod;
 				}
 			}
-			mkdirs (newDirPath, newDirMod);	//ÔÚµ±Ç°Ä¿Â¼ÏÂ´´½¨¶à¼¶×ÓÄ¿Â¼
+			mkdirs (newDirPath, newDirMod);	//åœ¨å½“å‰ç›®å½•ä¸‹åˆ›å»ºå¤šçº§å­ç›®å½•
 		}
 		else if (op1 == "cd") {
 			char ch = getchar ();
-			if (ch == '\n') {		//Ìø×ªµ½¸ùÄ¿Â¼
+			if (ch == '\n') {		//è·³è½¬åˆ°æ ¹ç›®å½•
 				curPath.clear ();
 				curPath.pb ("root");
 				curDirID = 0;
 				goto out;
 			}
 			string tarPath; cin >> tarPath;
-			if (tarPath == "..") {	//Ìø×ªµ½ÉÏÒ»¼¶Ä¿Â¼
+			if (tarPath == "..") {	//è·³è½¬åˆ°ä¸Šä¸€çº§ç›®å½•
 				if (!gotoFaDir ()) {
 					cout << "already in root!" << endl;
 				}
 			}
 			else {
-				if (!gotoDir (tarPath)) {	//Ìø×ªµ½Ä¿±êÄ¿Â¼
+				if (!gotoDir (tarPath)) {	//è·³è½¬åˆ°ç›®æ ‡ç›®å½•
 					cout << "no such path!" << endl;
 					goto out;
 				}
@@ -179,7 +179,11 @@ void bash () {			//ÃüÁîĞĞÄ£Ê½²Ù×÷ÎÄ¼şÏµÍ³
 		else if (op1 == "state") {
 			state ();
 		}
-		else if (op1 == "rename") {}
+		else if (op1 == "rename") {
+			string oldFilname,newFilename;
+                        cin >>oldFilname>>newFilename;
+                        rename(oldFilname,newFilename);
+		}
 		else if (op1 == "cat") {
 			string filename; cin >> filename;
 			cat (filename);
@@ -214,12 +218,12 @@ void bash () {			//ÃüÁîĞĞÄ£Ê½²Ù×÷ÎÄ¼şÏµÍ³
 		}
 		else if (op1 == "open") {
 			string fileName; cin >> fileName;
-			int id = openFile (fileName);		//´ò¿ªÎÄ¼şµÄÄ¿Â¼¿é ·µ»Ø¶ÔÓ¦µÄÎÄ¼şÄÚÈİ¿é±àºÅ
+			int id = openFile (fileName);		//æ‰“å¼€æ–‡ä»¶çš„ç›®å½•å— è¿”å›å¯¹åº”çš„æ–‡ä»¶å†…å®¹å—ç¼–å·
 			if (id == -1) {
 				cout << "filename error!" << endl;
 				goto out;
 			}
-			runVim(id);		//¶ÔÎÄ¼şÄÚÈİ½øĞĞ±à¼­
+			runVim(id);		//å¯¹æ–‡ä»¶å†…å®¹è¿›è¡Œç¼–è¾‘
 		}
 		else if (op1 == "exit") {
             return ;
@@ -235,14 +239,14 @@ void bash () {			//ÃüÁîĞĞÄ£Ê½²Ù×÷ÎÄ¼şÏµÍ³
 
 
 int main () {
-	load ();			//ÔØÈë´ÅÅÌÎÄ¼ş
-	if (!userLogin ()) {//ÓÃ»§µÇÂ¼
+	load ();			//è½½å…¥ç£ç›˜æ–‡ä»¶
+	if (!userLogin ()) {//ç”¨æˆ·ç™»å½•
 	    cout << "userID2" << curUserID << endl;
 		system ("CLS");
 		cout << "fail to longin!" << endl;
 		exit (0);
 	}
-	bash ();			//ÃüÁîĞĞÄ£Ê½²Ù×÷ÎÄ¼şÏµÍ³
+	bash ();			//å‘½ä»¤è¡Œæ¨¡å¼æ“ä½œæ–‡ä»¶ç³»ç»Ÿ
     return 0;
 }
 
