@@ -1,5 +1,6 @@
 #include "common.h"
 #include "filestruct.h"
+#include "dir.h"
 vector <string> curPath;//当前的绝对路径
 int curUserID;			//当前用户
 int curDirID;			//当前目录块ID
@@ -375,4 +376,148 @@ void releaseFile(int fileID){              //释放文件块
     }
     writeSuperNode(sn);
     writeFile (fb,fileID);
+}
+bool makeSymbolLink(string pathFrom, string pathTo) //创建软链接
+{
+    int tmpDirID = curDirID;
+    vector<string> tmpPath = curPath;
+    int pos = pathFrom.find_last_of('/');
+    string filename;
+    if(pos != pathFrom.npos)
+    {
+        string tmpPath = pathFrom.substr(0,pos);
+        gotoDir(tmpPath);
+        filename = pathFrom.substr(pos+1,pathFrom.npos);
+    }
+    else filename = pathFrom;
+    int dirID = giveDirBlock ();	//分配新的目录块
+	int indexID = giveIndexBlock ();//分配新的索引块
+	int fileID = giveFileBlock();
+	if (dirID == -1 || indexID == -1||fileID == -1) {
+		cout << "no more disk space!" << endl;
+		curDirID = tmpDirID; //恢复当前所在目录位置
+        curPath = tmpPath;
+		return false;
+	}
+
+	fileBlock fb = readFile (fileID);
+	fb.used = true;
+	fb.nextFileID = -1;
+	Clear (fb.text, 0);
+	strcpy(fb.text,pathTo.c_str());
+	writeFile(fb,fileID);
+	indexBlock ib = readIndex (indexID);
+	ib.used = 1;
+	ib.diskOffset = fileID;
+	writeIndex (ib, indexID);
+
+	dirBlock db = readDir (curDirID);
+	if (db.sonDirID == -1) {
+		db.sonDirID = dirID;
+		writeDir (db, curDirID);
+	}
+	else {
+		int tmp = db.sonDirID;
+		db = readDir (db.sonDirID);
+		while (db.nextDirID != -1) {		//找到当前路径的最后一个目录
+			tmp = db.nextDirID;
+			db = readDir (db.nextDirID);
+		}
+		db.nextDirID = dirID;
+		writeDir (db, tmp);
+	}
+
+	db = readDir (dirID);
+	userBlock ub = readUser (curUserID);
+	strcpy (db.dirName, filename.c_str ());
+	strcpy (db.dirOwner, ub.userName);
+	db.dirSize = pathTo.size();
+	db.dirCreateTime = getTime ();
+	db.dirChangeTime = db.dirCreateTime;
+	db.type =4;
+	db.textLocation =indexID;
+	db.faDirID = curDirID;
+	db.sonDirID = -1;
+	db.nextDirID = -1;
+	db.dirMod = 3;
+	db.used = true;
+	writeDir (db, dirID);	//将目录信息写入目录块
+    curDirID = tmpDirID; //恢复当前所在目录位置
+    curPath = tmpPath;
+    return true;
+}
+
+bool makeHardLink(string pathFrom, string pathTo)//创建硬链接
+{
+    int tmpDirID = curDirID;
+    vector<string> tmpPath = curPath;
+    int pos = pathFrom.find_last_of('/');
+    int  toDirID;
+    if(!gotoDir(pathTo))
+    {
+        cout<<"该链接至的文件并不存在！"<<endl;
+        curDirID = tmpDirID; //恢复当前所在目录位置
+        curPath = tmpPath;
+        return false;
+    }
+    if(!readDir(curDirID).type!=2)
+    {
+        cout<<"错误！硬链接所链接至的必须为文件！"<<endl;
+        curDirID = tmpDirID; //恢复当前所在目录位置
+        curPath = tmpPath;
+        return false;
+    }
+    toDirID = curDirID;
+    curDirID = tmpDirID; //恢复当前所在目录位置
+    curPath = tmpPath;
+    string filename;
+    if(pos != pathFrom.npos)
+    {
+        string tmpPath = pathFrom.substr(0,pos);
+        gotoDir(tmpPath);
+        filename = pathFrom.substr(pos+1,pathFrom.npos);
+    }
+    else filename = pathFrom;
+    int dirID = giveDirBlock ();	//分配新的目录块
+	if (dirID == -1 ) {
+		cout << "no more disk space!" << endl;
+		curDirID = tmpDirID; //恢复当前所在目录位置
+        curPath = tmpPath;
+		return false;
+	}
+
+	dirBlock db = readDir (curDirID);
+	if (db.sonDirID == -1) {
+		db.sonDirID = dirID;
+		writeDir (db, curDirID);
+	}
+	else {
+		int tmp = db.sonDirID;
+		db = readDir (db.sonDirID);
+		while (db.nextDirID != -1) {		//找到当前路径的最后一个目录
+			tmp = db.nextDirID;
+			db = readDir (db.nextDirID);
+		}
+		db.nextDirID = dirID;
+		writeDir (db, tmp);
+	}
+
+	db = readDir (dirID);
+	userBlock ub = readUser (curUserID);
+	strcpy (db.dirName, filename.c_str ());
+	strcpy (db.dirOwner, ub.userName);
+	db.dirSize = 0;
+	db.dirCreateTime = getTime ();
+	db.dirChangeTime = db.dirCreateTime;
+	db.type =3;
+	db.textLocation =readDir(toDirID).textLocation;//其所连接的文件的indexID
+	db.faDirID = curDirID;
+	db.sonDirID = -1;
+	db.nextDirID = -1;
+	db.dirMod = 3;
+	db.used = true;
+	writeDir (db, dirID);	//将目录信息写入目录块
+    curDirID = tmpDirID; //恢复当前所在目录位置
+    curPath = tmpPath;
+    return true;
 }

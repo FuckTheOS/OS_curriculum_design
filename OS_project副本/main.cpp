@@ -233,7 +233,18 @@ void bash () {			//命令行模式操作文件系统
             return ;
 		}
 		else if (op1 == "link") {
-
+            string st;
+            cin>> st;
+            string pathFrom, pathTo;
+            cin>>pathFrom>>pathTo;
+                    if(st == "-h") makeHardLink(pathFrom, pathTo);
+            else
+                if(st == "-s") makeSymbolLink(pathFrom, pathTo);
+                else
+                {
+					cout << "parameter error" << endl;
+					goto out;
+				}
 		}
 		else if (op1 == "formet") {
             init ();

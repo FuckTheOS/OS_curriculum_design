@@ -140,6 +140,9 @@ int giveIndexBlock ();		//分配新的索引块
 //如果分配成功返回索引块的ID 否则输出-1
 void releaseIndex (int indexID);		//释放索引块
 void releaseFile (int fileID);	//释放文件块
+bool makeHardLink(string pathFrom, string pathTo);//创建硬链接
+
+bool makeSymbolLink(string pathFrom, string pathTo); //创建软链接
 
 
 

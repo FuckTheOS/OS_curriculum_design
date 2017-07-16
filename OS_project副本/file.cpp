@@ -8,12 +8,26 @@ int openFile (string fileaName){ 			//打开文件的目录块 返回对应的�
 	if (db.sonDirID == -1)
 		return -1;
 	db = readDir (db.sonDirID);
-	while (!((string)db.dirName == fileaName && db.type == 2)) {
+	while (!((string)db.dirName == fileaName && (db.type >=2))) {
         if (db.nextDirID == -1) return -1;
 		db = readDir (db.nextDirID);
         if (!db.used) return -1;
 	}
-	if ((string)db.dirName == fileaName && db.type == 2) {
+	if ((string)db.dirName == fileaName && (db.type >= 2)) {
+        if (db.type == 4)
+        {
+            int tmpDirID = curDirID;
+            vector<string> tmpPath = curPath;
+            gotoDir(string(readFile(db.textLocation).text));
+            db = readDir(curDirID);
+            if(db.type!=2&&db.type!=3)
+            {
+                curDirID = tmpDirID;
+                curPath = tmpPath;
+                return -1;
+            }
+        }//处理软链接
+        if(db.type==3 && !db.used) return -1;//处理硬链接非法
 		indexBlock ib = readIndex (db.textLocation);
 		return ib.diskOffset;
 	}
