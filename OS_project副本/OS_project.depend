@@ -259,10 +259,11 @@
 1499876858 source:c:\morejarphone\code相关\os_project - 副本\global.cpp
 	"global.h"
 
-1499912025 source:e:\my_college\operatorsystem\os_curriculum_design\os_project副本\common.cpp
+1500210541 source:e:\my_college\operatorsystem\os_curriculum_design\os_project副本\common.cpp
 	"common.h"
+	"filestruct.h"
 
-1499910781 e:\my_college\operatorsystem\os_curriculum_design\os_project副本\common.h
+1500188482 e:\my_college\operatorsystem\os_curriculum_design\os_project副本\common.h
 	<cstdio>
 	<iostream>
 	<cstring>
@@ -280,45 +281,49 @@
 	<fstream>
 	"filestruct.h"
 
-1499910781 source:e:\my_college\operatorsystem\os_curriculum_design\os_project副本\dir.cpp
+1500210578 source:e:\my_college\operatorsystem\os_curriculum_design\os_project副本\dir.cpp
 	"dir.h"
 	"user.h"
 	"common.h"
+	"filestruct.h"
 
-1499910781 e:\my_college\operatorsystem\os_curriculum_design\os_project副本\dir.h
+1500188482 e:\my_college\operatorsystem\os_curriculum_design\os_project副本\dir.h
 	<string>
 
-1499910782 e:\my_college\operatorsystem\os_curriculum_design\os_project副本\user.h
+1500188482 e:\my_college\operatorsystem\os_curriculum_design\os_project副本\user.h
 	<string>
 
-1499912025 source:e:\my_college\operatorsystem\os_curriculum_design\os_project副本\file.cpp
+1500210592 source:e:\my_college\operatorsystem\os_curriculum_design\os_project副本\file.cpp
 	"file.h"
 	"dir.h"
 	"common.h"
+	"filestruct.h"
 
-1499910781 e:\my_college\operatorsystem\os_curriculum_design\os_project副本\file.h
+1500188482 e:\my_college\operatorsystem\os_curriculum_design\os_project副本\file.h
 	<string>
 
-1499910781 source:e:\my_college\operatorsystem\os_curriculum_design\os_project副本\index.cpp
+1500188482 source:e:\my_college\operatorsystem\os_curriculum_design\os_project副本\index.cpp
 	"index.h"
 	"common.h"
 
-1499910781 e:\my_college\operatorsystem\os_curriculum_design\os_project副本\index.h
+1500188482 e:\my_college\operatorsystem\os_curriculum_design\os_project副本\index.h
 
 1499877221 e:\my_college\operatorsystem\os_curriculum_design\os_project副本\global.h
 
-1499912025 source:e:\my_college\operatorsystem\os_curriculum_design\os_project副本\main.cpp
+1500210609 source:e:\my_college\operatorsystem\os_curriculum_design\os_project副本\main.cpp
 	"file.h"
 	"common.h"
 	"dir.h"
 	"user.h"
 	"vim.h"
+	"filestruct.h"
 
-1499910782 source:e:\my_college\operatorsystem\os_curriculum_design\os_project副本\user.cpp
+1500210655 source:e:\my_college\operatorsystem\os_curriculum_design\os_project副本\user.cpp
 	"user.h"
 	"common.h"
+	"filestruct.h"
 
-1499880065 source:e:\my_college\operatorsystem\os_curriculum_design\os_project副本\vim.cpp
+1500210909 source:e:\my_college\operatorsystem\os_curriculum_design\os_project副本\vim.cpp
 	"vim.h"
 	<cstdlib>
 	<Windows.h>
@@ -330,14 +335,16 @@
 	"user.h"
 	"dir.h"
 	"common.h"
+	"filestruct.h"
+	"concol.h"
 
-1499910782 e:\my_college\operatorsystem\os_curriculum_design\os_project副本\vim.h
+1500210909 e:\my_college\operatorsystem\os_curriculum_design\os_project副本\vim.h
 	<cstdlib>
 	<cstdio>
 	<windows.h>
 	"filestruct.h"
 
-1499910781 e:\my_college\operatorsystem\os_curriculum_design\os_project副本\filestruct.h
+1500188482 e:\my_college\operatorsystem\os_curriculum_design\os_project副本\filestruct.h
 
 1499908648 source:c:\morejarphone\code相关\os_project副本\common.cpp
 	"common.h"
@@ -495,4 +502,7 @@
 	"user.h"
 	"dir.h"
 	"common.h"
+
+1500210381 e:\my_college\operatorsystem\os_curriculum_design\os_project副本\concol.h
+	<windows.h>
 

@@ -1,6 +1,7 @@
 #include "dir.h"
 #include "user.h"
 #include "common.h"
+#include "filestruct.h"
 using namespace std;
 int giveDirBlock() {					//分配新的目录块
 	superNodeBlock sn = readSuperNode();

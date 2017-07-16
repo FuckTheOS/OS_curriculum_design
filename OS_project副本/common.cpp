@@ -1,5 +1,5 @@
 #include "common.h"
-
+#include "filestruct.h"
 vector <string> curPath;//当前的绝对路径
 int curUserID;			//当前用户
 int curDirID;			//当前目录块ID

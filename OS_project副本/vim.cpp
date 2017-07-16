@@ -1,5 +1,4 @@
 #include "vim.h"
-#include "vim.h"
 #include <cstdlib>
 #include <Windows.h>
 #include <conio.h>
@@ -11,10 +10,14 @@
 #define KEY_LEFT 75
 #define KEY_DOWN 80
 #define KEY_RIGHT 77
+#define P_X_BEGIN 8
+#define DISPLAY_X p_x+6
 #include "file.h"
 #include "user.h"
 #include "dir.h"
 #include "common.h"
+#include "filestruct.h"
+#include "concol.h"
 using namespace std;
 static short p_x = 0, p_y = 0;//光标目前所处的位置 仅为窗口中的相对位置
 static int x_backup, y_backup;
@@ -34,36 +37,48 @@ static enum WorkStatus
 }curStatus;
 static HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);//获取输出窗口的句柄
 														//清空屏幕
+
 void clearScreen(COORD pos) {
 	//HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 	DWORD written;
 	GetConsoleScreenBufferInfo(console, &screen);
 	FillConsoleOutputCharacterA(
-		console, ' ', screen.dwSize.X * screen.dwSize.Y, left_top, &written
+		console, ' ', screen.dwMaximumWindowSize.X * screen.dwMaximumWindowSize.Y, left_top, &written
 	);
 
 	FillConsoleOutputAttribute(
 		console, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE,
-		screen.dwSize.X * screen.dwSize.Y, left_top, &written
+		screen.dwMaximumWindowSize.X * screen.dwMaximumWindowSize.Y, left_top, &written
 	);
 
 }
 void displayVim() // 将当期缓存区当中的内容打印在终端屏幕上
 {
-	COORD pos = { p_x, p_y };
+	COORD pos = { DISPLAY_X, p_y };
 	clearScreen(pos);
 	SetConsoleCursorPosition(console, left_top);
+	int i;
 	if (curStatus == edit)
-		for (int i = begin_y; i - begin_y < screen.dwSize.Y&&i < bufferString.size(); i++)
-		{
-			std::cout << bufferString[i] << std::endl;
-		}
-	else
 	{
-		if(saved) std::cout << "---saved---" << std::endl;
-        else    std::cout << "---edit---" << std::endl;
+		for (i = begin_y; i - begin_y < screen.dwMaximumWindowSize.Y&&i < bufferString.size(); i++)
+		{
+			string rowS = " "+std::to_string(i+1);
+            while(rowS.size()<6) rowS.append(" ");
+			std::cout << green << rowS;
+			std::cout <<white<< bufferString[i] << std::endl;
+		}
+		for (; i - begin_y < screen.dwMaximumWindowSize.Y-10; i++)
+			std::cout << yellow << "~     " << std::endl;
+	}
+	else //normal模式之下的显示
+	{
+		setcolor(red, yellow);
+		if(!saved)
+		std::cout << "指令模式" << std::endl;
+		else std::cout << "指令模式(已保存)" << std::endl;
 		std::cout << "(S)ave (Q)uit" << std::endl << std::endl;
-		for (int i = begin_y; i - begin_y < screen.dwSize.Y - 4 && i < bufferString.size(); i++)
+		setcolor(white, black);
+		for (int i = begin_y; i - begin_y < screen.dwMaximumWindowSize.Y-4&&i < bufferString.size(); i++)
 		{
 			std::cout << bufferString[i] << std::endl;
 		}
@@ -71,12 +86,9 @@ void displayVim() // 将当期缓存区当中的内容打印在终端屏幕上
 		p_y = 2;
 		pos = { p_x,p_y };
 	}
-	/*
-	HBRUSH brush = CreateSolidBrush(RGB(0, 0, 255));
-	SetClassLongPtr(GetStdHandle(STD_OUTPUT_HANDLE), GCLP_HBRBACKGROUND, (LONG)brush);
-	*/
 	SetConsoleCursorPosition(console, pos);//
 }
+
 void quitVim()
 {
 	quit = true;
@@ -193,6 +205,7 @@ void workChar(int &x)
 			if (p_x < 0) p_x = 0;
 			break;
 		case KEY_DOWN: //Down
+	GetConsoleScreenBufferInfo(console, &screen);
 			if (GLOBAL_Y == bufferString.size() - 1) break;
 			if (p_y<screen.dwSize.Y - 1) p_y++;
 			else begin_y++;
@@ -270,6 +283,7 @@ void runVim(int fileBlockID)
 	bufferString.clear();
 	workFileBlockID = fileBlockID;
 	initBuffer(fileBlockID);
+	GetConsoleScreenBufferInfo(console, &screen);
 	isArrow = false;
 	quit = false;
 	while (!quit)
