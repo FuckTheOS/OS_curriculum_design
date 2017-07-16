@@ -39,7 +39,9 @@ bool checkDirName(string newDirName, int dirType) {	//检查目录名是否和当前其他目
 //如果不冲突返回1 否则返回0
 
 void showAllSonDir() {	//显示当前路径下所有子目录
+    cout << curUserID << " " << curDirID << endl;
 	dirBlock db = readDir(curDirID);
+	cout << db.sonDirID << endl;
 	if (db.sonDirID == -1 || !db.used) { 			//空目录
 		cout << endl;
 		return;
@@ -185,6 +187,7 @@ bool gotoFaDir() {						//跳转到父亲目录
 bool delDir(int dirID, string dirPath, int type) {	//删掉目录块
 	vector <string> path;
 	pathPrase(dirPath, path);
+	//for (int i = 0; i < path.size (); i++) cout << path[i] << " "; cout << endl; cout << type << endl;
 	if (path[0] == "error")
 		return false;
 	for (int i = 0; i < path.size() - 1; i++) {
@@ -197,14 +200,27 @@ bool delDir(int dirID, string dirPath, int type) {	//删掉目录块
 			return false;		//用户权限错误
 	}
 	string leaf = path[path.size() - 1];
+	//cout <<leaf << endl;
 	if (type == 0) {	//删除整个目录块
+        int faID = dirID;
 		dirID = findNextDir(dirID, leaf);
+		dirBlock db = readDir (dirID);
+        int broID = db.nextDirID;
+		//cout << "dirID" << dirID << endl;
 		if (dirID == -1)
 			return -1;
-		if (!checkMod(curUserID, dirID, 3))
+		if (!checkMod(curUserID, dirID, 3)) {
+           // cout << ".." << endl;
 			return false;
+		}
 		if (!delAllDir(dirID))	//递归删除整个目录块
 			return false;
+        else {
+            dirBlock fadb = readDir(faID);
+            fadb.sonDirID = broID;
+            writeDir(fadb, faID);
+        }
+
 	}
 	else {
         //cout << "fuck" << endl;
@@ -264,15 +280,30 @@ bool delAllDir(int dirID) {		//递归删掉整个目录块
 	bool flag = true;
 	dirBlock db = readDir(dirID);
 	if (db.sonDirID == -1) {
-		if (!checkMod(curUserID, dirID, 3))
+        //cout << "id1" <<endl;
+		if (!checkMod(curUserID, dirID, 3)) {
+            //cout << "1error" <<endl;
 			return false;
+		}
 	}
 	else {
+	    //cout << "id2" << endl;
 		flag = delAllDir(db.sonDirID);
 	}
 	if (db.nextDirID != -1) {
 		flag &= delAllDir(db.nextDirID);
 	}
+	if (checkMod(curUserID, dirID, 3) && flag) {
+        dirBlock db = readDir(dirID);
+        if (db.type == 1) releaseDir(dirID);
+        else if (db.type == 2) {
+            indexBlock ib = readIndex(db.textLocation);
+            releaseFile(ib.diskOffset);
+            releaseIndex(db.textLocation);
+            releaseDir(dirID);
+        }
+	}
+	else flag = 0;
 	return flag;
 }
 

@@ -2,7 +2,7 @@
 #include "common.h"
 #include "dir.h"
 #include "user.h"
-#include "vim.h"
+//#include "vim.h"
 #include "filestruct.h"
 void init () { //重新初始化磁盘块
 	//磁盘文件名//
@@ -86,7 +86,7 @@ void load () {			//载入磁盘文件
 }
 
 void bash () {			//命令行模式操作文件系统
-    cout << curUserID << ".." << endl;
+    //cout << curUserID << ".." << endl;
 	string op1, op2, op3;
 	showCurPath (0, curPath);	//命令行显示当前路径用户
 	while (cin >> op1) {
@@ -224,13 +224,16 @@ void bash () {			//命令行模式操作文件系统
 				cout << "filename error!" << endl;
 				goto out;
 			}
-			runVim(id);		//对文件内容进行编辑
+			//runVim(id);		//对文件内容进行编辑
 		}
 		else if (op1 == "exit") {
             return ;
 		}
 		else if (op1 == "link") {
 
+		}
+		else if (op1 == "formet") {
+            init ();
 		}
 		else {
 			cout << "instruction error!" << endl;
