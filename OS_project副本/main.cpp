@@ -168,6 +168,9 @@ void bash () {			//命令行模式操作文件系统
 		else if (op1 == "cp") {
 			string fromPath, toPath;
 			cin >> fromPath >> toPath;
+			if (!cpDir(fromPath, toPath)) {
+                cout << "copy error!" << endl;
+			}
 		}
 		else if (op1 == "move") {
 			string fromPath, toPath;
