@@ -35,23 +35,6 @@ void vim (int id){				//对文件内容进行编辑
 }
 //参数表示文件内容块的索引
 
-int  giveFileBlock(){           //分配文件块
-    superNodeBlock sn = readSuperNode ();
-    if (sn.emptyFileBlock == -1) {		//文件块空间不足
-		return -1;
-	}
-	int res = sn.emptyFileBlock;
-	if (sn.emptyFileBlock == sn._emptyFileBlock) {	//文件块刚好用完
-		sn.emptyFileBlock = -1;
-		sn._emptyFileBlock = -1;
-	}
-	else {
-		fileBlock fb = readFile(sn.emptyFileBlock);	//读取空文件信息
-		sn.emptyFileBlock = fb.nextFileID;			//该块的下一块作为空文件块的首块
-	}
-	writeSuperNode (sn);
-	return res;
- }
 
 bool touch (string fileName,string newDirMod){           //当前目录下新建文件
     if (!checkMod (curUserID, curDirID, 2)) {	//权限检查没通过

@@ -33,6 +33,11 @@ bool delDir (int dirID, string dirPath, int type);	//删掉目录块
 bool delAllDir (int dirID);				//递归删掉所有目录块
 //删除成功返回1 否则返回0
 void releaseDir (int dirID);			//释放一块目录块
+int getDirID (string path);             //从当前目录下按照这个路径访问目标 返回目标的dirID
+//如果不存在返回-1
+bool moveDir (string fromPath, string toPath);      //移动目录
+void cpAllDir (int id1, int id2);                   //将ID2中的内容递归拷贝到ID1中
+bool cpDir (string fromPath, string toPath);        //复制目录
 
 
 

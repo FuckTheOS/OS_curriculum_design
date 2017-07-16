@@ -302,6 +302,23 @@ void writeIndex (indexBlock ib, int id){ //将索引块信息写入索引块
 	fout.close ();
 }
 
+int  giveFileBlock(){           //分配文件块
+    superNodeBlock sn = readSuperNode ();
+    if (sn.emptyFileBlock == -1) {		//文件块空间不足
+		return -1;
+	}
+	int res = sn.emptyFileBlock;
+	if (sn.emptyFileBlock == sn._emptyFileBlock) {	//文件块刚好用完
+		sn.emptyFileBlock = -1;
+		sn._emptyFileBlock = -1;
+	}
+	else {
+		fileBlock fb = readFile(sn.emptyFileBlock);	//读取空文件信息
+		sn.emptyFileBlock = fb.nextFileID;			//该块的下一块作为空文件块的首块
+	}
+	writeSuperNode (sn);
+	return res;
+ }
 
 int giveIndexBlock (){                       //分配新的索引块
     superNodeBlock sn = readSuperNode ();

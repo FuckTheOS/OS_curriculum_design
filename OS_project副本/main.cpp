@@ -172,6 +172,9 @@ void bash () {			//命令行模式操作文件系统
 		else if (op1 == "move") {
 			string fromPath, toPath;
 			cin >> fromPath >> toPath;
+			if (!moveDir (fromPath, toPath)) {
+                cout << "move error!" << endl;
+			}
 		}
 		else if (op1 == "find") {
 			string target; cin >> target;

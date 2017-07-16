@@ -424,10 +424,11 @@
 	<windows.h>
 	"filestruct.h"
 
-1499935641 source:\\mac\home\desktop\os_curriculum_design\os_project副本\common.cpp
+1500221164 source:\\mac\home\desktop\os_curriculum_design\os_project副本\common.cpp
 	"common.h"
+	"filestruct.h"
 
-1499928963 \\mac\home\desktop\os_curriculum_design\os_project副本\common.h
+1500224593 \\mac\home\desktop\os_curriculum_design\os_project副本\common.h
 	<cstdio>
 	<iostream>
 	<cstring>
@@ -445,39 +446,41 @@
 	<fstream>
 	"filestruct.h"
 
-1499928963 \\mac\home\desktop\os_curriculum_design\os_project副本\filestruct.h
+1500221164 \\mac\home\desktop\os_curriculum_design\os_project副本\filestruct.h
 
-1499935759 source:\\mac\home\desktop\os_curriculum_design\os_project副本\dir.cpp
+1500221164 source:\\mac\home\desktop\os_curriculum_design\os_project副本\dir.cpp
 	"dir.h"
 	"user.h"
 	"common.h"
+	"filestruct.h"
 
-1499928963 \\mac\home\desktop\os_curriculum_design\os_project副本\dir.h
+1500223633 \\mac\home\desktop\os_curriculum_design\os_project副本\dir.h
 	<string>
 
-1499928963 \\mac\home\desktop\os_curriculum_design\os_project副本\user.h
+1500221164 \\mac\home\desktop\os_curriculum_design\os_project副本\user.h
 	<string>
 
-1499928963 source:\\mac\home\desktop\os_curriculum_design\os_project副本\file.cpp
+1500221164 source:\\mac\home\desktop\os_curriculum_design\os_project副本\file.cpp
 	"file.h"
 	"dir.h"
 	"common.h"
+	"filestruct.h"
 
-1499928963 \\mac\home\desktop\os_curriculum_design\os_project副本\file.h
+1500224630 \\mac\home\desktop\os_curriculum_design\os_project副本\file.h
 	<string>
 
-1499928963 source:\\mac\home\desktop\os_curriculum_design\os_project副本\index.cpp
+1500221164 source:\\mac\home\desktop\os_curriculum_design\os_project副本\index.cpp
 	"index.h"
 	"common.h"
 
-1499928963 \\mac\home\desktop\os_curriculum_design\os_project副本\index.h
+1500221164 \\mac\home\desktop\os_curriculum_design\os_project副本\index.h
 
-1499928963 source:\\mac\home\desktop\os_curriculum_design\os_project副本\main.cpp
+1500221350 source:\\mac\home\desktop\os_curriculum_design\os_project副本\main.cpp
 	"file.h"
 	"common.h"
 	"dir.h"
 	"user.h"
-	"vim.h"
+	"filestruct.h"
 
 1499928963 \\mac\home\desktop\os_curriculum_design\os_project副本\vim.h
 	<cstdlib>
@@ -485,9 +488,10 @@
 	<windows.h>
 	"filestruct.h"
 
-1499928963 source:\\mac\home\desktop\os_curriculum_design\os_project副本\user.cpp
+1500221164 source:\\mac\home\desktop\os_curriculum_design\os_project副本\user.cpp
 	"user.h"
 	"common.h"
+	"filestruct.h"
 
 1499928963 source:\\mac\home\desktop\os_curriculum_design\os_project副本\vim.cpp
 	"vim.h"

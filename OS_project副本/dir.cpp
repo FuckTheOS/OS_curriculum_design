@@ -326,3 +326,78 @@ void releaseDir(int dirID) {		//释放一块目录块
 	writeDir(db, dirID);
 }
 
+int getDirID (string path){         //从当前目录下按照这个路径访问目标 返回目标的dirID
+    vector <string> Path; pathPrase(path, Path);
+    if (Path[0] == "error")
+        return -1;
+    int dirID = (Path[0] == "/root"? 0 : curDirID);
+    for (int i = 0; i < Path.size (); i++) {
+        if (Path[i] == "/CUR") continue;
+        int tmp = findNextDir(dirID, Path[i], 1);
+        if (i == Path.size()-1 && tmp == -1) {
+            tmp = findNextDir(dirID, Path[i], 2);
+        }
+        dirID = tmp;
+    }
+    return dirID;
+}
+//如果不存在返回-1
+
+bool moveDir (string fromPath, string toPath) {     //移动文件
+    int id1 = getDirID(fromPath), id2 = getDirID(toPath);
+    dirBlock db1 = readDir(id1), db2 = readDir(id2);
+
+    return true;
+}
+
+void cpAllDir (int id1, int id2) {                  //将ID2中的内容递归拷贝到ID1中
+    dirBlock db1 = readDir(id1), db2 = readDir(id2), newdb;
+    int newID = giveDirBlock(); newdb = readDir(newID);
+    newdb = db2; newdb.faDirID = id1; newdb.nextDirID = -1;
+    if (newdb.type == 2) {                          //拷贝文件
+        int newi = giveIndexBlock(); indexBlock ib = readIndex(db2.textLocation), newib = ib;
+        int newf = giveFileBlock(); fileBlock fb = readFile(ib.diskOffset), newfb = fb;
+        newdb.textLocation = newi;
+        newib.diskOffset = newf;
+        writeIndex (newib, newi);
+        writeFile(newfb, newf);
+        return ;
+    }
+    writeDir(newdb, newID);
+    if (db2.sonDirID == -1) return ;
+    if (db1.sonDirID == -1) {
+        db1.sonDirID = newID;
+        writeDir (db1, id1);
+    }
+    else {
+        int dirID = db1.sonDirID; db1 = readDir (dirID);
+        while (db1.nextDirID != -1) {
+            dirID = db1.nextDirID;
+            db1 = readDir(dirID);
+        }
+        db1.nextDirID = newID;
+        writeDir(db1, dirID);
+    }
+    id2 = db2.sonDirID;
+    while (id2 != -1) {     //把目标文件夹下的东西都拷贝到新的文件夹下
+        cpAllDir(newID, id2);
+        db2 = readDir(id2);
+        id2 = db2.nextDirID;
+    }
+}
+
+bool cpDir (string fromPath, string toPath){        //复制目录
+    int id1 = getDirID(fromPath), id2 = getDirID(toPath);
+    dirBlock db, db1 = readDir(id1), db2 = readDir (id2);
+    db = readDir (id2);
+    if (findNextDir(id1, db.dirName, 1) || findNextDir(id1, db.dirName, 2)) {   //文件名冲突
+        return false;
+    }
+    cpAllDir (id1, id2);
+    return true;
+}
+
+
+
+
+
