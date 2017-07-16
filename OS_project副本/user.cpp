@@ -1,7 +1,7 @@
 #include "user.h"
 #include "common.h"
 #include "filestruct.h"
-bool userLogin () {			//¸Õ¿ªÊ¼Ê±µÄÓÃ»§µÇÂ¼
+bool userLogin () {			//åˆšå¼€å§‹æ—¶çš„ç”¨æˆ·ç™»å½•
     string userName, passwd;
     cout << "        input username: "; cin >> userName;
     cout << "        input password: "; cin >> passwd;
@@ -10,9 +10,9 @@ bool userLogin () {			//¸Õ¿ªÊ¼Ê±µÄÓÃ»§µÇÂ¼
 	superNodeBlock sn = readSuperNode ();
 	for (int i = 0; i < sn.emptyUserBlock; i++) {
 		ub = readUser (i);
-		if (userName == (string)ub.userName && passwd == (string)ub.userPassword) {  //ÕÒµ½¸ÃÓÃ»§
+		if (userName == (string)ub.userName && passwd == (string)ub.userPassword) {  //æ‰¾åˆ°è¯¥ç”¨æˆ·
 		    curUserID = i;
-		    cout << "userID" << curUserID << endl;
+		    //cout << "userID" << curUserID << endl;
 		    return true;
 		}
 	}
@@ -20,7 +20,7 @@ bool userLogin () {			//¸Õ¿ªÊ¼Ê±µÄÓÃ»§µÇÂ¼
 }
 
 
-bool chuser (string name, string passwd){	//ÔÚµ±Ç°Ä¿Â¼ÏÂÇÐ»»ÓÃ»§
+bool chuser (string name, string passwd){	//åœ¨å½“å‰ç›®å½•ä¸‹åˆ‡æ¢ç”¨æˆ·
 	userBlock ub;
 	for (int i = 0; i < USERSIZE; i++) {
 		ub = readUser (i);
@@ -28,7 +28,7 @@ bool chuser (string name, string passwd){	//ÔÚµ±Ç°Ä¿Â¼ÏÂÇÐ»»ÓÃ»§
 			int dirID = curDirID;
 			dirBlock db;
 			curUserID = i;
-			while (dirID != -1) {		//ÍùÉÏ×·ËÝ ¿´¿´ÊÇ¹»ºÍÉÏÃæµÄÄ¿Â¼³åÍ»
+			while (dirID != -1) {		//å¾€ä¸Šè¿½æº¯ çœ‹çœ‹æ˜¯å¤Ÿå’Œä¸Šé¢çš„ç›®å½•å†²çª
 				if (dirID == 0)
 					return true;
 				if (!checkMod (i, dirID, 1))
@@ -40,15 +40,15 @@ bool chuser (string name, string passwd){	//ÔÚµ±Ç°Ä¿Â¼ÏÂÇÐ»»ÓÃ»§
 	}
 	return false;
 }
-//²ÎÊý±íÊ¾ÓÃ»§ÃûºÍÓÃ»§ÃÜÂë
-//³É¹¦·µ»Ø1 ·ñÔò·µ»Ø0
+//å‚æ•°è¡¨ç¤ºç”¨æˆ·åå’Œç”¨æˆ·å¯†ç 
+//æˆåŠŸè¿”å›ž1 å¦åˆ™è¿”å›ž0
 
-bool createuser (string name, string passwd, int userMod){	//´´½¨ÓÃ»§
+bool createuser (string name, string passwd, int userMod){	//åˆ›å»ºç”¨æˆ·
 	userBlock ub;
 	superNodeBlock sn = readSuperNode ();
 	for (int i = 0; i < sn.emptyUserBlock; i++) {
 		ub = readUser (i);
-		if (name == (string)ub.userName) 	//ÓÃ»§ÃûÒÑ¾­´æÔÚ
+		if (name == (string)ub.userName) 	//ç”¨æˆ·åå·²ç»å­˜åœ¨
 			return false;
 	}
 	ub = readUser (sn.emptyUserBlock);
@@ -61,8 +61,8 @@ bool createuser (string name, string passwd, int userMod){	//´´½¨ÓÃ»§
 	writeSuperNode (sn);
 	return true;
 }
-//²ÎÊý±íÊ¾ÓÃ»§ÃûºÍÓÃ»§ÃÜÂë ±»´´½¨ÓÃ»§µÄÈ¨ÏÞ
-//³É¹¦·µ»Ø1 ·ñÔò·µ»Ø0
+//å‚æ•°è¡¨ç¤ºç”¨æˆ·åå’Œç”¨æˆ·å¯†ç  è¢«åˆ›å»ºç”¨æˆ·çš„æƒé™
+//æˆåŠŸè¿”å›ž1 å¦åˆ™è¿”å›ž0
 
 
 
