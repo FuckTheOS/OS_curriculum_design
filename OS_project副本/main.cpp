@@ -71,7 +71,7 @@ void init () { //重新初始化磁盘块
 }
 
 void load () {			//载入磁盘文件
-    cout << disk << endl;
+    //cout << disk << endl;
 	ifstream fin (disk.c_str ());
 	if (fin.is_open ()) {
         curDirID = 0;

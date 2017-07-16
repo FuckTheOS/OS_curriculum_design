@@ -399,7 +399,9 @@ int getDirID (string path){         //从当前目录下按照这个路径访问
 bool moveDir (string fromPath, string toPath) {     //移动文件
     int id1 = getDirID(fromPath), id2 = getDirID(toPath);
     dirBlock db1 = readDir(id1), db2 = readDir(id2);
-
+    if (db2.type != 1) return false;
+    cpDir(fromPath, toPath);
+    delDir(curDirID, fromPath, db1.type);
     return true;
 }
 
@@ -450,12 +452,14 @@ bool cpDir (string fromPath, string toPath){        //复制目录
     int id1 = getDirID(fromPath), id2 = getDirID(toPath);
     //cout << id1 << " " << id2 << endl;
     dirBlock db, db1 = readDir(id1), db2 = readDir (id2);
+    if (db2.type != 1) return false;
     if (findNextDir(id2, (string)db1.dirName, 1) != -1 || findNextDir(id2, (string)db1.dirName, 2) != -1) {   //文件名冲突
         return false;
     }
     cpAllDir (id2, id1);
     return true;
 }
+
 
 
 
