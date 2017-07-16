@@ -219,95 +219,106 @@ bool delDir(int dirID, string dirPath, int type) {	//删掉目录块
 	}
 	string leaf = path[path.size() - 1];
 	//cout <<leaf << endl;
-	if (type == 0) {	//删除整个目录块
-        int faID = dirID;
-		dirID = findNextDir(dirID, leaf);
-		dirBlock db = readDir (dirID);
-        int broID = db.nextDirID;
-		//cout << "dirID" << dirID << endl;
-		if (dirID == -1)
-			return -1;
-		if (!checkMod(curUserID, dirID, 3)) {
-           // cout << ".." << endl;
-			return false;
-		}
-		dirBlock fadb = readDir(faID);
-        if (fadb.sonDirID == dirID) {
-            fadb.sonDirID = broID;
-            writeDir(fadb, faID);
+//	if (type == 0) {	//删除整个目录块
+    int faID = dirID;
+    if (type == 0) dirID = findNextDir(dirID, leaf);
+    else dirID = findNextDir(dirID, leaf, 2);
+    if(dirID == -1)
+    {
+        cout<<"No such file. Maybe it's a directory?"<<endl;
+        return false;
+    }
+    dirBlock db = readDir (dirID);
+    int broID = db.nextDirID;
+    //cout << "dirID" << dirID << endl;
+    if (dirID == -1)
+        return -1;
+    if (!checkMod(curUserID, dirID, 3)) {
+       // cout << ".." << endl;
+        return false;
+    }
+    dirBlock fadb = readDir(faID);
+    if (fadb.sonDirID == dirID) {
+        fadb.sonDirID = broID;
+        writeDir(fadb, faID);
+    }
+    else {
+        dirBlock tmp = readDir(fadb.sonDirID); int oldID = fadb.sonDirID;
+        while (tmp.nextDirID != dirID) {
+            //cout << oldID << " " << tmp.dirName << endl;
+            oldID = tmp.nextDirID;
+            tmp = readDir(tmp.nextDirID);
         }
-        else {
-            dirBlock tmp = readDir(fadb.sonDirID); int oldID = fadb.sonDirID;
-            while (tmp.nextDirID != dirID) {
-                //cout << oldID << " " << tmp.dirName << endl;
-                oldID = tmp.nextDirID;
-                tmp = readDir(tmp.nextDirID);
-            }
-            tmp.nextDirID = broID;
-            writeDir(tmp, oldID);
-        }
-		if (!delAllDir(dirID))	//递归删除整个目录块
-			return false;
+        tmp.nextDirID = broID;
+        writeDir(tmp, oldID);
+    }
+    if (type == 0) {
+        if (!delAllDir(dirID, 1))	//递归删除整个目录块
+            return false;
+    }
+    else {
+        //cout << ".." << endl;
+        db = readDir(dirID);
+        if(db.type == 1) return false;
+        indexBlock ib = readIndex(db.textLocation);
+        releaseFile(ib.diskOffset);
+        releaseIndex(db.textLocation);
+        releaseDir(dirID);
+    }
 
-	}
-	else {
-        //cout << "fuck" << endl;
-		dirBlock db = readDir(dirID), tmp;
-		if (db.sonDirID == -1)
-			return false;
-		//dirID = db.sonDirID;
-		tmp = db;
-		db = readDir(db.sonDirID);
-		bool flag = 1;
-		while ((string)db.dirName != leaf) {
-			if (db.nextDirID == -1 || !db.used)
-				return false;
-            if (flag) dirID = tmp.sonDirID, flag = 0;
-            else dirID = tmp.nextDirID;
-			tmp = db;
-			db = readDir(tmp.nextDirID);
-			if ((string)db.dirName == leaf) {   //找到了
-			    if (!checkMod(curUserID, dirID, 2))
-                    return false;
-                int indexID = db.textLocation;
-                indexBlock ib = readIndex(indexID);
-                int fileID = ib.diskOffset;
-                releaseIndex(indexID);
-                releaseDir(tmp.nextDirID);
-                releaseFile(fileID);
-                tmp.nextDirID = -1;
-                writeDir (tmp, dirID);
-                return true;
-			}
-		}
-       // cout << ".." << dirID << endl;
-        //cout << tmp.dirName << endl;
-		if (!checkMod(curUserID, dirID, 2)) {
-            //cout << "//" << endl;
-			return false;
-		}
-		//state ();
-		int indexID = db.textLocation;
-		indexBlock ib = readIndex(indexID);
-		int fileID = ib.diskOffset;
-		releaseIndex(indexID);
-		releaseDir(tmp.sonDirID);
-		releaseFile(fileID);
-
-        //state ();
-		tmp.sonDirID = -1;
-		writeDir (tmp, dirID);
-		//tmp = readDir (dirID); cout << tmp.dirName << " " << tmp.sonDirID << "[[" << endl;
-	}
+//	}
+//	else {
+//        //cout << "fuck" << endl;
+//		dirBlock db = readDir(dirID), tmp;
+//		if (db.sonDirID == -1)
+//			return false;
+//		//dirID = db.sonDirID;
+//		tmp = db;
+//		db = readDir(db.sonDirID);
+//		bool flag = 1;
+//		while ((string)db.dirName != leaf) {
+//			if (db.nextDirID == -1 || !db.used)
+//				return false;
+//            if (flag) dirID = tmp.sonDirID, flag = 0;
+//            else dirID = tmp.nextDirID;
+//			tmp = db;
+//			db = readDir(tmp.nextDirID);
+//			if ((string)db.dirName == leaf) {   //找到了
+//			    if (!checkMod(curUserID, dirID, 2))
+//                    return false;
+//                int indexID = db.textLocation;
+//                indexBlock ib = readIndex(indexID);
+//                int fileID = ib.diskOffset;
+//                releaseIndex(indexID);
+//                releaseDir(tmp.nextDirID);
+//                releaseFile(fileID);
+//                tmp.nextDirID = -1;
+//                writeDir (tmp, dirID);
+//                return true;
+//			}
+//		}
+//		if (!checkMod(curUserID, dirID, 2)) {
+//			return false;
+//		}
+//		int indexID = db.textLocation;
+//		indexBlock ib = readIndex(indexID);
+//		int fileID = ib.diskOffset;
+//		releaseIndex(indexID);
+//		releaseDir(tmp.sonDirID);
+//		releaseFile(fileID);
+//
+//		tmp.sonDirID = -1;
+//		writeDir (tmp, dirID);
+//	}
 	return true;
 }
 //当前目录块 路径串 删掉的是整个目录还是某个文件
 //删除成功返回1 否则(路径不存在或者权限错误)是0
 
-bool delAllDir(int dirID) {		//递归删掉整个目录块
+bool delAllDir(int dirID, int type) {		//递归删掉整个目录块
     //cout << dirID << ".." << endl;
 	bool flag = true;
-	dirBlock db = readDir(dirID);
+	dirBlock db = readDir(dirID); cout << db.dirName << endl;
 	if (db.sonDirID == -1) {
         //cout << "id1" <<endl;
 		if (!checkMod(curUserID, dirID, 3)) {
@@ -318,6 +329,19 @@ bool delAllDir(int dirID) {		//递归删掉整个目录块
 	else {
 	    //cout << "id2" << endl;
 		flag = delAllDir(db.sonDirID);
+	}
+	if (type == 1) {
+        if (checkMod(curUserID, dirID, 3) && flag) {
+            dirBlock db = readDir(dirID);
+            if (db.type == 1) releaseDir(dirID);
+            else if (db.type == 2) {
+                indexBlock ib = readIndex(db.textLocation);
+                releaseFile(ib.diskOffset);
+                releaseIndex(db.textLocation);
+                releaseDir(dirID);
+            }
+        }
+        return flag;
 	}
 	if (db.nextDirID != -1) {
 		flag &= delAllDir(db.nextDirID);

@@ -120,7 +120,7 @@ bool visitPath(dirBlock& cur, string target, int& curID)
 	curID = cur.sonDirID;
 	if (curID < 0) return false;
 	cur = readDir(curID);
-	while (strcmp(cur.dirName, target.c_str()) != 0)
+	while (strcmp(cur.dirName, target.c_str()) != 0 || cur.type!=1)
 	{
 		if (cur.nextDirID == -1) return false; //当前目录下并找不到指定的目录
 		curID = cur.nextDirID;
