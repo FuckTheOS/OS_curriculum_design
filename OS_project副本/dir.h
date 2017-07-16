@@ -30,7 +30,8 @@ bool gotoFaDir ();						//跳转到父亲目录
 bool delDir (int dirID, string dirPath, int type);	//删掉目录块
 //当前目录块 路径串 删掉的是整个目录还是某个文件
 //删除成功返回1 否则(路径不存在或者权限错误)是0
-bool delAllDir (int dirID,int type=0);				//递归删掉所有目录块
+bool delAllDir (int dirID, int type = 0);				//递归删掉所有目录块
+//0表示删掉所有的儿子和兄弟 1表示只删掉儿子
 //删除成功返回1 否则返回0
 void releaseDir (int dirID);			//释放一块目录块
 int getDirID (string path);             //从当前目录下按照这个路径访问目标 返回目标的dirID
