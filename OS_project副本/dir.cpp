@@ -166,13 +166,13 @@ bool mkdirs(string newDirPath, string newDirMod) {	//在当前目录下创建多
 //路径是一个原始串 需要路径解析自动机解析
 //创建成功返回1 否则返回0
 
-bool gotoDir(string tarPath) {			//跳转到新的目录
+bool gotoDir(string tarPath, int type) {			//跳转到新的目录
 	vector <string> path;
 	pathPrase(tarPath, path);
 	dirBlock curDirBlock = readDir(curDirID);
 	int tmpDirID = curDirID;
 	for (auto op : path)
-		if (!visitPath(curDirBlock, op, tmpDirID)) return false;
+		if (!visitPath(curDirBlock, op, tmpDirID,type)) return false;
 	curDirID = tmpDirID;
 	if (path[0] == "/root") {
 		curPath.clear(); curPath.pb("/root");

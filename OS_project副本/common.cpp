@@ -96,7 +96,7 @@ void pathPrase(string tarPath, vector <string>& path) {	//用自动机解析路径
 	}
 }
 
-bool visitPath(dirBlock& cur, string target, int& curID)
+bool visitPath(dirBlock& cur, string target, int& curID, int type)
 {
 	//权限检查待更新
 	//indexBlock ib;
@@ -120,7 +120,15 @@ bool visitPath(dirBlock& cur, string target, int& curID)
 	curID = cur.sonDirID;
 	if (curID < 0) return false;
 	cur = readDir(curID);
-	while (strcmp(cur.dirName, target.c_str()) != 0 || cur.type!=1)
+	if(type == 1)
+	while (strcmp(cur.dirName, target.c_str()) != 0 )//vd 与open矛盾
+	{
+		if (cur.nextDirID == -1) return false; //当前目录下并找不到指定的目录
+		curID = cur.nextDirID;
+		cur = readDir(curID);
+	}
+	else
+    while (strcmp(cur.dirName, target.c_str()) != 0 || cur.type!=1)//vd 与open矛盾
 	{
 		if (cur.nextDirID == -1) return false; //当前目录下并找不到指定的目录
 		curID = cur.nextDirID;

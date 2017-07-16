@@ -18,6 +18,7 @@ int openFile (string fileaName){ 			//打开文件的目录块 返回对应的�
         {
             int tmpDirID = curDirID;
             vector<string> tmpPath = curPath;
+            printf("%s\n",readFile(db.textLocation).text);
             gotoDir(string(readFile(db.textLocation).text));
             db = readDir(curDirID);
             if(db.type!=2&&db.type!=3)
@@ -26,8 +27,10 @@ int openFile (string fileaName){ 			//打开文件的目录块 返回对应的�
                 curPath = tmpPath;
                 return -1;
             }
+            gotoFaDir();
         }//处理软链接
         if(db.type==3 && !db.used) return -1;//处理硬链接非法
+        cout<<"0";
 		indexBlock ib = readIndex (db.textLocation);
 		return ib.diskOffset;
 	}

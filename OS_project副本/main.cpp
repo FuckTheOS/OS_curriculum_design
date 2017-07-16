@@ -131,7 +131,7 @@ void bash () {			//命令行模式操作文件系统
 				}
 			}
 			else {
-				if (!gotoDir (tarPath)) {	//跳转到目标目录
+				if (!gotoDir (tarPath,0)) {	//跳转到目标目录
 					cout << "no such path!" << endl;
 					goto out;
 				}
@@ -249,7 +249,7 @@ void bash () {			//命令行模式操作文件系统
 					goto out;
 				}
 		}
-		else if (op1 == "formet") {
+		else if (op1 == "format") {
             init ();
 		}
 		else {

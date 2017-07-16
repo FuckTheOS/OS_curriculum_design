@@ -21,7 +21,7 @@ bool mkdirs (string newDirPath, string newDirMod);	//在当前目录下创建多级子目录
 //相对或绝对路径 新目录的权限(仅针对最末级)
 //路径是一个原始串 需要路径解析自动机解析
 //创建成功返回1 否则返回0
-bool gotoDir (string tarPath);			//跳转到新的目录
+bool gotoDir (string tarPath, int type =1);			//跳转到新的目录
 //参数是相对或绝对路径 需要路径解析自动机解析路径
 //跳转成功返回1 否则返回0
 //bool cd (string tarPath);               //另一种跳转方法

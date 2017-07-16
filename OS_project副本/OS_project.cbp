@@ -34,6 +34,8 @@
 		</Compiler>
 		<Unit filename="common.cpp" />
 		<Unit filename="common.h" />
+		<Unit filename="concol.cpp" />
+		<Unit filename="concol.h" />
 		<Unit filename="dir.cpp" />
 		<Unit filename="dir.h" />
 		<Unit filename="file.cpp" />
