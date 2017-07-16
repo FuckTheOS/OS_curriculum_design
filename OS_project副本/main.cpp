@@ -2,7 +2,7 @@
 #include "common.h"
 #include "dir.h"
 #include "user.h"
-//#include "vim.h"
+#include "vim.h"
 #include "filestruct.h"
 void init () { //重新初始化磁盘块
 	//磁盘文件名//
@@ -230,7 +230,7 @@ void bash () {			//命令行模式操作文件系统
 				cout << "filename error!" << endl;
 				goto out;
 			}
-			//runVim(id);		//对文件内容进行编辑
+			runVim(id);		//对文件内容进行编辑
 		}
 		else if (op1 == "exit") {
             return ;

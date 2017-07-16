@@ -36,21 +36,6 @@ int backcolor();/*returns current background color*/
 
 //-----------------------------------------------------------------------------
 
-int textcolor()
-{
-	CONSOLE_SCREEN_BUFFER_INFO csbi;
-	GetConsoleScreenBufferInfo(std_con_out,&csbi);
-	int a=csbi.wAttributes;
-	return a%16;
-}
-
-int backcolor()
-{
-	CONSOLE_SCREEN_BUFFER_INFO csbi;
-	GetConsoleScreenBufferInfo(std_con_out,&csbi);
-	int a=csbi.wAttributes;
-	return (a/16)%16;
-}
 
 inline void setcolor(concol textcol,concol backcol)
 {setcolor(int(textcol),int(backcol));}
@@ -64,13 +49,11 @@ inline void setcolor(int textcol,int backcol)
 }
 
 #if defined(_INC_OSTREAM)||defined(_IOSTREAM_)||defined(_GLIBCXX_IOSTREAM)
-ostream& operator<<(ostream& os,concol c)
-{os.flush();setcolor(c,backcolor());return os;}
+ostream& operator<<(ostream& os,concol c);
 #endif
 
 #if defined(_INC_ISTREAM)||defined(_IOSTREAM_)||defined(_GLIBCXX_IOSTREAM)
-istream& operator>>(istream& is,concol c)
-{cout.flush();setcolor(c,backcolor());return is;}
+istream& operator>>(istream& is,concol c);
 #endif
 
 

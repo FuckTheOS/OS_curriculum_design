@@ -2,6 +2,7 @@
 #include "user.h"
 #include "common.h"
 #include "filestruct.h"
+#include "concol.h"
 using namespace std;
 int giveDirBlock() {					//分配新的目录块
 	superNodeBlock sn = readSuperNode();
@@ -37,7 +38,17 @@ bool checkDirName(string newDirName, int dirType) {	//检查目录名是否和�
 }
 //参数表示希望新建的文件名
 //如果不冲突返回1 否则返回0
-
+void setColorForType(int type)
+{
+    if(type == 1)
+        setcolor(blue, dark_green);
+    if(type == 2)
+        setcolor(green,black);
+    if(type == 3)
+        setcolor(red, black);
+    if(type == 4)
+        setcolor(pink, black);
+}
 void showAllSonDir() {	//显示当前路径下所有子目录
     //cout << curUserID << " " << curDirID << endl;
 	dirBlock db = readDir(curDirID);
@@ -47,11 +58,18 @@ void showAllSonDir() {	//显示当前路径下所有子目录
 		return;
 	}
 	db = readDir(db.sonDirID);
-	cout << db.dirName << " ";
+	setColorForType(db.type);
+	cout << db.dirName ;
+	setcolor(gray, black);
+	cout<<" ";
 	while (db.nextDirID != -1 || !db.used) {
 		db = readDir(db.nextDirID);
-		cout << db.dirName << " ";
+		setColorForType(db.type);
+		cout << db.dirName ;
+		setcolor(gray, black);
+		cout<<" ";
 	}
+	setcolor(gray, black);
 	cout << endl;
 }
 //当前路径直接用全局变量

@@ -380,6 +380,11 @@ void releaseFile(int fileID){              //释放文件块
 bool makeSymbolLink(string pathFrom, string pathTo) //创建软链接
 {
     int tmpDirID = curDirID;
+    string tmps = "/";
+    for (int i = 1; i < curPath.size (); i++)
+            tmps += curPath[i] +"/";
+    tmps+=pathTo;
+    pathTo = tmps;
     vector<string> tmpPath = curPath;
     int pos = pathFrom.find_last_of('/');
     string filename;
