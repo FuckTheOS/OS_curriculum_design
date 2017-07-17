@@ -80,7 +80,7 @@ void load () {			//载入磁盘文件
 		return ;
 	}
 	else {
-        cout << "init" << endl;
+        //cout << "init" << endl;
 		init ();		//磁盘块丢失，重新初始化
 	}
 }
