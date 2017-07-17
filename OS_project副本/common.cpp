@@ -196,7 +196,7 @@ void state (){                      //显示内存使用情况
     int cnt, p;
     p = sn.emptyUserBlock;
     if (p == -1) p = USERSIZE+1;
-    printf ("%d user blocks empty, unilization ratio %.2f\n", USERSIZE-p, (USERSIZE-p+1)*1.0/USERSIZE);
+    printf ("%d user blocks empty, unilization ratio %.2f\n", USERSIZE-p, 1.0-(USERSIZE-p+1)*1.0/USERSIZE);
 
     cnt = 0, p = sn.emptyDirBlock;
     dirBlock db;
@@ -205,7 +205,7 @@ void state (){                      //显示内存使用情况
         db = readDir (p);
         p = db.nextDirID;
     }
-    printf ("%d dir blocks empty, unilization ratio %.2f\n", cnt, cnt*1.0/DIRSIZE);
+    printf ("%d dir blocks empty, unilization ratio %.2f\n", cnt, 1.0-cnt*1.0/DIRSIZE);
 
     cnt = 0, p = sn.emptyFileBlock;
     fileBlock fb;
@@ -214,7 +214,7 @@ void state (){                      //显示内存使用情况
         fb = readFile (p);
         p = fb.nextFileID;
     }
-    printf ("%d file blocks empty, unilization ratio %.2f\n", cnt, cnt*1.0/FILESIZE);
+    printf ("%d file blocks empty, unilization ratio %.2f\n", cnt, 1.0-cnt*1.0/FILESIZE);
 
     cnt = 0, p = sn.emptyIndexBlock;
     indexBlock ib;
@@ -223,9 +223,10 @@ void state (){                      //显示内存使用情况
         ib = readIndex (p);
         p = ib.nextIndexID;
     }
-    printf ("%d index blocks empty, unilization ratio %.2f\n", cnt, cnt*1.0/INDEXSIZE);
+    printf ("%d index blocks empty, unilization ratio %.2f\n", cnt, 1.0-cnt*1.0/INDEXSIZE);
 }
 //输出用户块 目录块 文件块 索引块剩下的块数和使用率
+
 
 userBlock readUser (int id){				//根据用户块id读取用户块信息
 	userBlock ub;
