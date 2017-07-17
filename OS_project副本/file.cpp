@@ -30,8 +30,8 @@ int openFile (string fileaName){ 			//打开文件的目录块 返回对应的�
             gotoFaDir();
         }//处理软链接
         if(db.type==3 && !db.used) return -1;//处理硬链接非法
-        cout<<"0";
 		indexBlock ib = readIndex (db.textLocation);
+		if(!ib.used) return -1;
 		return ib.diskOffset;
 	}
 	else
