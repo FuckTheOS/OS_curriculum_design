@@ -167,9 +167,9 @@ bool checkMod (int userID, int dirID, int type){    //权限判断
 void find (int curDirID, string target, vector <string> path){  //从当前路径下搜索目标文件（注意是文件）
     //直接递归搜索
     dirBlock db = readDir (curDirID);
-    cout << db.dirName << " " << target << " " << db.type << endl;
+    //cout << db.dirName << " " << target << " " << db.type << endl;
     if ((string)db.dirName == target) {
-        cout << "fuck" <<endl;
+        //cout << "fuck" <<endl;
         for (int i = 1; i < path.size (); i++) {
             cout << path[i] << '/';
         }
@@ -177,13 +177,13 @@ void find (int curDirID, string target, vector <string> path){  //从当前路�
         return ;
     }
     path.pb ((string)db.dirName);
-    cout << db.dirName << " " << db.sonDirID << endl;
+    //cout << db.dirName << " " << db.sonDirID << endl;
     if (db.sonDirID == -1) {}
     else {
         find (db.sonDirID, target, path);
     }
     path.pop_back ();
-    cout << db.dirName << " " << db.nextDirID << " " << db.used << endl;
+    //cout << db.dirName << " " << db.nextDirID << " " << db.used << endl;
     if (db.used && db.nextDirID != -1) {
         find (db.nextDirID, target, path);
     }
