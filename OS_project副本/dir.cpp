@@ -401,7 +401,7 @@ bool moveDir (string fromPath, string toPath) {     //移动文件
     dirBlock db1 = readDir(id1), db2 = readDir(id2);
     if (db2.type != 1) return false;
     cpDir(fromPath, toPath);
-    delDir(curDirID, fromPath, db1.type);
+    delDir(curDirID, fromPath, db1.type-1);
     return true;
 }
 
