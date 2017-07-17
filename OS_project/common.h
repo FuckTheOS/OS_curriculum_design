@@ -1,11 +1,95 @@
 #ifndef COMMON_H_INCLUDED
 #define COMMON_H_INCLUDED
-#include "dir.h"
-#include "user.h"
-#include "file.h"
-#include "user.h"
-#include "index.h"
-#include "global.h"
+#include <cstdio>
+#include <iostream>
+#include <cstring>
+#include <queue>
+#include <cmath>
+#include <algorithm>
+#include <stack>
+#include <map>
+#include <string>
+#include <set>
+#include <stdlib.h>
+#include <unistd.h>
+#include <conio.h>
+#include <windows.h>
+#include <fstream>
+#include "filestruct.h"
+#define Clear(x,y) memset (x,y,sizeof(x))
+#define Close() ios::sync_with_stdio(0)
+#define Open() freopen ("more.in", "r", stdin)
+#define get_min(a,b) a = min (a, b)
+#define get_max(a,b) a = max (a, b);
+#define y0 yzz
+#define y1 yzzz
+#define fi first
+#define se second
+#define pii pair<int, int>
+#define pli pair<long long, int>
+#define pll pair<long long, long long>
+#define pdi pair<double, int>
+#define pdd pair<double, double>
+#define vei vector<int>
+#define vel vector<long long>
+#define pb push_back
+#define pl c<<1
+#define pr (c<<1)|1
+#define lson l,mid,pl
+#define rson mid+1,r,pr
+using namespace std;
+#define mod 1000000007
+#define INF 1e18
+#define maxn 19
+#define maxm 2000005
+//-----------------morejarphone--------------------//
+
+/*****************
+»ù±¾Àà
+¶¨ÒåËùÓĞÓÃµ½µÄÊı¾İ½á¹¹ºÍ»ù±¾·½·¨
+±»¹¤³ÌÖĞËùÓĞµÄÄ£¿éËùÒıÓÃ
+
+´ÅÅÌ¿é»®·Ö£º³¬¼¶½Úµã|ÓÃ»§¿é|Ä¿Â¼¿é|ÎÄ¼ş¿é|Ë÷Òı¿é
+*****************/
+//¶¨ÒåËÄ¸ö¿éµÄ´óĞ¡
+#define USERSIZE 50
+#define DIRSIZE 100
+#define FILESIZE 100
+#define INDEXSIZE 200
+//¶¨ÒåËÄ¸ö¿éµÄÆ«ÒÆ
+#define superNodeSegOffset 0
+#define userSegOffset sizeof(superNodeBlock)
+#define dirSegOffset (userSegOffset+sizeof(userBlock)*USERSIZE)
+#define fileSegOffset (dirSegOffset+sizeof(dirBlock)*DIRSIZE)
+#define indexSegOffset (fileSegOffset+sizeof(fileBlock)*FILESIZE)
+/*
+ÎÄ¼şÈ¨ÏŞ¹æ¶¨
+ÒÔÏÂ¹æÔ¼°´ÕÕÓÅÏÈ¼¶±ğ´Ó¸ßµ½µÍÅÅĞò£º
+	rootÄ¿Â¼²»¿ÉÉ¾(°üÀ¨admin)
+	1.È¨ÏŞ¹æ¶¨£º
+		0(-p)£º½öadmin¿É¼û 1(-r)£ºËùÓĞÓÃ»§(·Ã¿Í)½ö¶Á 2(-rw)£ºËùÓĞÓÃ»§(·Ã¿Í)¿É¶Á¿É±à¼­£¬²»¿ÉÉ¾
+		3(-a)£ºËùÓĞÓÃ»§(·Ã¿Í)¿ÉÒÔ¶Á±à¼­É¾£¨È±Ê¡µÄÄ¬ÈÏ·½·¨£©
+	2.adminÓĞÒ»ÇĞÈ¨ÏŞ(°üÀ¨ĞŞ¸ÄÈÎºÎÓÃ»§µÄÃÜÂë£¬ĞŞ¸ÄÈÎºÎÎÄ¼şµÄÈ¨ÏŞ£¬ĞŞ¸ÄÈÎºÎÓÃ»§µÄÈ¨ÏŞ)
+	3.¶ÔÓÚÈ¨ÏŞÎª2µÄÎÄ¼ş£¬ÆäÉÏ¼¶ÎÄ¼ş²»¿ÉÄÜÎª3
+
+ÓÃ»§È¨ÏŞ¹æ¶¨£º
+	0£ºadminÈ¨ÏŞ  1£º¿É¶Á±à¼­É¾£¨È±Ê¡µÄÄ¬ÈÏÈ¨ÏŞ£© 2£º¿É¶Á±à¼­£¬²»¿ÉÉ¾ 3£ºÖ»¿É¶Á
+	ÕâÃ´Ò»À´µ±ÇÒ½öµ±£º
+		ÓÃ»§²Ù×÷Âú×ãÓÃ»§È¨ÏŞ && ²Ù×÷Âú×ãÎÄ¼şÈ¨ÏŞÊ±£¬ÓÃ»§¿ÉÒÔ¶ÔÎÄ¼ş½øĞĞÓÃ»§²Ù×÷
+
+²Ù×÷£º1£º¶Á 2£º±à¼­£¨°üÀ¨Ôö¼Ó£¬¸Ä¶¯£© 3£ºÉ¾³ı
+*/
+
+
+
+extern vector <string> curPath;//µ±Ç°µÄ¾ø¶ÔÂ·¾¶
+extern int curUserID;			//µ±Ç°ÓÃ»§
+extern int curDirID;			//µ±Ç°Ä¿Â¼¿éID
+extern string disk;	//´ÅÅÌ¿éÎÄ¼şÃû
+
+long long getTime ();				//»ñÈ¡µ±Ç°µÄÊ±¼ä
+//°´ÕÕÄêÔÂÈÕÊ±·Ö ¼´Äê*100000000+ÔÂ*1000000+ÈÕ*10000+Ê±*100+·Ö
+void printTime (long long num);		//¸ù¾İÊ±¼äÖµ´òÓ¡Ê±¼ä´®
 
 superNodeBlock readSuperNode ();	//¶ÁÈë³¬¼¶½ÚµãĞÅÏ¢
 void writeSuperNode (superNodeBlock sn);        //ÎüÈë³¬¼¶½ÚµãĞÅÏ¢
@@ -13,20 +97,17 @@ void showCurPath (int type, vector <string> curPath);	//ÃüÁîĞĞÊäÈëÖ¸ÁîÇ°ÏÔÊ¾µ±Ç°
 //0±íÊ¾ÃüÁîĞĞÊäÈëÖ¸ÁîÇ°ÏÔÊ¾µ±Ç°Â·¾¶ÓÃ»§ ¸ñÊ½Îªroot>a/b admin$[space]
 //1±íÊ¾Êä³öµ±Ç°¾ø¶ÔÂ·¾¶Î»ÖÃ ¸ñÊ½Îªroot>a/b[enter]
 //¸ù¾İÈ«¾Ö±äÁ¿globalÖ±½Ó°´ÕÕ¸ñÊ½Êä³ö
-vector <string>& pathPrase (string tarPath);	//ÓÃ×Ô¶¯»ú½âÎöÂ·¾¶
+void pathPrase(string tarPath, vector <string>& path);	//ÓÃ×Ô¶¯»ú½âÎöÂ·¾¶
 //²ÎÊı±íÊ¾Ä¿±êÂ·¾¶
 //Èç¹ûÄ¿±êÂ·¾¶ÒÔroot¿ªÍ·±íÊ¾¾ø¶ÔÂ·¾¶  ·ñÔòÊÇÏà¶ÔÂ·¾¶
 //·µ»ØÂ·¾¶ÉÏ¸÷¸ö½ÚµãµÄÄ¿Â¼Ãû¹¹³ÉµÄÏòÁ¿
 //  *±íÊ¾ËùÓĞÎÄ¼ş ÏòÁ¿ÖĞÓÃTOT±íÊ¾  .±íÊ¾µ±Ç°Â·¾¶ ÏòÁ¿ÖĞÓÃCUR±íÊ¾
-bool visitPath(dirBlock& cur, string target, int& curID); //·ÃÎÊµ±Ç°Ä¿Â¼ÏÂµÄÖ¸¶¨ÏÂ¼¶Ä¿Â¼
+bool visitPath(dirBlock& cur, string target, int& curID, int type=1); //·ÃÎÊµ±Ç°Ä¿Â¼ÏÂµÄÖ¸¶¨ÏÂ¼¶Ä¿Â¼
 //´«½øµ±Ê±ËùÔÚµÄÄ¿Â¼¿éÖ¸ÕëÒÔ¼°ÏÂ¼¶Ä¿Â¼µÄÃû³¼
 //Èç¹ûÎŞ·¨·ÃÎÊ»òÕß²»´æÔÚÔò·µ»Øfalse
 //·ÃÎÊ³É¹¦Ê±ĞŞ¸Äµ±Ç°µÄ±äÁ¿curDirID;
 int findNextDir (int dirID, string target, int dirType = 1);//·ÃÎÊdirIDÏÂµÄtargetÄ¿Â¼
 //·µ»ØÕâ¸öÏÂ¼¶Ä¿Â¼µÄID ²»´æÔÚ·µ»Ø-1
-long long getTime ();				//»ñÈ¡µ±Ç°µÄÊ±¼ä
-//°´ÕÕÄêÔÂÈÕÊ±·Ö ¼´Äê*100000000+ÔÂ*1000000+ÈÕ*10000+Ê±*100+·Ö
-void printTime (long long num);		//¸ù¾İÊ±¼äÖµ´òÓ¡Ê±¼ä´®
 bool checkMod (int userID, int dirID, int type);	//È¨ÏŞÅĞ¶Ï
 //²ÎÊı±íÊ¾ÓÃ»§id Ä¿Â¼id ĞĞÎªµÄÈ¨ÏŞÀàĞÍ
 //ÓÃ»§ÄÜ·ñ¶ÔÎÄ¼ş½øĞĞÈ¨ÏŞÎªtypeµÄ²Ù×÷
@@ -37,8 +118,31 @@ void find (int curDirID, string target, vector <string> path);	//´Óµ±Ç°Â·¾¶ÏÂËÑË
 void state ();						//ÏÔÊ¾ÄÚ´æÊ¹ÓÃÇé¿ö
 //Êä³öÓÃ»§¿é Ä¿Â¼¿é ÎÄ¼ş¿é Ë÷Òı¿éÊ£ÏÂµÄ¿éÊıºÍÊ¹ÓÃÂÊ
 
+userBlock readUser (int id);				//¸ù¾İÓÃ»§¿éid¶ÁÈ¡ÓÃ»§¿éĞÅÏ¢
+//·ÃÅÌ£¬×¢Òâ±£»¤Ô­ÓĞÊı¾İ
+void writeUser (userBlock ub, int id);  	//½«ÓÃ»§¿éĞÅÏ¢Ğ´ÈëÓÃ»§¿é
+//·ÃÅÌ£¬×¢Òâ±£»¤Ô­ÓĞÊı¾İ
+dirBlock readDir (int id);				//¸ù¾İÄ¿Â¼¿éid¶ÁÈ¡Ä¿Â¼¿éĞÅÏ¢
+//·ÃÅÌ£¬×¢Òâ±£»¤Ô­ÓĞÊı¾İ
+void writeDir (dirBlock db, int id);  	//½«Ä¿Â¼¿éĞÅÏ¢Ğ´ÈëÄ¿Â¼¿é
+//·ÃÅÌ£¬×¢Òâ±£»¤Ô­ÓĞÊı¾İ
+fileBlock readFile (int id);	//¸ù¾İÎÄ¼ş¿éid¶ÁÈ¡ÎÄ¼şÄÚÈİ
+//·ÃÅÌ£¬×¢Òâ±£»¤Ô­ÓĞÊı¾İ
+void writeFile (fileBlock db, int id);  	//½«ÎÄ¼şÄÚÈİĞ´ÈëÎÄ¼ş¿é
+//·ÃÅÌ£¬×¢Òâ±£»¤Ô­ÓĞÊı¾İ
+indexBlock readIndex (int id);				//¸ù¾İË÷Òı¿éid¶ÁÈ¡Ë÷Òı¿éĞÅÏ¢
+//·ÃÅÌ£¬×¢Òâ±£»¤Ô­ÓĞÊı¾İ
+void writeIndex (indexBlock db, int id);  	//½«Ë÷Òı¿éĞÅÏ¢Ğ´ÈëË÷Òı¿é
+//·ÃÅÌ£¬×¢Òâ±£»¤Ô­ÓĞÊı¾İ
+int  giveFileBlock();           //·ÖÅäÎÄ¼ş¿é
+//Èç¹û³É¹¦·µ»Ø·ÖÅäµÄÎÄ¼ş¿éµÄ±àºÅ ·ñÔò·µ»Ø-1
+int giveIndexBlock ();		//·ÖÅäĞÂµÄË÷Òı¿é
+//Èç¹û·ÖÅä³É¹¦·µ»ØË÷Òı¿éµÄID ·ñÔòÊä³ö-1
+void releaseIndex (int indexID);		//ÊÍ·ÅË÷Òı¿é
+void releaseFile (int fileID);	//ÊÍ·ÅÎÄ¼ş¿é
+bool makeHardLink(string pathFrom, string pathTo);//´´½¨Ó²Á´½Ó
 
-
+bool makeSymbolLink(string pathFrom, string pathTo); //´´½¨ÈíÁ´½Ó
 
 
 

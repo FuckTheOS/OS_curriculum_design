@@ -1,99 +1,99 @@
 #include "dir.h"
-
-dirBlock readDir (int id) {				//¸ù¾İÎÄ¼ş¿éid¶ÁÈ¡ÎÄ¼ş¿éĞÅÏ¢
-	if (id >= DIRSIZE || id < 0) {
-		cout << "segment fault!" << endl;
-		exit (0);
-	}
-	dirBlock db;
-	ifstream fin (disk.c_str (), std::ios::binary);
-	fin.seekg (dirSegOffset+sizeof (db)*id, ios::beg); 	//¶¨Î»µ½Ä¿±êÆ«ÒÆ
-	fin.read ((char *)&db, sizeof db);
-	fin.close ();
-	return db;
-}
-
-void writeDir (dirBlock db, int id){	//½«Ä¿Â¼¿éĞÅÏ¢Ğ´ÈëÄ¿Â¼¿é
-	if (id >= DIRSIZE || id < 0) {
-		cout << "segment fault!" << endl;
-		exit (0);
-	}
-	ofstream fout (disk.c_str (), std::ios::binary|ios::in|ios::out);
-	fout.seekp (dirSegOffset+sizeof (db)*id, ios::beg);
-	fout.write ((char *)&db, sizeof db);
-	fout.close ();
-}
-
-int giveDirBlock (){					//·ÖÅäĞÂµÄÄ¿Â¼¿é
-	superNodeBlock sn = readSuperNode ();
-	if (sn.emptyDirBlock == -1) {		//Ä¿Â¼¿é¿Õ¼ä²»×ã
+#include "user.h"
+#include "common.h"
+#include "filestruct.h"
+#include "concol.h"
+using namespace std;
+int giveDirBlock() {					//åˆ†é…æ–°çš„ç›®å½•å—
+	superNodeBlock sn = readSuperNode();
+	if (sn.emptyDirBlock == -1) {		//ç›®å½•å—ç©ºé—´ä¸è¶³
 		return -1;
 	}
 	int res = sn.emptyDirBlock;
-	if (sn.emptyDirBlock == sn._emptyDirBlock) {	//Ä¿Â¼¿é¸ÕºÃÓÃÍê
+	if (sn.emptyDirBlock == sn._emptyDirBlock) {	//ç›®å½•å—åˆšå¥½ç”¨å®Œ
 		sn.emptyDirBlock = -1;
 		sn._emptyDirBlock = -1;
 	}
 	else {
-		dirBlock db = readDir (sn.emptyDirBlock);	//¶ÁÈ¡¿ÕÄ¿Â¼¿éĞÅÏ¢
-		sn.emptyDirBlock = db.nextDirID;			//¸Ã¿éµÄÏÂÒ»¿é×÷Îª¿ÕÄ¿Â¼¿éµÄÊ×¿é
+		dirBlock db = readDir(sn.emptyDirBlock);	//è¯»å–ç©ºç›®å½•å—ä¿¡æ¯
+		sn.emptyDirBlock = db.nextDirID;			//è¯¥å—çš„ä¸‹ä¸€å—ä½œä¸ºç©ºç›®å½•å—çš„é¦–å—
 	}
-	writeSuperNode (sn);
+	writeSuperNode(sn);
 	return res;
 }
-//²ÎÊı±íÊ¾Ä¿Â¼¿éÀàĞÍ
-//Èç¹û·ÖÅä³É¹¦·µ»ØÄ¿Â¼¿éID ·ñÔò·µ»Ø-1
+//å‚æ•°è¡¨ç¤ºç›®å½•å—ç±»å‹
+//å¦‚æœåˆ†é…æˆåŠŸè¿”å›ç›®å½•å—ID å¦åˆ™è¿”å›-1
 
-bool checkDirName (string newDirName, int dirType){	//¼ì²éÄ¿Â¼ÃûÊÇ·ñºÍµ±Ç°ÆäËûÄ¿Â¼³åÍ»
-	dirBlock db = readDir (curDirID);
+bool checkDirName(string newDirName, int dirType) {	//æ£€æŸ¥ç›®å½•åæ˜¯å¦å’Œå½“å‰å…¶ä»–ç›®å½•å†²çª
+	dirBlock db = readDir(curDirID);
 	if (db.sonDirID == -1) return true;
-	db = readDir (db.sonDirID);
+	db = readDir(db.sonDirID);
 	if (db.dirName == newDirName) return false;
 	while (db.nextDirID != -1) {
-		db = readDir (db.nextDirID);
+		db = readDir(db.nextDirID);
 		if (db.dirName == newDirName)
 			return false;
 	}
 	return true;
 }
-//²ÎÊı±íÊ¾Ï£ÍûĞÂ½¨µÄÎÄ¼şÃû
-//Èç¹û²»³åÍ»·µ»Ø1 ·ñÔò·µ»Ø0
-
-void showAllSonDir (){	//ÏÔÊ¾µ±Ç°Â·¾¶ÏÂËùÓĞ×ÓÄ¿Â¼
-	dirBlock db = readDir (curDirID);
-	if (db.sonDirID == -1) { 			//¿ÕÄ¿Â¼
+//å‚æ•°è¡¨ç¤ºå¸Œæœ›æ–°å»ºçš„æ–‡ä»¶å
+//å¦‚æœä¸å†²çªè¿”å›1 å¦åˆ™è¿”å›0
+void setColorForType(int type)
+{
+    if(type == 1)
+        setcolor(blue, dark_green);
+    if(type == 2)
+        setcolor(green,black);
+    if(type == 3)
+        setcolor(red, black);
+    if(type == 4)
+        setcolor(pink, black);
+}
+void showAllSonDir() {	//æ˜¾ç¤ºå½“å‰è·¯å¾„ä¸‹æ‰€æœ‰å­ç›®å½•
+    //cout << curUserID << " " << curDirID << endl;
+	dirBlock db = readDir(curDirID);
+	//cout << db.sonDirID << endl;
+	if (db.sonDirID == -1 || !db.used) { 			//ç©ºç›®å½•
 		cout << endl;
-		return ;
+		return;
 	}
-	db = readDir (db.sonDirID);
-	cout << db.dirName << " ";
-	while (db.nextDirID != -1) {
-		db = readDir (db.nextDirID);
-		cout << db.dirName << " ";
+	db = readDir(db.sonDirID);
+	setColorForType(db.type);
+	cout << db.dirName ;
+	setcolor(gray, black);
+	cout<<" ";
+	while (db.nextDirID != -1 || !db.used) {
+		db = readDir(db.nextDirID);
+		setColorForType(db.type);
+		cout << db.dirName ;
+		setcolor(gray, black);
+		cout<<" ";
 	}
+	setcolor(gray, black);
 	cout << endl;
 }
-//µ±Ç°Â·¾¶Ö±½ÓÓÃÈ«¾Ö±äÁ¿
-//°´ÕÕa b.txt c d.cpp µÄ¸ñÊ½Êä³ö
+//å½“å‰è·¯å¾„ç›´æ¥ç”¨å…¨å±€å˜é‡
+//æŒ‰ç…§a b.txt c d.cpp çš„æ ¼å¼è¾“å‡º
 
-bool mkdir (string newDirName, string newDirMod, int _curDirID) {	//ÔÚµ±Ç°Ä¿Â¼ÏÂ´´½¨×ÓÄ¿Â¼
-	if (!checkMod (curUserID, curDirID, 2)) {	//È¨ÏŞ¼ì²éÃ»Í¨¹ı
+bool mkDir(string newDirName, string newDirMod, int _curDirID) {	//åœ¨å½“å‰ç›®å½•ä¸‹åˆ›å»ºå­ç›®å½•
+	if (_curDirID == -1) _curDirID = curDirID;
+	if (!checkMod(curUserID, curDirID, 2)) {	//æƒé™æ£€æŸ¥æ²¡é€šè¿‡
 		cout << "Mod fault!" << endl;
 		return false;
 	}
 	if (newDirMod == "p") {
-		userBlock ub = readUser (curUserID);
+		userBlock ub = readUser(curUserID);
 		if ((string)ub.userName != "admin") {
 			cout << "Mod fault!" << endl;
 			return false;
 		}
 	}
-	if (!checkDirName (newDirName, 1)) { 	//Ä¿Â¼Ãû¼ì²éÃ»Í¨¹ı
+	if (!checkDirName(newDirName, 1)) { 	//ç›®å½•åæ£€æŸ¥æ²¡é€šè¿‡
 		cout << "filename error!" << endl;
 		return false;
 	}
-	int dirID = giveDirBlock ();	//·ÖÅäĞÂµÄÄ¿Â¼¿é
-	//int indexID = giveIndexBlock ();//·ÖÅäĞÂµÄË÷Òı¿é
+	int dirID = giveDirBlock();	//åˆ†é…æ–°çš„ç›®å½•å—
+								//int indexID = giveIndexBlock ();//åˆ†é…æ–°çš„ç´¢å¼•å—
 	if (dirID == -1/* || indexID == -1*/) {
 		cout << "no more disk space!" << endl;
 		return false;
@@ -103,58 +103,58 @@ bool mkdir (string newDirName, string newDirMod, int _curDirID) {	//ÔÚµ±Ç°Ä¿Â¼ÏÂ
 	ib.offsetID = dirID;
 	writeIndex (ib, indexID);*/
 
-	dirBlock db = readDir (_curDirID);
+	dirBlock db = readDir(_curDirID);
 	if (db.sonDirID == -1) {
 		db.sonDirID = dirID;
-		writeDir (db, _curDirID);
+		writeDir(db, _curDirID);
 	}
 	else {
 		int tmp = db.sonDirID;
-		db = readDir (db.sonDirID);
-		while (db.nextDirID != -1) {		//ÕÒµ½µ±Ç°Â·¾¶µÄ×îºóÒ»¸öÄ¿Â¼
-            tmp = db.nextDirID;
-			db = readDir (db.nextDirID);
+		db = readDir(db.sonDirID);
+		while (db.nextDirID != -1) {		//æ‰¾åˆ°å½“å‰è·¯å¾„çš„æœ€åä¸€ä¸ªç›®å½•
+			tmp = db.nextDirID;
+			db = readDir(db.nextDirID);
 		}
 		db.nextDirID = dirID;
-		writeDir (db, tmp);
+		writeDir(db, tmp);
 	}
 
-	db = readDir (dirID);
-	userBlock ub = readUser (curUserID);
-	strcpy (db.dirName, newDirName.c_str ());
-	strcpy (db.dirOwner, ub.userName);
+	db = readDir(dirID);
+	userBlock ub = readUser(curUserID);
+	strcpy(db.dirName, newDirName.c_str());
+	strcpy(db.dirOwner, ub.userName);
 	db.dirSize = 0;
-	db.dirCreateTime = getTime ();
+	db.dirCreateTime = getTime();
 	db.dirChangeTime = db.dirCreateTime;
-	db.type = (newDirMod[0] == 'r' ?
-		(newDirMod == "r" ? 1 : 2) :
-		(newDirMod == "p" ? 0 : 3));
+	db.type = 1;
 	db.textLocation = -1;
 	db.faDirID = _curDirID;
 	db.sonDirID = -1;
 	db.nextDirID = -1;
 	db.dirMod = (newDirMod[0] == 'r' ?
 		(newDirMod == "rw" ? 2 : 1) :
-		(newDirMod == "a" ? 3: 0));
+		(newDirMod == "a" ? 3 : 0));
 	db.used = 1;
-	writeDir (db, dirID);	//½«Ä¿Â¼ĞÅÏ¢Ğ´ÈëÄ¿Â¼¿é
+	writeDir(db, dirID);	//å°†ç›®å½•ä¿¡æ¯å†™å…¥ç›®å½•å—
 	return true;
 }
 
-bool mkdirs (string newDirPath, string newDirMod){	//ÔÚµ±Ç°Ä¿Â¼ÏÂ´´½¨¶à¼¶×ÓÄ¿Â¼
-	vector <string> tarDirPath = pathPrase (newDirPath);	//ÓÃ×Ô¶¯»ú½âÎöÂ·¾¶
+bool mkdirs(string newDirPath, string newDirMod) {	//åœ¨å½“å‰ç›®å½•ä¸‹åˆ›å»ºå¤šçº§å­ç›®å½•
+	vector <string> tarDirPath;
+	pathPrase(newDirPath, tarDirPath);	//ç”¨è‡ªåŠ¨æœºè§£æè·¯å¾„
 	int dirID = (tarDirPath[0] == "/root" ? 0 : curDirID);
-	for (int i = 0; i < tarDirPath.size (); i++) {
+	for (int i = 0; i < tarDirPath.size(); i++) {
 		string tmp = tarDirPath[i];
 		if (tmp == "/TOT") {
 			return 0;
 		}
 		if (i == 0 && tmp == "/root") continue;
 		if (tmp == "/CUR") continue;
-		int nextID = findNextDir (dirID, tarDirPath[i]);
-		if (nextID == -1) {	//²»´æÔÚĞèÒªĞÂ´´½¨
-			if (!mkdir (tarDirPath[i], (string)"a",  dirID));
-				return false;
+		int nextID = findNextDir(dirID, tarDirPath[i]);
+		if (nextID == -1) {	//ä¸å­˜åœ¨éœ€è¦æ–°åˆ›å»º
+			if (!mkDir(tarDirPath[i], (string)"a", dirID))
+			return false;
+			dirID = findNextDir(dirID, tarDirPath[i]);
 		}
 		else {
 			dirID = nextID;
@@ -162,121 +162,306 @@ bool mkdirs (string newDirPath, string newDirMod){	//ÔÚµ±Ç°Ä¿Â¼ÏÂ´´½¨¶à¼¶×ÓÄ¿Â¼
 	}
 	return true;
 }
-//Ïà¶Ô»ò¾ø¶ÔÂ·¾¶ ĞÂÄ¿Â¼µÄÈ¨ÏŞ(½öÕë¶Ô×îÄ©¼¶)
-//Â·¾¶ÊÇÒ»¸öÔ­Ê¼´® ĞèÒªÂ·¾¶½âÎö×Ô¶¯»ú½âÎö
-//´´½¨³É¹¦·µ»Ø1 ·ñÔò·µ»Ø0
+//ç›¸å¯¹æˆ–ç»å¯¹è·¯å¾„ æ–°ç›®å½•çš„æƒé™(ä»…é’ˆå¯¹æœ€æœ«çº§)
+//è·¯å¾„æ˜¯ä¸€ä¸ªåŸå§‹ä¸² éœ€è¦è·¯å¾„è§£æè‡ªåŠ¨æœºè§£æ
+//åˆ›å»ºæˆåŠŸè¿”å›1 å¦åˆ™è¿”å›0
 
-bool gotoDir (string tarPath){			//Ìø×ªµ½ĞÂµÄÄ¿Â¼
-	vector <string> path = pathPrase (tarPath);
+bool gotoDir(string tarPath, int type) {			//è·³è½¬åˆ°æ–°çš„ç›®å½•
+	vector <string> path;
+	pathPrase(tarPath, path);
 	dirBlock curDirBlock = readDir(curDirID);
 	int tmpDirID = curDirID;
-    	for(auto op:path)
-        	if(!visitPath(curDirBlock, op, tmpDirID)) return false;
-    	curDirID = tmpDirID;
-		return true;
+	for (auto op : path)
+		if (!visitPath(curDirBlock, op, tmpDirID,type)) return false;
+	curDirID = tmpDirID;
+	if (path[0] == "/root") {
+		curPath.clear(); curPath.pb("/root");
+		for (int i = 1; i < path.size(); i++) {
+			if (path[i] == "/CUR" || path[i] == "/TOT") continue;
+			curPath.pb(path[i]);
+		}
+	}
+	else {
+		for (int i = 0; i < path.size(); i++) {
+			if (path[i] == "/CUR" || path[i] == "/TOT") continue;
+			curPath.pb(path[i]);
+		}
+	}
+	return true;
 }
-//²ÎÊıÊÇÏà¶Ô»ò¾ø¶ÔÂ·¾¶ ĞèÒªÂ·¾¶½âÎö×Ô¶¯»ú½âÎöÂ·¾¶
-//Ìø×ª³É¹¦·µ»Ø1 ·ñÔò·µ»Ø0
+//å‚æ•°æ˜¯ç›¸å¯¹æˆ–ç»å¯¹è·¯å¾„ éœ€è¦è·¯å¾„è§£æè‡ªåŠ¨æœºè§£æè·¯å¾„
+//è·³è½¬æˆåŠŸè¿”å›1 å¦åˆ™è¿”å›0
 
-bool gotoFaDir () {						//Ìø×ªµ½¸¸Ç×Ä¿Â¼
-	dirBlock db = readDir (curDirID);
-	if (db.faDirID == -1) {	 	//ÒÑ¾­´¦ÔÚ×îÉÏ¼¶Ä¿Â¼
+bool gotoFaDir() {						//è·³è½¬åˆ°çˆ¶äº²ç›®å½•
+	dirBlock db = readDir(curDirID);
+	if (db.faDirID == -1) {	 	//å·²ç»å¤„åœ¨æœ€ä¸Šçº§ç›®å½•
 		return false;
 	}
-	curPath.pop_back ();		//²ÁµôÂ·¾¶µÄ×îÄ©Î²
-	curDirID = db.faDirID;	//ĞŞ¸Äµ±Ç°Ä¿Â¼¿éid
+	curPath.pop_back();		//æ“¦æ‰è·¯å¾„çš„æœ€æœ«å°¾
+	curDirID = db.faDirID;	//ä¿®æ”¹å½“å‰ç›®å½•å—id
 	return true;
 }
 
-bool delDir (int dirID, string dirPath, int type){	//É¾µôÄ¿Â¼¿é
-	vector <string> path = pathPrase (dirPath);
+bool delDir(int dirID, string dirPath, int type) {	//åˆ æ‰ç›®å½•å—
+	vector <string> path;
+	pathPrase(dirPath, path);
+	//for (int i = 0; i < path.size (); i++) cout << path[i] << " "; cout << endl; cout << type << endl;
 	if (path[0] == "error")
 		return false;
-	for (int i = 0; i < path.size ()-1; i++) {
+	for (int i = 0; i < path.size() - 1; i++) {
 		if (path[i] == "/CUR")
 			continue;
-		dirID = (findNextDir (dirID, path[i]));
-		if (dirID == -1) 		//Ã»ÓĞÕÒµ½Ä¿±êÂ·¾¶
+		dirID = (findNextDir(dirID, path[i]));
+		if (dirID == -1) 		//æ²¡æœ‰æ‰¾åˆ°ç›®æ ‡è·¯å¾„
 			return false;
-		if (!checkMod (curUserID, dirID, 2))
-			return false;		//ÓÃ»§È¨ÏŞ´íÎó
+		if (!checkMod(curUserID, dirID, 2))
+			return false;		//ç”¨æˆ·æƒé™é”™è¯¯
 	}
-	string leaf = path[path.size ()-1];
-	if (type == 0) {	//É¾³ıÕû¸öÄ¿Â¼¿é
-		dirID = findNextDir (dirID, leaf);
-		if (dirID == -1)
-			return -1;
-		if (!checkMod (curUserID, dirID, 3))
-			return false;
-		if (!delAllDir (dirID))	//µİ¹éÉ¾³ıÕû¸öÄ¿Â¼¿é
-			return false;
-	}
-	else {
-		dirBlock db = readDir (dirID);
-		if (db.sonDirID == -1)
-			return false;
-		dirID = db.sonDirID;
-		db = readDir (dirID);
-		while (!((string)db.dirName != leaf && db.type == 2)) {
-			if (db.nextDirID == -1)
-				return false;
-			dirID = db.nextDirID;
-			db = readDir (dirID);
-		}
-		if (!checkMod (curUserID, dirID, 3))
-			return false;
-        int indexID = db.textLocation;
-        indexBlock ib = readIndex (indexID);
-        int fileID = ib.diskOffset;
-        releaseIndex (indexID);
-        releaseDir (dirID);
-        releaseFile (fileID);
-	}
+	string leaf = path[path.size() - 1];
+	//cout <<leaf << endl;
+//	if (type == 0) {	//åˆ é™¤æ•´ä¸ªç›®å½•å—
+    int faID = dirID;
+    if (type == 0) dirID = findNextDir(dirID, leaf);
+    else dirID = findNextDir(dirID, leaf, 2);
+    if(dirID == -1)
+    {
+        cout<<"No such file. Maybe it's a directory?"<<endl;
+        return false;
+    }
+    dirBlock db = readDir (dirID);
+    int broID = db.nextDirID;
+    //cout << "dirID" << dirID << endl;
+    if (dirID == -1)
+        return -1;
+    if (!checkMod(curUserID, dirID, 3)) {
+       // cout << ".." << endl;
+        return false;
+    }
+    dirBlock fadb = readDir(faID);
+    if (fadb.sonDirID == dirID) {
+        fadb.sonDirID = broID;
+        writeDir(fadb, faID);
+    }
+    else {
+        dirBlock tmp = readDir(fadb.sonDirID); int oldID = fadb.sonDirID;
+        while (tmp.nextDirID != dirID) {
+            //cout << oldID << " " << tmp.dirName << endl;
+            oldID = tmp.nextDirID;
+            tmp = readDir(tmp.nextDirID);
+        }
+        tmp.nextDirID = broID;
+        writeDir(tmp, oldID);
+    }
+    if (type == 0) {
+        if (!delAllDir(dirID, 1))	//é€’å½’åˆ é™¤æ•´ä¸ªç›®å½•å—
+            return false;
+    }
+    else {
+        //cout << ".." << endl;
+        db = readDir(dirID);
+        if(db.type == 1) return false;
+        indexBlock ib = readIndex(db.textLocation);
+        releaseFile(ib.diskOffset);
+        releaseIndex(db.textLocation);
+        releaseDir(dirID);
+    }
+
+//	}
+//	else {
+//        //cout << "fuck" << endl;
+//		dirBlock db = readDir(dirID), tmp;
+//		if (db.sonDirID == -1)
+//			return false;
+//		//dirID = db.sonDirID;
+//		tmp = db;
+//		db = readDir(db.sonDirID);
+//		bool flag = 1;
+//		while ((string)db.dirName != leaf) {
+//			if (db.nextDirID == -1 || !db.used)
+//				return false;
+//            if (flag) dirID = tmp.sonDirID, flag = 0;
+//            else dirID = tmp.nextDirID;
+//			tmp = db;
+//			db = readDir(tmp.nextDirID);
+//			if ((string)db.dirName == leaf) {   //æ‰¾åˆ°äº†
+//			    if (!checkMod(curUserID, dirID, 2))
+//                    return false;
+//                int indexID = db.textLocation;
+//                indexBlock ib = readIndex(indexID);
+//                int fileID = ib.diskOffset;
+//                releaseIndex(indexID);
+//                releaseDir(tmp.nextDirID);
+//                releaseFile(fileID);
+//                tmp.nextDirID = -1;
+//                writeDir (tmp, dirID);
+//                return true;
+//			}
+//		}
+//		if (!checkMod(curUserID, dirID, 2)) {
+//			return false;
+//		}
+//		int indexID = db.textLocation;
+//		indexBlock ib = readIndex(indexID);
+//		int fileID = ib.diskOffset;
+//		releaseIndex(indexID);
+//		releaseDir(tmp.sonDirID);
+//		releaseFile(fileID);
+//
+//		tmp.sonDirID = -1;
+//		writeDir (tmp, dirID);
+//	}
 	return true;
 }
-//µ±Ç°Ä¿Â¼¿é Â·¾¶´® É¾µôµÄÊÇÕû¸öÄ¿Â¼»¹ÊÇÄ³¸öÎÄ¼ş
-//É¾³ı³É¹¦·µ»Ø1 ·ñÔò(Â·¾¶²»´æÔÚ»òÕßÈ¨ÏŞ´íÎó)ÊÇ0
+//å½“å‰ç›®å½•å— è·¯å¾„ä¸² åˆ æ‰çš„æ˜¯æ•´ä¸ªç›®å½•è¿˜æ˜¯æŸä¸ªæ–‡ä»¶
+//åˆ é™¤æˆåŠŸè¿”å›1 å¦åˆ™(è·¯å¾„ä¸å­˜åœ¨æˆ–è€…æƒé™é”™è¯¯)æ˜¯0
 
-bool delAllDir (int dirID) {		//µİ¹éÉ¾µôÕû¸öÄ¿Â¼¿é
+bool delAllDir(int dirID, int type) {		//é€’å½’åˆ æ‰æ•´ä¸ªç›®å½•å—
+    //cout << dirID << ".." << endl;
 	bool flag = true;
-	dirBlock db = readDir (dirID);
+	dirBlock db = readDir(dirID); cout << db.dirName << endl;
 	if (db.sonDirID == -1) {
-		if (!checkMod (curUserID, dirID, 3))
+        //cout << "id1" <<endl;
+		if (!checkMod(curUserID, dirID, 3)) {
+            //cout << "1error" <<endl;
 			return false;
+		}
 	}
 	else {
-		flag = delAllDir (db.sonDirID);
+	    //cout << "id2" << endl;
+		flag = delAllDir(db.sonDirID);
+	}
+	if (type == 1) {
+        if (checkMod(curUserID, dirID, 3) && flag) {
+            dirBlock db = readDir(dirID);
+            if (db.type == 1) releaseDir(dirID);
+            else if (db.type == 2) {
+                indexBlock ib = readIndex(db.textLocation);
+                releaseFile(ib.diskOffset);
+                releaseIndex(db.textLocation);
+                releaseDir(dirID);
+            }
+        }
+        return flag;
 	}
 	if (db.nextDirID != -1) {
-		flag &= delAllDir (db.nextDirID);
+		flag &= delAllDir(db.nextDirID);
 	}
+	if (checkMod(curUserID, dirID, 3) && flag) {
+        dirBlock db = readDir(dirID);
+        if (db.type == 1) releaseDir(dirID);
+        else if (db.type == 2) {
+            indexBlock ib = readIndex(db.textLocation);
+            releaseFile(ib.diskOffset);
+            releaseIndex(db.textLocation);
+            releaseDir(dirID);
+        }
+	}
+	else flag = 0;
 	return flag;
 }
 
-void releaseDir (int dirID) {		//ÊÍ·ÅÒ»¿éÄ¿Â¼¿é
-	superNodeBlock sn = readSuperNode ();
-	dirBlock db = readDir (dirID);
+void releaseDir(int dirID) {		//é‡Šæ”¾ä¸€å—ç›®å½•å—
+	superNodeBlock sn = readSuperNode();
+	dirBlock db = readDir(dirID);
 	db.used = 0;
 	if (sn.emptyDirBlock == -1) {
 		sn.emptyDirBlock = dirID;
 		sn._emptyDirBlock = dirID;
 	}
 	else {
-		dirBlock db = readDir (sn._emptyDirBlock);
-		db.nextDirID = dirID;
-		writeDir (db, sn._emptyDirBlock);
+		dirBlock tmp = readDir(sn._emptyDirBlock);
+		tmp.nextDirID = dirID;
+		writeDir(tmp, sn._emptyDirBlock);
 		sn._emptyDirBlock = dirID;
 	}
-	writeSuperNode (sn);
-	dirBlock faDir = readDir (db.faDirID);
-	if (db.nextDirID == -1) {
-		faDir.sonDirID = -1;
-	}
-	else {
-		faDir.sonDirID = db.nextDirID;
-	}
-	writeDir (db, dirID);
-	writeDir (faDir, db.faDirID);
+	writeSuperNode(sn);
+	db.sonDirID = db.faDirID = -1;
+	writeDir(db, dirID);
 }
+
+int getDirID (string path){         //ä»å½“å‰ç›®å½•ä¸‹æŒ‰ç…§è¿™ä¸ªè·¯å¾„è®¿é—®ç›®æ ‡ è¿”å›ç›®æ ‡çš„dirID
+    vector <string> Path; pathPrase(path, Path);
+    if (Path[0] == "error")
+        return -1;
+    int dirID = (Path[0] == "/root"? 0 : curDirID);
+    for (int i = 0; i < Path.size (); i++) {
+        if (Path[i] == "/CUR") continue;
+        int tmp = findNextDir(dirID, Path[i], 1);
+        if (i == Path.size()-1 && tmp == -1) {
+            tmp = findNextDir(dirID, Path[i], 2);
+        }
+        dirID = tmp;
+    }
+    return dirID;
+}
+//å¦‚æœä¸å­˜åœ¨è¿”å›-1
+
+bool moveDir (string fromPath, string toPath) {     //ç§»åŠ¨æ–‡ä»¶
+    int id1 = getDirID(fromPath), id2 = getDirID(toPath);
+    dirBlock db1 = readDir(id1), db2 = readDir(id2);
+    if (db2.type != 1) return false;
+    cpDir(fromPath, toPath);
+    delDir(curDirID, fromPath, db1.type-1);
+    return true;
+}
+
+void cpAllDir (int id1, int id2) {                  //å°†ID2ä¸­çš„å†…å®¹é€’å½’æ‹·è´åˆ°ID1ä¸­
+    //cout << id1 << " " << id2 << ".." << endl;
+    dirBlock db1 = readDir(id1), db2 = readDir(id2), newdb;
+    int newID = giveDirBlock(); newdb = readDir(newID);
+    //cout << ".." << endl;
+    newdb = db2; newdb.faDirID = id1; newdb.nextDirID = -1; newdb.sonDirID = -1;
+    if (newdb.type == 2) {                          //æ‹·è´æ–‡ä»¶
+        int newi = giveIndexBlock(); indexBlock ib = readIndex(db2.textLocation), newib = ib;
+        int newf = giveFileBlock(); fileBlock fb = readFile(ib.diskOffset), newfb = fb;
+        newdb.textLocation = newi;
+        newib.diskOffset = newf;
+        writeIndex (newib, newi);
+        writeFile(newfb, newf);
+    }
+    //cout << newID << " " << newdb.dirName << endl;
+    writeDir(newdb, newID);
+    //cout << "1.." << endl;
+    if (db1.sonDirID == -1) {
+        db1.sonDirID = newID;
+        //cout << "2.." << endl;
+        writeDir (db1, id1);
+    }
+    else {
+        //cout << "3.." << endl;
+        int dirID = db1.sonDirID; db1 = readDir (dirID);
+        while (db1.nextDirID != -1) {
+            dirID = db1.nextDirID;
+            db1 = readDir(dirID);
+        }
+        db1.nextDirID = newID;
+        writeDir(db1, dirID);
+    }
+    //cout << "4.." <<endl;
+    if (db2.sonDirID == -1) return ;
+    id2 = db2.sonDirID; db2 = readDir(id2);
+    while (id2 != -1 && db2.used) {     //æŠŠç›®æ ‡æ–‡ä»¶å¤¹ä¸‹çš„ä¸œè¥¿éƒ½æ‹·è´åˆ°æ–°çš„æ–‡ä»¶å¤¹ä¸‹
+        cpAllDir(newID, id2);
+        id2 = db2.nextDirID;
+        if (id2 == -1) break;
+        db2 = readDir(id2);
+    }
+}
+
+bool cpDir (string fromPath, string toPath){        //å¤åˆ¶ç›®å½•
+    int id1 = getDirID(fromPath), id2 = getDirID(toPath);
+    //cout << id1 << " " << id2 << endl;
+    dirBlock db, db1 = readDir(id1), db2 = readDir (id2);
+    if (db2.type != 1) return false;
+    if (findNextDir(id2, (string)db1.dirName, 1) != -1 || findNextDir(id2, (string)db1.dirName, 2) != -1) {   //æ–‡ä»¶åå†²çª
+        return false;
+    }
+    cpAllDir (id2, id1);
+    return true;
+}
+
+
+
+
 
 
