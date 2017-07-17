@@ -175,9 +175,9 @@ bool checkMod (int userID, int dirID, int type){    //权限判断
 void find (int curDirID, string target, vector <string> path){  //从当前路径下搜索目标文件（注意是文件）
     //直接递归搜索
     dirBlock db = readDir (curDirID);
-    cout << db.dirName << " " << target << " " << db.type << endl;
-    if ((string)db.dirName == target && db.type == 2) {
-        cout << "fuck" <<endl;
+    //cout << db.dirName << " " << target << " " << db.type << endl;
+    if ((string)db.dirName == target) {
+        //cout << "fuck" <<endl;
         for (int i = 1; i < path.size (); i++) {
             cout << path[i] << '/';
         }
@@ -185,13 +185,13 @@ void find (int curDirID, string target, vector <string> path){  //从当前路径下搜
         return ;
     }
     path.pb ((string)db.dirName);
-    cout << db.dirName << " " << db.sonDirID << endl;
+    //cout << db.dirName << " " << db.sonDirID << endl;
     if (db.sonDirID == -1) {}
     else {
         find (db.sonDirID, target, path);
     }
     path.pop_back ();
-    cout << db.dirName << " " << db.nextDirID << " " << db.used << endl;
+    //cout << db.dirName << " " << db.nextDirID << " " << db.used << endl;
     if (db.used && db.nextDirID != -1) {
         find (db.nextDirID, target, path);
     }
@@ -204,7 +204,7 @@ void state (){                      //显示内存使用情况
     int cnt, p;
     p = sn.emptyUserBlock;
     if (p == -1) p = USERSIZE+1;
-    printf ("%d user blocks empty, unilization ratio %.2f\n", USERSIZE-p, (USERSIZE-p+1)*1.0/USERSIZE);
+    printf ("%d user blocks empty, unilization ratio %.2f\n", USERSIZE-p, 1.0-(USERSIZE-p+1)*1.0/USERSIZE);
 
     cnt = 0, p = sn.emptyDirBlock;
     dirBlock db;
@@ -213,7 +213,7 @@ void state (){                      //显示内存使用情况
         db = readDir (p);
         p = db.nextDirID;
     }
-    printf ("%d dir blocks empty, unilization ratio %.2f\n", cnt, cnt*1.0/DIRSIZE);
+    printf ("%d dir blocks empty, unilization ratio %.2f\n", cnt, 1.0-cnt*1.0/DIRSIZE);
 
     cnt = 0, p = sn.emptyFileBlock;
     fileBlock fb;
@@ -222,7 +222,7 @@ void state (){                      //显示内存使用情况
         fb = readFile (p);
         p = fb.nextFileID;
     }
-    printf ("%d file blocks empty, unilization ratio %.2f\n", cnt, cnt*1.0/FILESIZE);
+    printf ("%d file blocks empty, unilization ratio %.2f\n", cnt, 1.0-cnt*1.0/FILESIZE);
 
     cnt = 0, p = sn.emptyIndexBlock;
     indexBlock ib;
@@ -231,7 +231,7 @@ void state (){                      //显示内存使用情况
         ib = readIndex (p);
         p = ib.nextIndexID;
     }
-    printf ("%d index blocks empty, unilization ratio %.2f\n", cnt, cnt*1.0/INDEXSIZE);
+    printf ("%d index blocks empty, unilization ratio %.2f\n", cnt, 1.0-cnt*1.0/INDEXSIZE);
 }
 //输出用户块 目录块 文件块 索引块剩下的块数和使用率
 
