@@ -473,7 +473,7 @@ bool makeHardLink(string pathFrom, string pathTo)//创建硬链接
         curPath = tmpPath;
         return false;
     }
-    if(!readDir(curDirID).type!=2)
+    if(readDir(curDirID).type!=2)
     {
         cout<<"错误！硬链接所链接至的必须为文件！"<<endl;
         curDirID = tmpDirID; //恢复当前所在目录位置

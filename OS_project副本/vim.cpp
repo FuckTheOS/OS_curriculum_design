@@ -130,6 +130,7 @@ void saveVim()
 		for (int j = 0; j<bf2_sz; j++)
 			writeChar(curFileID, curFileBlock, bufferString[i][j], cnt);
 		//在把当前单元的String写入之后，加个换行符
+		if(i!=bufferString.size()-1)
 		writeChar(curFileID, curFileBlock, '\n', cnt);
 	}
 	writeFile(curFileBlock, curFileID);
